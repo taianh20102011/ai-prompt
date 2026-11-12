@@ -18,7 +18,9 @@ import {
   Gauge,
   Cpu,
   Sliders,
-  HelpCircle
+  HelpCircle,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { analyzePromptLocally, TARGET_AI_MODELS } from '../services/promptService';
 import { getStorageData, DEFAULT_BENCHMARKS } from '../services/mockStorage';
@@ -62,10 +64,22 @@ export default function UserAnalyzer() {
     }
   }, [location.state?.initialPrompt]);
 
-  const [benchmarks] = useState(() => 
-    getStorageData('promptcraft_benchmarks', DEFAULT_BENCHMARKS)
-  );
+  const [benchmarks] = useState(() => {
+    const saved = getStorageData('promptcraft_benchmarks', DEFAULT_BENCHMARKS);
+    if (Array.isArray(saved) && saved.length < DEFAULT_BENCHMARKS.length) {
+      const existingIds = new Set(saved.map(b => b.id));
+      const merged = [...saved, ...DEFAULT_BENCHMARKS.filter(b => !existingIds.has(b.id))];
+      return merged;
+    }
+    return saved;
+  });
   const [searchBenchmark, setSearchBenchmark] = useState('');
+  const [benchmarkPage, setBenchmarkPage] = useState(1);
+  const benchmarksPerPage = 3;
+
+  useEffect(() => {
+    setBenchmarkPage(1);
+  }, [searchBenchmark]);
 
   const handleInspect = async (promptOverride, targetAIOverride) => {
     const textToAnalyze = typeof promptOverride === 'string' ? promptOverride : promptInput;
@@ -97,7 +111,14 @@ export default function UserAnalyzer() {
 
   const filteredBenchmarks = benchmarks.filter(b => 
     b.title.toLowerCase().includes(searchBenchmark.toLowerCase()) ||
-    b.industry.toLowerCase().includes(searchBenchmark.toLowerCase())
+    b.industry.toLowerCase().includes(searchBenchmark.toLowerCase()) ||
+    (b.tags && b.tags.some(t => t.toLowerCase().includes(searchBenchmark.toLowerCase())))
+  );
+
+  const totalBenchmarkPages = Math.max(1, Math.ceil(filteredBenchmarks.length / benchmarksPerPage));
+  const displayedBenchmarks = filteredBenchmarks.slice(
+    (benchmarkPage - 1) * benchmarksPerPage, 
+    benchmarkPage * benchmarksPerPage
   );
 
   return (
@@ -490,7 +511,7 @@ export default function UserAnalyzer() {
             <div className="flex items-center space-x-2">
               <h2 className="text-base font-semibold text-[var(--text-primary)]">Prompt Benchmarks</h2>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                {filteredBenchmarks.length} {lang === 'vi' ? 'mẫu chuẩn' : 'verified templates'}
+                {filteredBenchmarks.length} {lang === 'vi' ? 'mẫu chuẩn' : 'verified templates'} • {lang === 'vi' ? 'Trang' : 'Page'} {benchmarkPage}/{totalBenchmarkPages}
               </span>
             </div>
             <p className="text-xs text-[var(--text-secondary)] mt-0.5">
@@ -528,7 +549,7 @@ export default function UserAnalyzer() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {filteredBenchmarks.map((bm) => (
+          {displayedBenchmarks.map((bm) => (
             <div key={bm.id} className="craft-card p-4 flex flex-col justify-between space-y-3">
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-[11px] font-mono">
@@ -584,6 +605,53 @@ export default function UserAnalyzer() {
             </div>
           ))}
         </div>
+
+        {/* Thanh Phân Trang 3 Prompt Mẫu / Lượt (Clean Linear Style) */}
+        {totalBenchmarkPages > 1 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between pt-4 pb-1 border-t border-[var(--border-subtle)] gap-3 text-xs font-mono">
+            <button
+              onClick={() => {
+                setBenchmarkPage(prev => Math.max(1, prev - 1));
+              }}
+              disabled={benchmarkPage === 1}
+              className="px-3.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] disabled:opacity-30 disabled:pointer-events-none flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer w-full sm:w-auto justify-center shadow-xs"
+            >
+              <ChevronLeft className="w-3.5 h-3.5" />
+              <span>{lang === 'vi' ? '3 Mẫu Trước' : 'Previous 3'}</span>
+            </button>
+
+            <div className="flex items-center gap-1.5 overflow-x-auto max-w-full py-1">
+              {Array.from({ length: totalBenchmarkPages }, (_, i) => {
+                const pageNum = i + 1;
+                const isActive = benchmarkPage === pageNum;
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setBenchmarkPage(pageNum)}
+                    className={`w-8 h-8 rounded-lg text-xs font-mono flex items-center justify-center transition-all shrink-0 ${
+                      isActive
+                        ? 'bg-indigo-600 text-white font-bold shadow-xs cursor-default'
+                        : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={() => {
+                setBenchmarkPage(prev => Math.min(totalBenchmarkPages, prev + 1));
+              }}
+              disabled={benchmarkPage === totalBenchmarkPages}
+              className="px-3.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] disabled:opacity-30 disabled:pointer-events-none flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer w-full sm:w-auto justify-center shadow-xs"
+            >
+              <span>{lang === 'vi' ? '3 Mẫu Kế Tiếp' : 'Next 3'}</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );
