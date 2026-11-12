@@ -30,7 +30,9 @@ export const TRANSLATIONS = {
       verified: 'Đã xác thực',
       loading: 'Đang tải...',
       viewMore: 'Xem chi tiết',
-      trySample: 'Thử mẫu'
+      trySample: 'Thử mẫu',
+      collapseSidebar: 'Thu gọn thanh bên',
+      expandSidebar: 'Mở rộng thanh bên'
     },
     security: {
       recaptchaBadge: 'Bảo vệ bởi Google reCAPTCHA v3 & Enclave an toàn',
@@ -200,7 +202,9 @@ export const TRANSLATIONS = {
       verified: 'Verified',
       loading: 'Loading...',
       viewMore: 'View Details',
-      trySample: 'Try Sample'
+      trySample: 'Try Sample',
+      collapseSidebar: 'Collapse sidebar',
+      expandSidebar: 'Expand sidebar'
     },
     security: {
       recaptchaBadge: 'Protected by Google reCAPTCHA v3 & Secure Enclave',

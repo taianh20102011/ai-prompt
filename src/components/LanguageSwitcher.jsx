@@ -5,13 +5,24 @@ import { Globe } from 'lucide-react';
 export default function LanguageSwitcher({ compact = false, className = '' }) {
   const { lang, setLang } = useLanguage();
 
+  if (compact) {
+    return (
+      <button
+        type="button"
+        onClick={() => setLang(lang === 'vi' ? 'en' : 'vi')}
+        className={`w-9 h-9 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] flex items-center justify-center text-sm transition-colors cursor-pointer ${className}`}
+        title={lang === 'vi' ? 'Switch to English' : 'Chuyển sang Tiếng Việt'}
+      >
+        <span>{lang === 'vi' ? '🇻🇳' : '🇬🇧'}</span>
+      </button>
+    );
+  }
+
   return (
     <div className={`inline-flex items-center rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-0.5 text-xs font-mono select-none ${className}`}>
-      {!compact && (
-        <span className="flex items-center px-1.5 text-[var(--text-muted)] pointer-events-none">
-          <Globe className="w-3.5 h-3.5 mr-1 text-indigo-400" />
-        </span>
-      )}
+      <span className="flex items-center px-1.5 text-[var(--text-muted)] pointer-events-none">
+        <Globe className="w-3.5 h-3.5 mr-1 text-indigo-400" />
+      </span>
       <button
         type="button"
         onClick={() => setLang('vi')}

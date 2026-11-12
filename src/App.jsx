@@ -30,7 +30,7 @@ export default function App() {
 
             {/* Main Content Area dynamically adjusted for sidebar with buttery-smooth cubic-bezier */}
             <div 
-              className={`flex-1 flex flex-col min-h-screen transition-[padding] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+              className={`flex-1 flex flex-col min-h-screen transition-[padding] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[padding] ${
                 isCollapsed ? 'lg:pl-[68px]' : 'lg:pl-64'
               }`}
             >
