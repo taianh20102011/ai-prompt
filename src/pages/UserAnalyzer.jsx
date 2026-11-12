@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { 
   SlidersHorizontal, 
   Copy, 
@@ -35,11 +36,20 @@ const CATEGORIES = [
 ];
 
 export default function UserAnalyzer() {
-  const [promptInput, setPromptInput] = useState('');
+  const location = useLocation();
+  const [promptInput, setPromptInput] = useState(() => {
+    return location.state?.initialPrompt || '';
+  });
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
   const [copiedUpgraded, setCopiedUpgraded] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.initialPrompt && !result) {
+      handleInspect();
+    }
+  }, [location.state?.initialPrompt]);
 
   const [benchmarks] = useState(() => 
     getStorageData('promptcraft_benchmarks', DEFAULT_BENCHMARKS)
@@ -74,9 +84,15 @@ export default function UserAnalyzer() {
     <div className="space-y-10 max-w-5xl mx-auto">
       {/* Precision Hero Header */}
       <section className="space-y-2 border-b border-[var(--border-subtle)] pb-6">
-        <div className="inline-flex items-center space-x-2 text-xs font-mono text-[var(--text-secondary)] px-3 py-1 rounded-full craft-card">
-          <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-          <DecryptedText text="SPEC-DRIVEN PROMPT AUDITING & SYNTHESIZER" speed={30} maxIterations={8} />
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="inline-flex items-center space-x-2 text-xs font-mono text-[var(--text-secondary)] px-3 py-1 rounded-full craft-card">
+            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+            <DecryptedText text="SPEC-DRIVEN PROMPT AUDITING & SYNTHESIZER" speed={30} maxIterations={8} />
+          </div>
+          <span className="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-950/40 text-emerald-400 border border-emerald-800/50 text-[11px] font-mono">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Bảo vệ bởi Google reCAPTCHA v3</span>
+          </span>
         </div>
         <h1>
           <ShinyText text="Prompt Inspector & Synthesizer" speed={4} className="text-2xl sm:text-3xl font-semibold tracking-tight block" />

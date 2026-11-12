@@ -27,11 +27,12 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
   const { theme, toggleTheme } = useTheme();
 
   const publicLinks = [
-    { name: 'Prompt Inspector', path: '/', icon: Compass, badge: 'Core' },
+    { name: 'Giới Thiệu & Bắt Đầu', path: '/', icon: Sparkles, badge: 'Intro' },
+    { name: 'Kiểm Định Prompt (6D)', path: '/inspector', icon: Compass, badge: 'Core' },
     { name: 'Cortex Bot (Trained)', path: '/trained-bot', icon: Bot, badge: 'Free ∞' },
     { name: 'Đội Ngũ Devs & Admins', path: '/directory', icon: Users, badge: 'Profiles' },
-    { name: 'GitHub AI Ledger', path: '/news', icon: GitBranch, badge: 'Live' },
-    { name: 'Research Papers', path: '/research-guide', icon: BookOpen },
+    { name: 'Kho 50+ GitHub Repos', path: '/news', icon: GitBranch, badge: 'Live' },
+    { name: 'Nghiên Cứu Thấu Cảm', path: '/research-guide', icon: BookOpen },
   ];
 
   const privilegedLinks = [
@@ -230,18 +231,24 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
             </div>
           )}
 
-          {/* Enclave Status */}
+          {/* Enclave & reCAPTCHA v3 Status */}
           {(!isCollapsed || mobileOpen) ? (
-            <div className="p-2 rounded-md bg-[var(--bg-page)] border border-[var(--border-subtle)] text-[11px] font-mono flex items-center justify-between text-[var(--text-secondary)]">
-              <span className="flex items-center space-x-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <div className="space-y-1">
+              <div className="p-2 rounded-md bg-[var(--bg-page)] border border-[var(--border-subtle)] text-[10px] font-mono flex items-center justify-between text-[var(--text-secondary)]">
+                <span className="flex items-center space-x-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span>Google reCAPTCHA v3</span>
+                </span>
+                <span className="text-emerald-500 text-[10px] font-bold">Active</span>
+              </div>
+              <div className="p-1.5 rounded-md bg-[var(--bg-page)] border border-[var(--border-subtle)] text-[10px] font-mono flex items-center justify-between text-[var(--text-muted)]">
                 <span>SHA-256 Enclave</span>
-              </span>
-              <span className="text-emerald-500 text-[10px]">Secure</span>
+                <span className="text-indigo-400">Secure</span>
+              </div>
             </div>
           ) : (
-            <div className="flex justify-center pt-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" title="Secure Enclave" />
+            <div className="flex justify-center pt-1" title="Google reCAPTCHA v3 & Enclave Secure">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
           )}
         </div>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import Footer from './components/Footer';
+import LandingPage from './pages/LandingPage';
 import UserAnalyzer from './pages/UserAnalyzer';
 import DevStudio from './pages/DevStudio';
 import AdminPortal from './pages/AdminPortal';
@@ -30,7 +32,11 @@ export default function App() {
             >
               <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-16 lg:pt-8">
                 <Routes>
-                  <Route path="/" element={<UserAnalyzer />} />
+                  {/* Trang Giới Thiệu Tổng Quan & Bắt Đầu */}
+                  <Route path="/" element={<LandingPage />} />
+                  {/* Phân Hệ Kiểm Định Prompt 6D */}
+                  <Route path="/inspector" element={<UserAnalyzer />} />
+                  <Route path="/analyzer" element={<UserAnalyzer />} />
                   <Route path="/trained-bot" element={<TrainedBotChat />} />
                   <Route path="/directory" element={<EngineersDirectory />} />
                   <Route path="/news" element={<GitHubNews />} />
@@ -40,9 +46,8 @@ export default function App() {
                 </Routes>
               </main>
 
-              <footer className="border-t border-[var(--border-subtle)] py-6 text-center text-xs text-[var(--text-muted)] font-mono">
-                <p>© 2026 PromptCraft AI Studio. Nền tảng phân tích, kiểm định & chia sẻ Prompt AI tiêu chuẩn.</p>
-              </footer>
+              {/* Chi Tiết Footer Toàn Diện */}
+              <Footer />
             </div>
           </div>
         </BrowserRouter>

@@ -1,0 +1,196 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { 
+  ShieldCheck, 
+  Sparkles, 
+  GitBranch, 
+  Compass, 
+  Bot, 
+  BookOpen, 
+  Terminal, 
+  Users, 
+  ExternalLink, 
+  Lock, 
+  Shield, 
+  CheckCircle2,
+  Cpu,
+  Heart
+} from 'lucide-react';
+import ShinyText from './react-bits/ShinyText';
+
+export default function Footer() {
+  return (
+    <footer className="mt-16 border-t border-[var(--border-subtle)] bg-[var(--bg-elevated)]/60 text-xs font-mono text-[var(--text-secondary)] transition-colors">
+      {/* 1. Banner Bảo Vệ & An Ninh Hệ Thống (Google reCAPTCHA v3 & Enclave Defense) */}
+      <div className="border-b border-[var(--border-subtle)] px-4 sm:px-6 lg:px-8 py-4 bg-[var(--bg-surface)]">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+            <span className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-emerald-950/40 text-emerald-400 border border-emerald-800/50 font-semibold text-[11px]">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Được bảo vệ bởi Google reCAPTCHA v3</span>
+            </span>
+            <span className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-indigo-950/40 text-indigo-300 border border-indigo-800/50 text-[11px]">
+              <Lock className="w-3.5 h-3.5" />
+              <span>SHA-256 Zero-Trust Enclave</span>
+            </span>
+            <span className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-amber-950/40 text-amber-300 border border-amber-800/50 text-[11px]">
+              <Shield className="w-3.5 h-3.5" />
+              <span>Anti-IDOR Masked Hash</span>
+            </span>
+          </div>
+
+          <p className="text-[11px] text-[var(--text-muted)] max-w-md">
+            Hệ thống áp dụng cơ chế đánh giá độ tin cậy tự động của Google reCAPTCHA v3 và tuân thủ các chuẩn mực an toàn không lưu dữ liệu nhạy cảm.
+          </p>
+        </div>
+      </div>
+
+      {/* 2. Cột Liên Kết Chi Tiết */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Cột 1: Thông tin thương hiệu & Tác giả */}
+        <div className="space-y-3">
+          <div className="flex items-center space-x-2">
+            <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center font-mono">
+              PNIT
+            </div>
+            <span className="text-sm font-bold text-[var(--text-primary)]">
+              Prompt AI PNIT
+            </span>
+          </div>
+          <p className="text-xs leading-relaxed text-[var(--text-muted)]">
+            Nền tảng kiểm định, phân tích và tối ưu hóa System Prompt AI theo chuẩn Anti-Slop, tích hợp chuỗi suy luận CoT và thư viện tri thức mở.
+          </p>
+          <div className="pt-1 text-[11px] space-y-1">
+            <div>
+              <span className="text-[var(--text-muted)]">Tác giả: </span>
+              <strong className="text-[var(--text-primary)]">Phạm Ngọc Tài Anh</strong>
+            </div>
+            <div>
+              <span className="text-[var(--text-muted)]">Giấy phép: </span>
+              <span className="text-indigo-400 font-semibold">Apache License 2.0</span>
+            </div>
+            <div>
+              <a
+                href="https://github.com/taianh20102011/ai-prompt"
+                target="_blank"
+                rel="noreferrer"
+                className="text-indigo-400 hover:text-indigo-300 flex items-center space-x-1 mt-1 transition-colors"
+              >
+                <GitBranch className="w-3.5 h-3.5" />
+                <span>github.com/taianh20102011/ai-prompt</span>
+                <ExternalLink className="w-3 h-3 ml-0.5" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Cột 2: Công cụ Trí tuệ Nhân tạo */}
+        <div className="space-y-2.5">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-primary)] flex items-center space-x-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Công Cụ AI & Kiểm Định</span>
+          </h4>
+          <ul className="space-y-2 text-xs">
+            <li>
+              <Link to="/inspector" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5">
+                <Compass className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                <span>Kiểm Định Prompt (Inspector 6D)</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/trained-bot" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5">
+                <Bot className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                <span>Cortex Bot (Chain-of-Thought)</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/research-guide" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                <span>Nghiên Cứu Prompt Thấu Cảm</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/news" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5">
+                <GitBranch className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                <span>Kho 50+ GitHub AI Repositories</span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Cột 3: Phân hệ Nhà phát triển */}
+        <div className="space-y-2.5">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-primary)] flex items-center space-x-1.5">
+            <Cpu className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Kỹ Sư & Quản Trị</span>
+          </h4>
+          <ul className="space-y-2 text-xs">
+            <li>
+              <Link to="/dev-studio" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5">
+                <Terminal className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                <span>Dev Studio & Cấp Quyền Kỹ Sư</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/directory" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5">
+                <Users className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                <span>Danh Bạ Kỹ Sư Kiểm Định</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin-portal" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                <span>Admin Enclave Portal</span>
+              </Link>
+            </li>
+            <li>
+              <span className="text-[var(--text-muted)] flex items-center space-x-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Vercel Edge DB Synchronizer</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        {/* Cột 4: Tiêu chuẩn Bảo Mật & Nền Tảng */}
+        <div className="space-y-2.5">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-primary)] flex items-center space-x-1.5">
+            <Shield className="w-3.5 h-3.5 text-amber-400" />
+            <span>Tiêu Chuẩn Bảo Mật</span>
+          </h4>
+          <div className="space-y-2 text-[11px] leading-relaxed text-[var(--text-muted)]">
+            <div className="p-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] space-y-1">
+              <div className="text-emerald-400 font-semibold flex items-center space-x-1">
+                <span>✓ Google reCAPTCHA v3</span>
+              </div>
+              <p className="text-[10px]">Bảo vệ chống bot tự động, tính điểm hành vi theo thời gian thực.</p>
+            </div>
+            <div className="p-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] space-y-1">
+              <div className="text-indigo-400 font-semibold flex items-center space-x-1">
+                <span>✓ Zero-Trust Architecture</span>
+              </div>
+              <p className="text-[10px]">Session HttpOnly Cookie 4H, HMAC SHA-256 Client Fingerprinting.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Dải Chân Trang Cuối Cùng (Bottom Copyright & Status) */}
+      <div className="border-t border-[var(--border-subtle)] px-4 sm:px-6 lg:px-8 py-4 bg-[var(--bg-surface)]">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left text-[11px] text-[var(--text-muted)]">
+          <div>
+            © 2026 <strong>Phạm Ngọc Tài Anh</strong>. Dự án phát hành theo chuẩn giấy phép mã nguồn mở <strong>Apache License 2.0</strong>.
+          </div>
+          <div className="flex items-center space-x-3">
+            <span className="flex items-center space-x-1.5 text-emerald-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Trạng thái: 100% Operational</span>
+            </span>
+            <span>•</span>
+            <span>Phiên bản: v2.4.0</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
