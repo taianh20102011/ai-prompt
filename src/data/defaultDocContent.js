@@ -84,12 +84,12 @@ Dưới đây là 6 công trình nghiên cứu nền tảng quốc tế được
 
 ## 3. KHUNG CẤU TRÚC PROMPT THẤU CẢM: THE "H-E-A-R" FRAMEWORK
 
-\```
+\`\`\`
 [H] - Human Persona Grounding (Định danh bản sắc con người, quá khứ và giới hạn tri thức)
 [E] - Emotional Validation First (Phản chiếu & thừa nhận tính hợp lý của cảm xúc người nói)
 [A] - Anti-Slop Negative Constraints (Ràng buộc cấm tuyệt đối các từ ngữ máy móc và bullet points)
 [R] - Reflective Open Question (Kết thúc bằng câu hỏi gợi mở chiều sâu để tạo dòng chảy đối thoại)
-\```
+\`\`\`
 
 ---
 
