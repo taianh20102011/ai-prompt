@@ -178,7 +178,7 @@ export default function GitHubNews() {
             </span>
           ) : (
             <span>
-              Chủ đề: <strong className="text-indigo-400">{CATEGORIES.find(c => c.id === activeCategory)?.name}</strong>
+              Chủ đề: <strong className="text-indigo-400">{categories.find(c => c.id === activeCategory)?.name}</strong>
             </span>
           )}
         </div>
