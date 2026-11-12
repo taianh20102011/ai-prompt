@@ -561,7 +561,7 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
               placeholder={t.cortexBot.inputPlaceholder}
               className="w-full pl-4 pr-24 py-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-xs font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-indigo-500 transition-colors"
             />
-            <div className="absolute right-1.5 flex items-center">
+            <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center">
               <button
                 type="submit"
                 disabled={!inputValue.trim() || isThinking}

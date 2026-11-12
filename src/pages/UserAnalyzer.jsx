@@ -501,7 +501,7 @@ export default function UserAnalyzer() {
           </div>
 
           <div className="relative w-full sm:w-64 shrink-0">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[var(--text-muted)]" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] pointer-events-none" />
             <input
               type="text"
               value={searchBenchmark}

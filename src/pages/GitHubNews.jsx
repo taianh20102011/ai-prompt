@@ -136,9 +136,9 @@ export default function GitHubNews() {
         ))}
       </div>
 
-      {/* Search Filter Bar (Single Layer, Không Card Lồng Card) */}
+      {/* Search Filter Bar (Single Layer, Perfectly Vertically Centered) */}
       <form onSubmit={handleSearchSubmit} className="relative flex items-center w-full">
-        <Search className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 pointer-events-none" />
+        <Search className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           type="text"
           value={searchTerm}
@@ -150,14 +150,14 @@ export default function GitHubNews() {
           <button
             type="button"
             onClick={handleClearSearch}
-            className="absolute right-24 text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+            className="absolute right-24 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer flex items-center justify-center p-1"
           >
             <X className="w-3.5 h-3.5" />
           </button>
         )}
         <button
           type="submit"
-          className="absolute right-1.5 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs font-mono cursor-pointer transition-colors shadow-xs"
+          className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs font-mono cursor-pointer transition-colors shadow-xs flex items-center justify-center"
         >
           {t.repos.btnSearch}
         </button>
