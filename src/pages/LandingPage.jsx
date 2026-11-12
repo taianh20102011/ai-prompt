@@ -9,7 +9,8 @@ import {
   Sparkles,
   ShieldCheck,
   Check,
-  Users
+  Users,
+  HelpCircle
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -42,11 +43,21 @@ export default function LandingPage() {
     <div className="space-y-12 pb-10">
       {/* 1. HERO & WORKBENCH */}
       <div className="text-center space-y-4 max-w-3xl mx-auto pt-2">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-mono text-[var(--text-secondary)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span>{lang === 'vi' ? 'Công cụ kiểm định Prompt mã nguồn mở' : 'Open-source Prompt Engineering Suite'}</span>
-          <span className="text-[var(--text-muted)]">•</span>
-          <span className="text-indigo-400 font-semibold">Apache 2.0</span>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-mono text-[var(--text-secondary)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <span>{lang === 'vi' ? 'Công cụ kiểm định Prompt mã nguồn mở' : 'Open-source Prompt Engineering Suite'}</span>
+            <span className="text-[var(--text-muted)]">•</span>
+            <span className="text-indigo-400 font-semibold">Apache 2.0</span>
+          </div>
+
+          <Link
+            to="/guide"
+            className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 text-xs font-mono transition-colors"
+          >
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span>{lang === 'vi' ? 'Xem hướng dẫn sử dụng' : 'User Guide & FAQ'}</span>
+          </Link>
         </div>
 
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--text-primary)]">

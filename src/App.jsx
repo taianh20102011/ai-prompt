@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
 import LandingPage from './pages/LandingPage';
@@ -10,11 +10,12 @@ import GitHubNews from './pages/GitHubNews';
 import ResearchGuide from './pages/ResearchGuide';
 import TrainedBotChat from './pages/TrainedBotChat';
 import EngineersDirectory from './pages/EngineersDirectory';
+import UserGuide from './pages/UserGuide';
 import { ThemeProvider } from './context/ThemeContext';
 import { LanguageProvider } from './context/LanguageContext';
 import SmoothScroll from './components/SmoothScroll';
 import LanguageSwitcher from './components/LanguageSwitcher';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, HelpCircle } from 'lucide-react';
 
 export default function App() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -45,6 +46,14 @@ export default function App() {
                   </div>
 
                   <div className="flex items-center space-x-2.5">
+                    <Link
+                      to="/guide"
+                      className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg border border-[var(--border-subtle)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono transition-colors"
+                      title="Hướng dẫn sử dụng website"
+                    >
+                      <HelpCircle className="w-3.5 h-3.5 text-indigo-400" />
+                      <span className="hidden sm:inline">Hướng dẫn</span>
+                    </Link>
                     <LanguageSwitcher compact={false} />
                     <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg border border-emerald-800/40 bg-emerald-950/20 text-emerald-400 text-[10px] font-mono">
                       <ShieldCheck className="w-3 h-3" />
@@ -58,6 +67,9 @@ export default function App() {
                 <Routes>
                   {/* Trang Giới Thiệu Tổng Quan & Bắt Đầu */}
                   <Route path="/" element={<LandingPage />} />
+                  {/* Hướng Dẫn Sử Dụng Chi Tiết */}
+                  <Route path="/guide" element={<UserGuide />} />
+                  <Route path="/user-guide" element={<UserGuide />} />
                   {/* Phân Hệ Kiểm Định Prompt 6D */}
                   <Route path="/inspector" element={<UserAnalyzer />} />
                   <Route path="/analyzer" element={<UserAnalyzer />} />

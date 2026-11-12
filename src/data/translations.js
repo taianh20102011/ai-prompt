@@ -42,6 +42,7 @@ export const TRANSLATIONS = {
     nav: {
       home: 'Tổng quan',
       inspector: 'Kiểm định Prompt',
+      guide: 'Hướng dẫn sử dụng',
       bot: 'Trợ lý AI',
       directory: 'Đội ngũ Kỹ sư',
       repos: 'Kho Repositories',
@@ -214,6 +215,7 @@ export const TRANSLATIONS = {
     nav: {
       home: 'Overview',
       inspector: 'Prompt Inspector',
+      guide: 'User Guide',
       bot: 'AI Assistant',
       directory: 'Engineers Directory',
       repos: 'Repositories',

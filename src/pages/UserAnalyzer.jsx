@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { 
   SlidersHorizontal, 
   Copy, 
@@ -53,10 +53,11 @@ export default function UserAnalyzer() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
   const [copiedUpgraded, setCopiedUpgraded] = useState(false);
+  const [copiedBenchmarkId, setCopiedBenchmarkId] = useState(null);
 
   useEffect(() => {
     if (location.state?.initialPrompt && !result) {
-      handleInspect();
+      handleInspect(location.state.initialPrompt);
     }
   }, [location.state?.initialPrompt]);
 
@@ -65,14 +66,16 @@ export default function UserAnalyzer() {
   );
   const [searchBenchmark, setSearchBenchmark] = useState('');
 
-  const handleInspect = async (e) => {
-    e?.preventDefault();
-    if (!promptInput.trim()) return;
+  const handleInspect = async (promptOverride) => {
+    const textToAnalyze = typeof promptOverride === 'string' ? promptOverride : promptInput;
+    if (!textToAnalyze || !textToAnalyze.trim()) return;
 
     setIsAnalyzing(true);
     try {
-      const data = await analyzePromptLocally(promptInput, selectedCategory);
+      const data = await analyzePromptLocally(textToAnalyze, selectedCategory);
       setResult(data);
+    } catch (err) {
+      console.error('Error analyzing prompt:', err);
     } finally {
       setIsAnalyzing(false);
     }
@@ -82,6 +85,12 @@ export default function UserAnalyzer() {
     navigator.clipboard.writeText(text);
     setCopiedUpgraded(true);
     setTimeout(() => setCopiedUpgraded(false), 2000);
+  };
+
+  const handleCopyBenchmark = (bm) => {
+    navigator.clipboard.writeText(bm.optimizedPrompt);
+    setCopiedBenchmarkId(bm.id);
+    setTimeout(() => setCopiedBenchmarkId(null), 2000);
   };
 
   const filteredBenchmarks = benchmarks.filter(b => 
@@ -102,6 +111,13 @@ export default function UserAnalyzer() {
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
             <span>Google reCAPTCHA v3</span>
           </span>
+          <Link
+            to="/guide"
+            className="flex items-center space-x-1.5 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 text-[11px] font-mono transition-colors"
+          >
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span>{lang === 'vi' ? 'Xem hướng dẫn sử dụng' : 'User Guide & FAQ'}</span>
+          </Link>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text-primary)]">
           {t.inspector.title}
@@ -376,11 +392,20 @@ export default function UserAnalyzer() {
       <section className="space-y-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-base font-semibold text-[var(--text-primary)]">Prompt Benchmarks</h2>
-            <p className="text-xs text-[var(--text-secondary)] mt-0.5">{lang === 'vi' ? 'Mẫu prompt thực tế chọn lọc.' : 'Curated prompt examples.'}</p>
+            <div className="flex items-center space-x-2">
+              <h2 className="text-base font-semibold text-[var(--text-primary)]">Prompt Benchmarks</h2>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                {filteredBenchmarks.length} {lang === 'vi' ? 'mẫu chuẩn' : 'verified templates'}
+              </span>
+            </div>
+            <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+              {lang === 'vi' 
+                ? 'Mẫu prompt đã kiểm nghiệm thực tế từ các kỹ sư AI. Chọn "Chép" để dùng ngay trong ChatGPT/Claude, hoặc "Phân tích" để kiểm định câu hỏi gốc.' 
+                : 'Field-tested prompt templates. Click "Copy" to paste into ChatGPT/Claude, or "Inspect" to audit the baseline prompt.'}
+            </p>
           </div>
 
-          <div className="relative w-full sm:w-64">
+          <div className="relative w-full sm:w-64 shrink-0">
             <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[var(--text-muted)]" />
             <input
               type="text"
@@ -392,6 +417,21 @@ export default function UserAnalyzer() {
           </div>
         </div>
 
+        {/* Quick Explainer Callout */}
+        <div className="p-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)]/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-[var(--text-secondary)] font-mono">
+          <div className="flex items-center space-x-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+            <span>
+              {lang === 'vi'
+                ? '💡 Mẹo sử dụng: Bấm [Chép] để lấy prompt tối ưu, hoặc bấm [Phân tích] để xem hệ thống phân tích AST và lọc bỏ từ sáo rỗng.'
+                : '💡 Pro Tip: Click [Copy] to use the optimized prompt, or [Inspect] to see AST structure scoring & slop elimination.'}
+            </span>
+          </div>
+          <Link to="/guide#benchmarks" className="text-indigo-400 hover:underline shrink-0 text-[11px] font-semibold">
+            {lang === 'vi' ? 'Xem cẩm nang hướng dẫn →' : 'Read Guidebook →'}
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {filteredBenchmarks.map((bm) => (
             <div key={bm.id} className="craft-card p-4 flex flex-col justify-between space-y-3">
@@ -401,23 +441,50 @@ export default function UserAnalyzer() {
                   <span className="text-amber-400 font-medium">★ {bm.rating}</span>
                 </div>
                 <h3 className="text-sm font-semibold text-[var(--text-primary)] leading-snug">{bm.title}</h3>
-                <div className="p-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[11px] font-mono text-[var(--text-secondary)] max-h-24 overflow-y-auto leading-relaxed">
+                <div className="p-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[11px] font-mono text-[var(--text-secondary)] max-h-28 overflow-y-auto leading-relaxed select-text">
                   {bm.optimizedPrompt}
                 </div>
               </div>
 
-              <div className="pt-2.5 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono">
-                <span className="text-[var(--text-muted)] truncate max-w-[120px]">{bm.author}</span>
-                <button
-                  onClick={() => {
-                    setPromptInput(bm.originalPrompt);
-                    window.scrollTo({ top: 100, behavior: 'smooth' });
-                  }}
-                  className="px-2.5 py-1 rounded-md border border-[var(--border-subtle)] hover:bg-[var(--bg-elevated)] text-[var(--text-primary)] flex items-center space-x-1 cursor-pointer transition-colors"
-                >
-                  <span>{lang === 'vi' ? 'Dùng mẫu' : 'Use Template'}</span>
-                  <ArrowRight className="w-3 h-3" />
-                </button>
+              <div className="pt-2.5 border-t border-[var(--border-subtle)] flex items-center justify-between gap-2 text-[11px] font-mono">
+                <span className="text-[var(--text-muted)] truncate max-w-[95px] text-[10px]" title={bm.author}>
+                  {bm.author.split('(')[0].trim()}
+                </span>
+                
+                <div className="flex items-center space-x-1.5 shrink-0">
+                  {/* Nút Sao chép Prompt đã tối ưu */}
+                  <button
+                    onClick={() => handleCopyBenchmark(bm)}
+                    className="px-2 py-1 rounded-md border border-[var(--border-subtle)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center space-x-1 cursor-pointer transition-colors"
+                    title={lang === 'vi' ? 'Sao chép prompt tối ưu này vào bộ nhớ tạm' : 'Copy optimized prompt to clipboard'}
+                  >
+                    {copiedBenchmarkId === bm.id ? (
+                      <>
+                        <Check className="w-3 h-3 text-emerald-400" />
+                        <span className="text-emerald-400 font-bold">{lang === 'vi' ? 'Đã chép' : 'Copied'}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3" />
+                        <span>{lang === 'vi' ? 'Chép' : 'Copy'}</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* Nút Thử phân tích mẫu gốc */}
+                  <button
+                    onClick={() => {
+                      setPromptInput(bm.originalPrompt);
+                      handleInspect(bm.originalPrompt);
+                      window.scrollTo({ top: 120, behavior: 'smooth' });
+                    }}
+                    className="px-2.5 py-1 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white flex items-center space-x-1 cursor-pointer transition-colors shadow-xs"
+                    title={lang === 'vi' ? 'Nạp và kiểm định câu hỏi gốc' : 'Load and inspect original prompt'}
+                  >
+                    <span>{lang === 'vi' ? 'Phân tích' : 'Inspect'}</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
             </div>
           ))}

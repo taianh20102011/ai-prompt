@@ -12,7 +12,8 @@ import {
   Sun,
   Moon,
   Users,
-  Sparkles
+  Sparkles,
+  HelpCircle
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -27,6 +28,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
   const publicLinks = [
     { name: t.nav.home, path: '/', icon: Sparkles, badge: 'Intro' },
     { name: t.nav.inspector, path: '/inspector', icon: Compass, badge: 'Core' },
+    { name: t.nav.guide, path: '/guide', icon: HelpCircle, badge: 'Docs' },
     { name: t.nav.bot, path: '/trained-bot', icon: Bot, badge: 'Free ∞' },
     { name: t.nav.directory, path: '/directory', icon: Users, badge: 'Profiles' },
     { name: t.nav.joinTeam, path: '/dev-studio', icon: Terminal, badge: 'Dev' },

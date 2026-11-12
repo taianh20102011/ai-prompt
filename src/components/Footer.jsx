@@ -14,7 +14,8 @@ import {
   Shield, 
   CheckCircle2,
   Cpu,
-  Heart
+  Heart,
+  HelpCircle
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -95,6 +96,12 @@ export default function Footer() {
             <span>{t.footer.colPlatform}</span>
           </h4>
           <ul className="space-y-2 text-xs">
+            <li>
+              <Link to="/guide" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5 text-indigo-400 font-medium">
+                <HelpCircle className="w-3.5 h-3.5" />
+                <span>{t.nav.guide}</span>
+              </Link>
+            </li>
             <li>
               <Link to="/inspector" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5">
                 <Compass className="w-3.5 h-3.5 text-[var(--text-muted)]" />
