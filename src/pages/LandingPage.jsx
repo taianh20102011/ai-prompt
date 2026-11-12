@@ -1,359 +1,226 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
-  Sparkles, 
-  ArrowRight, 
-  ShieldCheck, 
   Compass, 
   Bot, 
   BookOpen, 
   GitBranch, 
-  Lock, 
-  ShieldAlert, 
-  CheckCircle2, 
-  Zap, 
-  Cpu, 
-  Layers, 
-  Code2, 
-  Terminal,
-  ExternalLink,
-  Award,
-  Users
+  ArrowRight, 
+  Sparkles,
+  ShieldCheck,
+  Check
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import ShinyText from '../components/react-bits/ShinyText';
-import SpotlightCard from '../components/react-bits/SpotlightCard';
 
 export default function LandingPage() {
   const navigate = useNavigate();
   const { t, lang } = useLanguage();
-  const [samplePrompt, setSamplePrompt] = useState(
+  const [promptInput, setPromptInput] = useState(
     lang === 'vi' 
-      ? 'Nâng cấp hệ thống web này chuẩn Anti-Slop và bảo mật cao' 
-      : 'Upgrade this web system with strict Anti-Slop principles and zero-trust security'
+      ? 'Viết cho tôi một lá thư chia sẻ khi bạn tôi mất việc...' 
+      : 'Draft an empathetic letter for a friend who unexpectedly lost their job...'
   );
 
   const handleStartInspection = (e) => {
     e?.preventDefault();
-    navigate('/inspector', { state: { initialPrompt: samplePrompt } });
+    if (!promptInput.trim()) return;
+    navigate('/inspector', { state: { initialPrompt: promptInput } });
   };
 
+  const samplePrompts = lang === 'vi' ? [
+    'Nâng cấp hệ thống web này',
+    'Nói chuyện khi tôi bế tắc',
+    'Refactor thuật toán này'
+  ] : [
+    'Upgrade this web system',
+    'Talk to me when I feel stuck',
+    'Refactor this algorithm'
+  ];
+
   return (
-    <div className="space-y-16 animate-fadeIn pb-12">
-      {/* 1. HERO SECTION */}
-      <div className="text-center space-y-6 pt-4 max-w-4xl mx-auto">
-        {/* Protection & Standard Badge */}
-        <div className="inline-flex flex-wrap items-center justify-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/25 text-emerald-400 font-mono text-xs">
-          <span className="flex items-center space-x-1 font-semibold">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>{t.security.recaptchaBadge.toUpperCase()}</span>
-          </span>
-          <span className="opacity-40">•</span>
-          <span className="text-[var(--text-secondary)]">ZERO-TRUST ENCLAVE</span>
-          <span className="opacity-40">•</span>
-          <span className="text-indigo-400">APACHE 2.0</span>
+    <div className="space-y-12 pb-10">
+      {/* 1. HERO & WORKBENCH */}
+      <div className="text-center space-y-4 max-w-3xl mx-auto pt-2">
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-mono text-[var(--text-secondary)]">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span>{lang === 'vi' ? 'Công cụ kiểm định Prompt mã nguồn mở' : 'Open-source Prompt Engineering Suite'}</span>
+          <span className="text-[var(--text-muted)]">•</span>
+          <span className="text-indigo-400 font-semibold">Apache 2.0</span>
         </div>
 
-        {/* Main Title */}
-        <div className="space-y-3">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--text-primary)] leading-[1.15]">
-            <ShinyText text={t.brand.name} speed={4} />
-          </h1>
-          <p className="text-lg sm:text-xl font-medium text-indigo-400 font-mono">
-            {t.brand.subtitle}
-          </p>
-        </div>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[var(--text-primary)]">
+          {t.brand.name}
+        </h1>
 
-        {/* Description */}
-        <p className="text-sm sm:text-base text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
-          {t.landing.heroSubtitle}
+        <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed max-w-xl mx-auto">
+          {lang === 'vi'
+            ? 'Phân tích cấu trúc câu lệnh theo chuẩn 4 trụ cột (R-C-O-C), đo độ đa dạng từ vựng và loại bỏ hoàn toàn ngôn ngữ máy móc sáo rỗng.'
+            : 'Audit prompt structure across 4 core pillars (Role, Context, Objective, Constraints), quantify vocabulary diversity, and eliminate robotic clichés.'}
         </p>
-
-        {/* Author Attribution Highlight */}
-        <div className="inline-block px-4 py-1.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-xs font-mono text-[var(--text-muted)]">
-          {t.footer.authorPrefix} <strong className="text-[var(--text-primary)]">{t.common.authorName}</strong> • {lang === 'vi' ? 'Giấy phép:' : 'License:'} <span className="text-indigo-400 font-semibold">Apache License 2.0</span>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <button
-            onClick={() => navigate('/inspector')}
-            className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-semibold flex items-center space-x-2 transition-colors cursor-pointer shadow-md shadow-indigo-600/20"
-          >
-            <Compass className="w-4 h-4" />
-            <span>{t.landing.btnInspect}</span>
-            <ArrowRight className="w-4 h-4 ml-1" />
-          </button>
-
-          <button
-            onClick={() => navigate('/trained-bot')}
-            className="neu-button px-5 py-3 text-xs font-mono font-semibold flex items-center space-x-2 text-indigo-400 cursor-pointer"
-          >
-            <Bot className="w-4 h-4" />
-            <span>{t.landing.btnChatBot}</span>
-          </button>
-
-          <button
-            onClick={() => navigate('/research-guide')}
-            className="neu-button px-5 py-3 text-xs font-mono font-semibold flex items-center space-x-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
-          >
-            <BookOpen className="w-4 h-4 text-amber-400" />
-            <span>{t.landing.btnResearch}</span>
-          </button>
-        </div>
       </div>
 
-      {/* 2. KHỐI TRẢ LỜI: HỆ THỐNG ĐƯỢC BẢO VỆ BỞI CÁI GÌ? (SECURITY & TRUST MATRIX) */}
-      <div className="space-y-4 max-w-5xl mx-auto">
-        <div className="space-y-1">
-          <div className="flex items-center space-x-2 text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">
-            <ShieldCheck className="w-4 h-4" />
-            <span>{lang === 'vi' ? 'LỚP PHÒNG THỦ & BẢO MẬT HỆ THỐNG' : 'SYSTEM SECURITY & DEFENSE MATRIX'}</span>
+      {/* 2. DIRECT PROMPT INPUT BENCH (Immediate utility, zero marketing fluff) */}
+      <div className="max-w-3xl mx-auto craft-card p-4 sm:p-5 space-y-3">
+        <form onSubmit={handleStartInspection} className="space-y-3">
+          <textarea
+            rows={4}
+            value={promptInput}
+            onChange={(e) => setPromptInput(e.target.value)}
+            className="craft-input w-full p-3.5 text-xs sm:text-sm font-mono text-[var(--text-primary)] resize-y leading-relaxed"
+            placeholder={t.inspector.placeholder}
+          />
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+            {/* Quick sample chips */}
+            <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono">
+              <span className="text-[var(--text-muted)] text-[11px] mr-1">{t.landing.sampleTag}</span>
+              {samplePrompts.map((sample, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setPromptInput(sample)}
+                  className="px-2.5 py-1 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-page)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-[11px] transition-colors cursor-pointer"
+                >
+                  {sample}
+                </button>
+              ))}
+            </div>
+
+            <button
+              type="submit"
+              disabled={!promptInput.trim()}
+              className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors cursor-pointer shrink-0 disabled:opacity-40"
+            >
+              <span>{t.inspector.btnInspect}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
-          <h2 className="text-2xl font-bold text-[var(--text-primary)]">
-            {lang === 'vi' ? 'Hệ Thống Được Bảo Vệ Bởi Những Công Nghệ Nào?' : 'What Technologies Protect This System?'}
-          </h2>
-          <p className="text-xs text-[var(--text-secondary)]">
-            {lang === 'vi' 
-              ? 'Mọi thao tác, phiên đăng nhập và dữ liệu trao đổi trong Prompt AI PNIT được giám sát bởi 3 lớp phòng ngự độc lập:' 
-              : 'Every session, inspection payload, and administrative action in Prompt AI PNIT is governed by 3 distinct defense layers:'}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Card 1: Google reCAPTCHA v3 */}
-          <SpotlightCard className="p-5 space-y-3 border-emerald-500/30">
-            <div className="flex items-center justify-between">
-              <div className="w-9 h-9 rounded-xl bg-emerald-950/40 text-emerald-400 border border-emerald-800/50 flex items-center justify-center font-bold font-mono text-xs">
-                v3
-              </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/60 text-emerald-400 border border-emerald-800">
-                ACTIVE DEFENSE
-              </span>
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-sm font-bold text-[var(--text-primary)]">
-                Google reCAPTCHA v3
-              </h3>
-              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                {lang === 'vi'
-                  ? 'Đánh giá rủi ro vô hình theo thời gian thực (Realtime Risk Score 0.0 - 1.0). Ngăn chặn 100% bot spam, bot tự động quét và tấn công vét cạn tài nguyên mà không làm phiền người dùng bằng captcha giải đố hình ảnh.'
-                  : 'Frictionless, invisible risk scoring (Score 0.0 - 1.0). Neutralizes automated scraping and denial-of-service spam with zero disruptive puzzle challenges.'}
-              </p>
-            </div>
-          </SpotlightCard>
-
-          {/* Card 2: SHA-256 Zero-Trust Enclave */}
-          <SpotlightCard className="p-5 space-y-3 border-indigo-500/30">
-            <div className="flex items-center justify-between">
-              <div className="w-9 h-9 rounded-xl bg-indigo-950/40 text-indigo-400 border border-indigo-800/50 flex items-center justify-center">
-                <Lock className="w-4 h-4" />
-              </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-950/60 text-indigo-300 border border-indigo-800">
-                ZERO-TRUST
-              </span>
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-sm font-bold text-[var(--text-primary)]">
-                SHA-256 Enclave Session
-              </h3>
-              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                {lang === 'vi'
-                  ? 'Phiên làm việc quản trị được mã hóa bằng Cookie HttpOnly 4 giờ và chữ ký số HMAC SHA-256 Client Fingerprinting. Miễn nhiễm với tấn công XSS trộm Session Storage hay CSRF đánh cắp quyền hạn.'
-                  : 'Administrative sessions backed by 4-hour HttpOnly cookies and HMAC SHA-256 client fingerprinting, resilient against XSS storage hijacking and CSRF threats.'}
-              </p>
-            </div>
-          </SpotlightCard>
-
-          {/* Card 3: Anti-IDOR Masked Hash */}
-          <SpotlightCard className="p-5 space-y-3 border-amber-500/30">
-            <div className="flex items-center justify-between">
-              <div className="w-9 h-9 rounded-xl bg-amber-950/40 text-amber-400 border border-amber-800/50 flex items-center justify-center">
-                <ShieldAlert className="w-4 h-4" />
-              </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-800">
-                ANTI-IDOR
-              </span>
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-sm font-bold text-[var(--text-primary)]">
-                {lang === 'vi' ? 'Mã Hóa Ẩn ID (Anti-IDOR)' : 'Masked Hash Anti-IDOR'}
-              </h3>
-              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                {lang === 'vi'
-                  ? 'ID thực trong cơ sở dữ liệu bị che giấu hoàn toàn trước client và thay thế bằng chuỗi Masked Hash an toàn một chiều. Ngăn chặn triệt để hành vi trích xuất dữ liệu trái phép (Insecure Direct Object Reference).'
-                  : 'Real database identifiers are completely concealed behind one-way cryptographic hashes, preventing Insecure Direct Object Reference data leakage.'}
-              </p>
-            </div>
-          </SpotlightCard>
-        </div>
+        </form>
       </div>
 
-      {/* 3. KHÁM PHÁ CÁC TÍNH NĂNG CHÍNH (FEATURE HUBS) */}
-      <div className="space-y-4 max-w-5xl mx-auto">
-        <div className="space-y-1">
-          <div className="flex items-center space-x-2 text-xs font-mono text-indigo-400 font-bold uppercase tracking-wider">
-            <Layers className="w-4 h-4" />
-            <span>{lang === 'vi' ? 'KIẾN TRÚC PHÂN HỆ CÔNG CỤ' : 'CORE MODULE ARCHITECTURE'}</span>
-          </div>
-          <h2 className="text-2xl font-bold text-[var(--text-primary)]">
-            {lang === 'vi' ? 'Các Module Chuyên Nghiệp Trong Prompt AI PNIT' : 'Professional Modules in Prompt AI PNIT'}
-          </h2>
+      {/* 3. FOUR CORE MODULES (Clean, flat grid without spotlights or bouncy scaling) */}
+      <div className="max-w-4xl mx-auto space-y-3">
+        <div className="text-xs font-mono uppercase tracking-wider text-[var(--text-muted)] px-1">
+          {lang === 'vi' ? 'Các phân hệ trong nền tảng' : 'Platform Modules'}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
           {/* Module 1: Inspector */}
           <Link to="/inspector" className="block group">
-            <div className="craft-card p-6 space-y-3 h-full flex flex-col justify-between transition-colors">
-              <div className="space-y-2">
+            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-indigo-500/40 transition-colors">
+              <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <div className="p-2 rounded-xl bg-indigo-950/40 text-indigo-400 border border-indigo-900/40">
-                    <Compass className="w-5 h-5" />
+                  <div className="flex items-center space-x-2 font-semibold text-sm text-[var(--text-primary)]">
+                    <Compass className="w-4 h-4 text-indigo-400" />
+                    <span>{t.nav.inspector}</span>
                   </div>
-                  <span className="text-xs font-mono text-indigo-400 flex items-center space-x-1 transition-colors">
-                    <span>{lang === 'vi' ? 'Mở công cụ' : 'Open Module'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
+                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-indigo-400 transition-colors" />
                 </div>
-                <h3 className="text-base font-bold text-[var(--text-primary)]">
-                  {t.landing.feature1Title}
-                </h3>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  {t.landing.feature1Desc}
+                  {lang === 'vi' 
+                    ? 'Đánh giá cấu trúc prompt theo 4 trụ cột (Role, Context, Objective, Constraints), phát hiện từ ngữ mơ hồ và tự động tái cấu trúc.'
+                    : 'Analyze prompt structure across 4 pillars, detect ambiguity, and generate production-ready rewritten prompts.'}
                 </p>
               </div>
-              <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
-                <span>{lang === 'vi' ? 'Chấm điểm /100' : 'Score /100'}</span>
-                <span>{lang === 'vi' ? 'Tự động viết lại Prompt chuẩn' : 'Auto Standardized Rewrite'}</span>
+              <div className="pt-2 text-[11px] font-mono text-[var(--text-muted)] flex items-center space-x-3">
+                <span>R-C-O-C Audit</span>
+                <span>•</span>
+                <span>Lexical Diversity</span>
               </div>
             </div>
           </Link>
 
           {/* Module 2: Cortex Bot */}
           <Link to="/trained-bot" className="block group">
-            <div className="craft-card p-6 space-y-3 h-full flex flex-col justify-between transition-colors">
-              <div className="space-y-2">
+            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-indigo-500/40 transition-colors">
+              <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <div className="p-2 rounded-xl bg-purple-950/40 text-purple-400 border border-purple-900/40">
-                    <Bot className="w-5 h-5" />
+                  <div className="flex items-center space-x-2 font-semibold text-sm text-[var(--text-primary)]">
+                    <Bot className="w-4 h-4 text-purple-400" />
+                    <span>{t.nav.bot}</span>
                   </div>
-                  <span className="text-xs font-mono text-purple-400 flex items-center space-x-1 transition-colors">
-                    <span>{lang === 'vi' ? 'Mở trợ lý' : 'Open Assistant'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
+                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-purple-400 transition-colors" />
                 </div>
-                <h3 className="text-base font-bold text-[var(--text-primary)]">
-                  {t.landing.feature2Title}
-                </h3>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  {t.landing.feature2Desc}
+                  {lang === 'vi'
+                    ? 'Trợ lý AI hỗ trợ giải quyết bài toán kỹ thuật, viết prompt chuẩn và trả lời theo chuỗi suy luận từng bước (Chain-of-Thought).'
+                    : 'AI assistant for technical inquiries, prompt drafting, and transparent step-by-step Chain-of-Thought reasoning.'}
                 </p>
               </div>
-              <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
-                <span>{lang === 'vi' ? '4 Chế độ suy luận' : '4 Reasoning Modes'}</span>
-                <span>Vercel Edge DB Sync</span>
+              <div className="pt-2 text-[11px] font-mono text-[var(--text-muted)] flex items-center space-x-3">
+                <span>Chain-of-Thought</span>
+                <span>•</span>
+                <span>Multi-Mode Reasoning</span>
               </div>
             </div>
           </Link>
 
-          {/* Module 3: Research Docs Hub */}
+          {/* Module 3: Research Hub */}
           <Link to="/research-guide" className="block group">
-            <div className="craft-card p-6 space-y-3 h-full flex flex-col justify-between transition-colors">
-              <div className="space-y-2">
+            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-indigo-500/40 transition-colors">
+              <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <div className="p-2 rounded-xl bg-amber-950/40 text-amber-400 border border-amber-900/40">
-                    <BookOpen className="w-5 h-5" />
+                  <div className="flex items-center space-x-2 font-semibold text-sm text-[var(--text-primary)]">
+                    <BookOpen className="w-4 h-4 text-amber-400" />
+                    <span>{t.nav.research}</span>
                   </div>
-                  <span className="text-xs font-mono text-amber-400 flex items-center space-x-1 transition-colors">
-                    <span>{lang === 'vi' ? 'Đọc tài liệu' : 'Read Paper'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
+                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-amber-400 transition-colors" />
                 </div>
-                <h3 className="text-base font-bold text-[var(--text-primary)]">
-                  {t.landing.feature3Title}
-                </h3>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  {t.landing.feature3Desc}
+                  {lang === 'vi'
+                    ? 'Tài liệu nghiên cứu khoa học giải mã cơ chế Alignment Tax trong RLHF và khuôn khổ H-E-A-R để tạo prompt tự nhiên, sâu sắc.'
+                    : 'Research dissertation dissecting RLHF Alignment Tax and establishing the H-E-A-R framework for human-centric dialogues.'}
                 </p>
               </div>
-              <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
-                <span>{lang === 'vi' ? 'Song ngữ VI & EN' : 'Bilingual VI & EN'}</span>
-                <span>{lang === 'vi' ? 'Tải lên & Tải về .md' : 'Upload & Download .md'}</span>
+              <div className="pt-2 text-[11px] font-mono text-[var(--text-muted)] flex items-center space-x-3">
+                <span>Stanford / OpenAI Citations</span>
+                <span>•</span>
+                <span>BibTeX Support</span>
               </div>
             </div>
           </Link>
 
-          {/* Module 4: Global AI Ecosystem */}
+          {/* Module 4: Repos */}
           <Link to="/news" className="block group">
-            <div className="craft-card p-6 space-y-3 h-full flex flex-col justify-between transition-colors">
-              <div className="space-y-2">
+            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-indigo-500/40 transition-colors">
+              <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <div className="p-2 rounded-xl bg-emerald-950/40 text-emerald-400 border border-emerald-900/40">
-                    <GitBranch className="w-5 h-5" />
+                  <div className="flex items-center space-x-2 font-semibold text-sm text-[var(--text-primary)]">
+                    <GitBranch className="w-4 h-4 text-emerald-400" />
+                    <span>{t.nav.repos}</span>
                   </div>
-                  <span className="text-xs font-mono text-emerald-400 flex items-center space-x-1 transition-colors">
-                    <span>{lang === 'vi' ? 'Xem kho repos' : 'Browse Repos'}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </span>
+                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-emerald-400 transition-colors" />
                 </div>
-                <h3 className="text-base font-bold text-[var(--text-primary)]">
-                  {t.landing.feature4Title}
-                </h3>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  {t.landing.feature4Desc}
+                  {lang === 'vi'
+                    ? 'Bộ sưu tập chọn lọc các kho mã nguồn mở AI uy tín: Gemini SDKs, AutoGen, DeepSeek, Ollama, LangChain.'
+                    : 'Curated directory of prominent open-source AI repositories: Gemini SDKs, AutoGen, DeepSeek, Ollama, LangChain.'}
                 </p>
               </div>
-              <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
-                <span>Realtime GitHub Search</span>
-                <span>50+ Top Repos Fallback</span>
+              <div className="pt-2 text-[11px] font-mono text-[var(--text-muted)] flex items-center space-x-3">
+                <span>Live GitHub Sync</span>
+                <span>•</span>
+                <span>50+ Top Repos</span>
               </div>
             </div>
           </Link>
         </div>
       </div>
 
-      {/* 4. HỘP DÙNG THỬ NHANH PROMPT (INTERACTIVE TEST DRIVE) */}
-      <div className="craft-card p-6 sm:p-8 space-y-4 max-w-4xl mx-auto border-indigo-500/30">
-        <div className="space-y-1">
-          <div className="flex items-center space-x-2 text-xs font-mono text-indigo-400 font-bold uppercase tracking-wider">
-            <Zap className="w-4 h-4" />
-            <span>{lang === 'vi' ? 'TRẢI NGHIỆM TRỰC TIẾP' : 'INTERACTIVE TEST DRIVE'}</span>
-          </div>
-          <h3 className="text-lg font-bold text-[var(--text-primary)]">
-            {t.landing.quickTrialTitle}
-          </h3>
-          <p className="text-xs text-[var(--text-secondary)]">
-            {lang === 'vi' 
-              ? 'Điền câu lệnh bất kỳ của bạn, hệ thống sẽ mở ngay trang Kiểm Định để tính điểm 4 trụ cột và đề xuất Prompt tối ưu:' 
-              : 'Enter any prompt to instantly compute 4-pillar AST scores and receive a standardized rewrite:'}
-          </p>
+      {/* 4. DISCREET ATTRIBUTION & SECURITY FOOTER NOTE */}
+      <div className="max-w-4xl mx-auto pt-4 text-center text-xs font-mono text-[var(--text-muted)] space-y-1.5">
+        <div>
+          <span>{t.footer.authorPrefix} </span>
+          <strong className="text-[var(--text-primary)]">{t.common.authorName}</strong>
+          <span> • </span>
+          <span>{lang === 'vi' ? 'Bản quyền theo chuẩn ' : 'Licensed under '}</span>
+          <span className="text-indigo-400 font-semibold">Apache License 2.0</span>
         </div>
-
-        <form onSubmit={handleStartInspection} className="space-y-3">
-          <textarea
-            rows={3}
-            value={samplePrompt}
-            onChange={(e) => setSamplePrompt(e.target.value)}
-            className="craft-input w-full p-4 text-xs font-mono text-[var(--text-primary)] resize-y leading-relaxed"
-            placeholder={t.landing.quickTrialPlaceholder}
-          />
-
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
-            <div className="flex items-center space-x-2 text-[11px] font-mono text-[var(--text-muted)]">
-              <span>{lang === 'vi' ? `Độ dài: ${samplePrompt.trim().split(/\s+/).filter(Boolean).length} từ` : `Length: ${samplePrompt.trim().split(/\s+/).filter(Boolean).length} words`}</span>
-              <span>•</span>
-              <span className="text-emerald-400">{lang === 'vi' ? 'AST Heuristic Parser sẵn sàng' : 'AST Heuristic Parser Ready'}</span>
-            </div>
-
-            <button
-              type="submit"
-              className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-semibold flex items-center justify-center space-x-2 transition-colors cursor-pointer shadow-xs"
-            >
-              <span>{t.landing.quickTrialBtn}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </form>
+        <div className="text-[11px] opacity-75">
+          {lang === 'vi' 
+            ? 'Hệ thống bảo vệ tự động bằng Google reCAPTCHA v3 & Xác thực Enclave an toàn.' 
+            : 'Automated protection via Google reCAPTCHA v3 & Secure Enclave verification.'}
+        </div>
       </div>
     </div>
   );

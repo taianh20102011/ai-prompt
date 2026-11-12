@@ -23,9 +23,6 @@ import {
 import { analyzePromptLocally } from '../services/promptService';
 import { getStorageData, DEFAULT_BENCHMARKS } from '../services/mockStorage';
 import { useLanguage } from '../context/LanguageContext';
-import SpotlightCard from '../components/react-bits/SpotlightCard';
-import ShinyText from '../components/react-bits/ShinyText';
-import DecryptedText from '../components/react-bits/DecryptedText';
 
 const CATEGORIES_VI = [
   'Tự động phát hiện (Auto-detect)',
@@ -94,28 +91,28 @@ export default function UserAnalyzer() {
 
   return (
     <div className="space-y-10 max-w-5xl mx-auto">
-      {/* Precision Hero Header */}
-      <section className="space-y-2 border-b border-[var(--border-subtle)] pb-6">
+      {/* Clean Header */}
+      <section className="space-y-2 border-b border-[var(--border-subtle)] pb-5">
         <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex items-center space-x-2 text-xs font-mono text-[var(--text-secondary)] px-3 py-1 rounded-full craft-card">
+          <div className="inline-flex items-center space-x-2 text-xs font-mono text-[var(--text-secondary)] px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
             <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-            <DecryptedText text="SPEC-DRIVEN PROMPT AUDITING & SYNTHESIZER" speed={30} maxIterations={8} />
+            <span>{lang === 'vi' ? 'Kiểm định cấu trúc câu lệnh' : 'Prompt Structure Analyzer'}</span>
           </div>
-          <span className="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-950/40 text-emerald-400 border border-emerald-800/50 text-[11px] font-mono">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>{t.security.recaptchaBadge}</span>
+          <span className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[11px] font-mono text-[var(--text-muted)]">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Google reCAPTCHA v3</span>
           </span>
         </div>
-        <h1>
-          <ShinyText text={t.inspector.title} speed={4} className="text-2xl sm:text-3xl font-semibold tracking-tight block" />
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text-primary)]">
+          {t.inspector.title}
         </h1>
-        <p className="text-sm text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+        <p className="text-xs sm:text-sm text-[var(--text-secondary)] max-w-2xl leading-relaxed">
           {t.inspector.subtitle}
         </p>
       </section>
 
-      {/* Input Workbench Card with React Bits Spotlight (No bouncy jump) */}
-      <SpotlightCard className="p-6 sm:p-7 space-y-5">
+      {/* Input Workbench Card */}
+      <div className="craft-card p-5 sm:p-6 space-y-4">
         <form onSubmit={handleInspect} className="space-y-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <span className="text-xs font-mono font-medium text-[var(--text-secondary)] uppercase tracking-wider flex items-center space-x-1.5">
@@ -373,14 +370,14 @@ export default function UserAnalyzer() {
             </div>
           </div>
         )}
-      </SpotlightCard>
+      </div>
 
       {/* Production Tested Benchmarks Grid */}
       <section className="space-y-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg font-semibold text-[var(--text-primary)]">Prompt Benchmarks</h2>
-            <p className="text-xs text-[var(--text-secondary)] mt-0.5">Mẫu prompt đã kiểm nghiệm thực tế từ các kỹ sư AI.</p>
+            <h2 className="text-base font-semibold text-[var(--text-primary)]">Prompt Benchmarks</h2>
+            <p className="text-xs text-[var(--text-secondary)] mt-0.5">{lang === 'vi' ? 'Mẫu prompt thực tế chọn lọc.' : 'Curated prompt examples.'}</p>
           </div>
 
           <div className="relative w-full sm:w-64">
@@ -389,40 +386,40 @@ export default function UserAnalyzer() {
               type="text"
               value={searchBenchmark}
               onChange={(e) => setSearchBenchmark(e.target.value)}
-              placeholder="Lọc theo tag, từ khóa..."
+              placeholder={lang === 'vi' ? 'Lọc theo tag, từ khóa...' : 'Filter by tag, keyword...'}
               className="craft-input w-full text-xs pl-8 pr-3 py-2"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {filteredBenchmarks.map((bm) => (
-            <SpotlightCard key={bm.id} className="p-5 flex flex-col justify-between space-y-3">
-              <div className="space-y-2.5">
+            <div key={bm.id} className="craft-card p-4 flex flex-col justify-between space-y-3">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between text-[11px] font-mono">
                   <span className="text-indigo-400 font-semibold">{bm.industry}</span>
                   <span className="text-amber-400 font-medium">★ {bm.rating}</span>
                 </div>
                 <h3 className="text-sm font-semibold text-[var(--text-primary)] leading-snug">{bm.title}</h3>
-                <div className="p-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[11px] font-mono text-[var(--text-secondary)] max-h-28 overflow-y-auto leading-relaxed">
+                <div className="p-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[11px] font-mono text-[var(--text-secondary)] max-h-24 overflow-y-auto leading-relaxed">
                   {bm.optimizedPrompt}
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono">
+              <div className="pt-2.5 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono">
                 <span className="text-[var(--text-muted)] truncate max-w-[120px]">{bm.author}</span>
                 <button
                   onClick={() => {
                     setPromptInput(bm.originalPrompt);
                     window.scrollTo({ top: 100, behavior: 'smooth' });
                   }}
-                  className="neu-button px-2.5 py-1 text-[var(--text-primary)] flex items-center space-x-1 cursor-pointer"
+                  className="px-2.5 py-1 rounded-md border border-[var(--border-subtle)] hover:bg-[var(--bg-elevated)] text-[var(--text-primary)] flex items-center space-x-1 cursor-pointer transition-colors"
                 >
-                  <span>Use Template</span>
+                  <span>{lang === 'vi' ? 'Dùng mẫu' : 'Use Template'}</span>
                   <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
-            </SpotlightCard>
+            </div>
           ))}
         </div>
       </section>

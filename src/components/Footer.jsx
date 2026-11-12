@@ -17,7 +17,6 @@ import {
   Heart
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-import ShinyText from './react-bits/ShinyText';
 
 export default function Footer() {
   const { t, lang } = useLanguage();

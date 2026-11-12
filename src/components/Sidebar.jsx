@@ -22,7 +22,6 @@ import {
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
-import ShinyText from './react-bits/ShinyText';
 
 export default function Sidebar({ isCollapsed, setIsCollapsed }) {
   const location = useLocation();
@@ -88,7 +87,9 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
             </div>
             {(!isCollapsed || mobileOpen) && (
               <div className="truncate">
-                <ShinyText text="Prompt AI PNIT" speed={4} className="text-sm font-semibold tracking-tight block" />
+                <span className="text-sm font-bold tracking-tight text-[var(--text-primary)] block">
+                  Prompt AI PNIT
+                </span>
                 <span className="text-[10px] text-[var(--text-muted)] font-mono tracking-wider uppercase block -mt-0.5">
                   Intelligence Suite
                 </span>

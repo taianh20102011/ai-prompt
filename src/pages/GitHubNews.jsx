@@ -19,8 +19,6 @@ import {
   FileCode
 } from 'lucide-react';
 import { fetchAIGitHubNews } from '../services/promptService';
-import SpotlightCard from '../components/react-bits/SpotlightCard';
-import ShinyText from '../components/react-bits/ShinyText';
 import { useLanguage } from '../context/LanguageContext';
 
 const CATEGORIES_VI = [
@@ -99,8 +97,8 @@ export default function GitHubNews() {
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)] flex items-center space-x-2">
-              <ShinyText text={t.repos.title} speed={4} />
+            <h1 className="text-2xl font-bold text-[var(--text-primary)] flex items-center space-x-2">
+              <span>{t.repos.title}</span>
             </h1>
             <p className="text-xs text-[var(--text-secondary)] mt-0.5">
               {t.repos.subtitle}
@@ -212,9 +210,9 @@ export default function GitHubNews() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fadeIn">
           {repos.map((repo) => (
-            <SpotlightCard
+            <div
               key={repo.id}
-              className="p-5 flex flex-col justify-between space-y-3"
+              className="craft-card p-4 flex flex-col justify-between space-y-3 hover:border-indigo-500/40 transition-colors"
             >
               <div className="space-y-2.5">
                 <div className="flex items-center space-x-2.5">
@@ -263,7 +261,7 @@ export default function GitHubNews() {
                   <span>{t.repos.visitRepo}</span>
                 </a>
               </div>
-            </SpotlightCard>
+            </div>
           ))}
         </div>
       )}
