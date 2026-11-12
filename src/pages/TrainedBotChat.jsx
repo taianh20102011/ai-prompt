@@ -21,7 +21,8 @@ import {
   ChevronDown,
   ChevronUp,
   BrainCircuit,
-  Database
+  Database,
+  HardDrive
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { chatWithTrainedBot, BOT_MODES } from '../services/botService';
@@ -66,7 +67,35 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
   const [storageMetrics, setStorageMetrics] = useState(getStorageMetrics());
   const [syncToast, setSyncToast] = useState('');
   const [openThinkingId, setOpenThinkingId] = useState(null);
+  const [storageMode, setStorageMode] = useState(() => {
+    return localStorage.getItem('promptcraft_storage_mode') || 'web'; // 'web' | 'cloud'
+  });
+  const [showStorageMenu, setShowStorageMenu] = useState(false);
+  const storageMenuRef = useRef(null);
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (storageMenuRef.current && !storageMenuRef.current.contains(e.target)) {
+        setShowStorageMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectStorageMode = async (mode) => {
+    setStorageMode(mode);
+    localStorage.setItem('promptcraft_storage_mode', mode);
+    setShowStorageMenu(false);
+
+    if (mode === 'cloud') {
+      await handleCloudSync();
+    } else {
+      setSyncToast(lang === 'vi' ? 'Đã kích hoạt: Lưu trữ trên Web máy cá nhân (Mặc định)' : 'Active: Web Local Storage mode (Default)');
+      setTimeout(() => setSyncToast(''), 3000);
+    }
+  };
 
   const adminConfig = getStorageData('promptcraft_system_prompt_cfg', DEFAULT_ADMIN_CONFIG);
   const benchmarks = getStorageData('promptcraft_benchmarks', DEFAULT_BENCHMARKS);
@@ -178,33 +207,116 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
           </p>
         </div>
 
-        {/* Action Controls */}
-        <div className="flex items-center space-x-2">
+        {/* Storage Mode Selector & Actions (Mặc định: Lưu bằng Web) */}
+        <div className="relative" ref={storageMenuRef}>
           <button
-            onClick={handleCloudSync}
-            className="px-3 py-1.5 rounded-lg border border-emerald-900/40 bg-emerald-950/20 text-xs font-mono flex items-center space-x-1.5 text-emerald-400 hover:bg-emerald-950/40 cursor-pointer transition-colors"
-            title="Đồng bộ ngay lên Vercel Database / Edge Storage"
+            type="button"
+            onClick={() => setShowStorageMenu(!showStorageMenu)}
+            className="px-3.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:border-indigo-500/40 text-xs font-mono flex items-center space-x-2 text-[var(--text-primary)] cursor-pointer transition-all shadow-xs"
+            title={lang === 'vi' ? 'Chọn chế độ lưu trữ dữ liệu' : 'Select storage mode'}
           >
-            <Database className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">{t.cortexBot.syncVercel}</span>
+            {storageMode === 'cloud' ? (
+              <Cloud className="w-3.5 h-3.5 text-emerald-400" />
+            ) : (
+              <HardDrive className="w-3.5 h-3.5 text-indigo-400" />
+            )}
+            <span className="font-semibold">
+              {storageMode === 'cloud'
+                ? (lang === 'vi' ? 'Đồng Bộ Cloud' : 'Cloud Sync')
+                : (lang === 'vi' ? 'Lưu bằng Web (Mặc định)' : 'Web Storage (Default)')}
+            </span>
+            <ChevronDown className={`w-3.5 h-3.5 text-[var(--text-muted)] transition-transform duration-200 ${showStorageMenu ? 'rotate-180 text-indigo-400' : ''}`} />
           </button>
 
-          <button
-            onClick={exportChatHistory}
-            className="px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-xs font-mono flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer transition-colors"
-            title="Tải toàn bộ lịch sử tin nhắn về máy tính (.json)"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">JSON</span>
-          </button>
+          {/* Storage Options Dropdown */}
+          {showStorageMenu && (
+            <div className="absolute right-0 mt-2 w-72 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-2 shadow-2xl z-50 space-y-1.5 text-xs font-mono animate-fadeIn">
+              <div className="px-2 py-1 text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider border-b border-[var(--border-subtle)]">
+                {lang === 'vi' ? 'Chọn chế độ lưu trữ' : 'Select Storage Mode'}
+              </div>
 
-          <button
-            onClick={clearChat}
-            className="px-3 py-1.5 rounded-lg border border-rose-900/30 bg-rose-950/20 hover:bg-rose-950/40 text-xs font-mono flex items-center space-x-1.5 text-rose-400 hover:text-rose-300 cursor-pointer transition-colors"
-            title={t.cortexBot.clearHistory}
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-          </button>
+              {/* Chế độ 1: Lưu bằng Web (Trình duyệt - Mặc định) */}
+              <button
+                type="button"
+                onClick={() => selectStorageMode('web')}
+                className={`w-full p-2.5 rounded-lg text-left flex items-start space-x-2.5 transition-colors cursor-pointer ${
+                  storageMode === 'web'
+                    ? 'bg-indigo-600/15 border border-indigo-500/40 text-[var(--text-primary)]'
+                    : 'hover:bg-[var(--bg-elevated)] text-[var(--text-secondary)] border border-transparent'
+                }`}
+              >
+                <HardDrive className={`w-4 h-4 mt-0.5 shrink-0 ${storageMode === 'web' ? 'text-indigo-400' : 'text-[var(--text-muted)]'}`} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-xs text-[var(--text-primary)]">
+                      {lang === 'vi' ? 'Lưu bằng Web' : 'Web Browser Storage'}
+                    </span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 font-bold">
+                      {lang === 'vi' ? 'Mặc định' : 'Default'}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-[var(--text-muted)] leading-relaxed mt-0.5">
+                    {lang === 'vi' ? 'Lưu trực tiếp trong Local Storage của trình duyệt máy bạn (1 GB), riêng tư 100%.' : 'Stored securely inside your local browser storage (1 GB), 100% client-side.'}
+                  </p>
+                </div>
+              </button>
+
+              {/* Chế độ 2: Đồng bộ Đám mây (Cloud) */}
+              <button
+                type="button"
+                onClick={() => selectStorageMode('cloud')}
+                className={`w-full p-2.5 rounded-lg text-left flex items-start space-x-2.5 transition-colors cursor-pointer ${
+                  storageMode === 'cloud'
+                    ? 'bg-emerald-600/15 border border-emerald-500/40 text-[var(--text-primary)]'
+                    : 'hover:bg-[var(--bg-elevated)] text-[var(--text-secondary)] border border-transparent'
+                }`}
+              >
+                <Cloud className={`w-4 h-4 mt-0.5 shrink-0 ${storageMode === 'cloud' ? 'text-emerald-400' : 'text-[var(--text-muted)]'}`} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-xs text-[var(--text-primary)]">
+                      {lang === 'vi' ? 'Đồng Bộ Đám Mây' : 'Cloud Sync (Vercel DB)'}
+                    </span>
+                    {storageMode === 'cloud' && (
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-bold">
+                        Active
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-[var(--text-muted)] leading-relaxed mt-0.5">
+                    {lang === 'vi' ? 'Tự động sao lưu và đồng bộ lên Vercel Edge Database an toàn.' : 'Sync to secure Vercel Edge Database for multi-device access.'}
+                  </p>
+                </div>
+              </button>
+
+              {/* Tùy chọn Phụ: Tải JSON & Xóa lịch sử */}
+              <div className="pt-1.5 border-t border-[var(--border-subtle)] space-y-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    exportChatHistory();
+                    setShowStorageMenu(false);
+                  }}
+                  className="w-full px-2.5 py-1.5 rounded-md text-left flex items-center space-x-2 hover:bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+                >
+                  <Download className="w-3.5 h-3.5 text-indigo-400" />
+                  <span>{lang === 'vi' ? 'Tải tệp tin nhắn (.json)' : 'Download JSON history'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearChat();
+                    setShowStorageMenu(false);
+                  }}
+                  className="w-full px-2.5 py-1.5 rounded-md text-left flex items-center space-x-2 hover:bg-rose-950/30 text-rose-400 hover:text-rose-300 transition-colors cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>{lang === 'vi' ? 'Xóa lịch sử trò chuyện' : 'Clear chat history'}</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
