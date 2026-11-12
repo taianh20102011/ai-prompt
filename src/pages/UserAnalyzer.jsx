@@ -20,7 +20,8 @@ import {
   Sliders,
   HelpCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  RefreshCw
 } from 'lucide-react';
 import { analyzePromptLocally, TARGET_AI_MODELS } from '../services/promptService';
 import { getStorageData, DEFAULT_BENCHMARKS } from '../services/mockStorage';
@@ -82,8 +83,13 @@ export default function UserAnalyzer() {
   }, [searchBenchmark]);
 
   const handleInspect = async (promptOverride, targetAIOverride) => {
-    const textToAnalyze = typeof promptOverride === 'string' ? promptOverride : promptInput;
-    if (!textToAnalyze || !textToAnalyze.trim()) return;
+    let textToAnalyze = typeof promptOverride === 'string' ? promptOverride : promptInput;
+    if (!textToAnalyze || !textToAnalyze.trim()) {
+      textToAnalyze = lang === 'vi' 
+        ? 'Nâng cấp hệ thống web này cho mượt mà, chuyên nghiệp và bảo mật hơn' 
+        : 'Upgrade this web application architecture for better performance, smoothness and security';
+      setPromptInput(textToAnalyze);
+    }
 
     const activeTarget = targetAIOverride || targetAI;
     setIsAnalyzing(true);
@@ -236,19 +242,26 @@ export default function UserAnalyzer() {
           <div className="flex items-center justify-between pt-1">
             <button
               type="button"
-              onClick={() => setPromptInput(lang === 'vi' ? 'nâng cấp hệ thống web này' : 'upgrade this web application architecture')}
-              className="px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-page)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+              onClick={() => {
+                const sample = lang === 'vi' ? 'Nâng cấp hệ thống web này cho mượt mà, chuyên nghiệp và bảo mật hơn' : 'Upgrade this web application architecture for better performance, smoothness and security';
+                setPromptInput(sample);
+                handleInspect(sample);
+              }}
+              className="px-3.5 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-page)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
             >
               {t.inspector.btnSample}
             </button>
 
             <button
               type="submit"
-              disabled={isAnalyzing || !promptInput.trim()}
-              className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold font-mono disabled:opacity-40 flex items-center space-x-2 transition-colors cursor-pointer"
+              disabled={isAnalyzing}
+              className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold font-mono shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
             >
               {isAnalyzing ? (
-                <span>{t.inspector.btnInspecting}</span>
+                <>
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <span>{t.inspector.btnInspecting}</span>
+                </>
               ) : (
                 <>
                   <span>{t.inspector.btnInspect}</span>

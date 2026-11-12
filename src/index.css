@@ -10,8 +10,8 @@
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
-    --input-bg: #0c0f17;
-    --code-bg: #090b10;
+    --input-bg: #141824;
+    --code-bg: #0f121c;
 
     /* Grounded Minimalist Shadows (Zero bounce, zero ballooning on hover) */
     --neu-flat: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
