@@ -216,28 +216,28 @@ export default function ResearchGuide() {
           className="hidden" 
         />
 
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-          <div className="space-y-1.5">
+        <div className="flex flex-col gap-4">
+          <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="flex items-center space-x-1.5 text-xs font-mono text-indigo-400 font-bold uppercase tracking-wider">
-                <FileText className="w-4 h-4" />
+              <span className="flex items-center space-x-1.5 text-xs font-mono text-blue-500 font-bold uppercase tracking-wider">
+                <FileText className="w-4 h-4 shrink-0" />
                 <span>{t.meta.docBanner.title}</span>
               </span>
-              <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-semibold ${
+              <span className={`text-[10px] font-mono px-2 py-0.5 rounded-[6px] font-semibold ${
                 docMeta.isCustom 
                   ? 'bg-amber-950/40 text-amber-300 border border-amber-800/40' 
-                  : 'bg-indigo-950/40 text-indigo-300 border border-indigo-800/40'
+                  : 'bg-blue-950/40 text-blue-300 border border-blue-800/40'
               }`}>
                 {docMeta.isCustom ? 'Tài liệu Tùy biến (Custom Uploaded)' : 'Tài liệu Gốc (Official)'}
               </span>
             </div>
 
-            <div className="text-sm font-semibold text-[var(--text-primary)] font-mono flex items-center space-x-2">
-              <span>{docMeta.path}</span>
-              <span className="text-xs text-[var(--text-muted)] font-normal">({docMeta.size} • {docMeta.updatedAt})</span>
+            <div className="text-sm font-semibold text-[var(--text-primary)] font-mono flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+              <span className="break-all">{docMeta.path}</span>
+              <span className="text-xs text-[var(--text-muted)] font-normal whitespace-nowrap">({docMeta.size} • {docMeta.updatedAt})</span>
             </div>
 
-            <p className="text-xs text-[var(--text-secondary)] max-w-2xl">
+            <p className="text-xs text-[var(--text-secondary)] max-w-3xl leading-relaxed">
               {docMeta.isCustom 
                 ? 'Tệp tài liệu do bạn nạp lên đã được đồng bộ vào bộ nhớ trình duyệt, có thể xem trực tiếp hoặc tải về bất cứ lúc nào.' 
                 : t.meta.docBanner.desc}
@@ -245,10 +245,10 @@ export default function ResearchGuide() {
           </div>
 
           {/* Action Toolbar */}
-          <div className="flex flex-wrap items-center gap-2 shrink-0 self-stretch lg:self-auto">
+          <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-[var(--border-subtle)]/60">
             <button
               onClick={() => setShowReader(!showReader)}
-              className="neu-button px-3.5 py-2 text-xs font-mono font-semibold flex items-center space-x-1.5 text-indigo-400 cursor-pointer"
+              className="neu-button px-3.5 py-2 text-xs font-mono font-semibold flex items-center space-x-1.5 text-blue-500 cursor-pointer"
               title="Đọc nội dung tài liệu ngay trên trang"
             >
               <Eye className="w-4 h-4" />
@@ -286,7 +286,7 @@ export default function ResearchGuide() {
 
             <button
               onClick={handleCopyMaster}
-              className="neu-button px-3.5 py-2 text-xs font-mono font-semibold flex items-center space-x-1.5 text-indigo-400 cursor-pointer"
+              className="neu-button px-3.5 py-2 text-xs font-mono font-semibold flex items-center space-x-1.5 text-blue-500 cursor-pointer"
             >
               {copiedMaster ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
               <span>{copiedMaster ? t.meta.docBanner.copiedBtn : t.meta.docBanner.copyBtn}</span>
