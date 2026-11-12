@@ -65,7 +65,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
       {mobileOpen && (
         <div 
           onClick={() => setMobileOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black/60 z-40 backdrop-blur-xs transition-opacity duration-300"
+          className="lg:hidden fixed inset-0 bg-black/65 z-40 transition-opacity duration-300"
         />
       )}
 
@@ -275,9 +275,9 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                 </span>
                 <span className="text-emerald-500 text-[10px] font-bold">Active</span>
               </div>
-              <div className="p-1.5 rounded-md bg-[var(--bg-page)] border border-[var(--border-subtle)] text-[10px] font-mono flex items-center justify-between text-[var(--text-muted)]">
+              <div className="p-1.5 rounded-[6px] bg-[var(--bg-page)] border border-[var(--border-subtle)] text-[10px] font-mono flex items-center justify-between text-[var(--text-muted)]">
                 <span>SHA-256 Enclave</span>
-                <span className="text-indigo-400">Secure</span>
+                <span className="text-blue-500">Secure</span>
               </div>
             </div>
 
@@ -285,8 +285,8 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
             <div className={`transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden flex justify-center ${
               isCollapsed && !mobileOpen ? 'max-h-8 opacity-100 pt-1' : 'max-h-0 opacity-0 pointer-events-none'
             }`} title="Google reCAPTCHA v3 & SHA-256 Enclave Secure">
-              <div className="w-8 h-8 rounded-lg bg-[var(--bg-page)] border border-[var(--border-subtle)] flex items-center justify-center">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="w-8 h-8 rounded-[6px] bg-[var(--bg-page)] border border-[var(--border-subtle)] flex items-center justify-center">
+                <span className="w-2 h-2 rounded-[6px] bg-emerald-500" />
               </div>
             </div>
           </div>

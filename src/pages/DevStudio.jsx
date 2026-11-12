@@ -556,7 +556,7 @@ export default function DevStudio() {
                 <p className="text-xs text-[var(--text-muted)] mt-0.5">Prompt sẽ lập tức được nạp vào kho chung và tri thức của Cortex Bot.</p>
               </div>
               {successMsg && (
-                <span className="text-xs font-mono text-emerald-400 flex items-center space-x-1 animate-pulse">
+                <span className="text-xs font-mono text-emerald-400 flex items-center space-x-1">
                   <CheckCircle2 className="w-4 h-4" />
                   <span>Đã Xuất Bản Thành Công!</span>
                 </span>

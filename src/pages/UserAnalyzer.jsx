@@ -247,7 +247,7 @@ export default function UserAnalyzer() {
                 setPromptInput(sample);
                 handleInspect(sample);
               }}
-              className="px-3.5 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-page)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+              className="px-3.5 py-2 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-page)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
             >
               {t.inspector.btnSample}
             </button>
@@ -255,7 +255,7 @@ export default function UserAnalyzer() {
             <button
               type="submit"
               disabled={isAnalyzing}
-              className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold font-mono shadow-xs flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
+              className="px-5 py-2.5 rounded-[6px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold font-mono flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
             >
               {isAnalyzing ? (
                 <>
@@ -547,16 +547,16 @@ export default function UserAnalyzer() {
         </div>
 
         {/* Quick Explainer Callout */}
-        <div className="p-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)]/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-[var(--text-secondary)] font-mono">
+        <div className="p-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)]/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-[var(--text-secondary)] font-mono">
           <div className="flex items-center space-x-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
             <span>
               {lang === 'vi'
-                ? '💡 Mẹo sử dụng: Bấm [Chép] để lấy prompt tối ưu, hoặc bấm [Phân tích] để xem hệ thống phân tích AST và lọc bỏ từ sáo rỗng.'
-                : '💡 Pro Tip: Click [Copy] to use the optimized prompt, or [Inspect] to see AST structure scoring & slop elimination.'}
+                ? 'Mẹo sử dụng: Bấm [Chép] để lấy prompt tối ưu, hoặc bấm [Phân tích] để xem hệ thống phân tích AST và lọc bỏ từ sáo rỗng.'
+                : 'Pro Tip: Click [Copy] to use the optimized prompt, or [Inspect] to see AST structure scoring & slop elimination.'}
             </span>
           </div>
-          <Link to="/guide#benchmarks" className="text-indigo-400 hover:underline shrink-0 text-[11px] font-semibold">
+          <Link to="/guide#benchmarks" className="text-blue-500 hover:underline shrink-0 text-[11px] font-semibold">
             {lang === 'vi' ? 'Xem cẩm nang hướng dẫn →' : 'Read Guidebook →'}
           </Link>
         </div>

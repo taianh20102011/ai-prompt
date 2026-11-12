@@ -193,7 +193,7 @@ export default function Footer() {
           </div>
           <div className="flex items-center space-x-3">
             <span className="flex items-center space-x-1.5 text-emerald-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span className="w-1.5 h-1.5 rounded-[6px] bg-emerald-400"></span>
               <span>{lang === 'vi' ? 'Trạng thái: 100% Hoạt động' : 'Status: 100% Operational'}</span>
             </span>
             <span>•</span>

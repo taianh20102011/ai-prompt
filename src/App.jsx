@@ -35,11 +35,11 @@ export default function App() {
                 isCollapsed ? 'lg:pl-[68px]' : 'lg:pl-64'
               }`}
             >
-              {/* Top Global Control Bar (Quick Language Switcher & Security Pill) */}
-              <header className="sticky top-0 z-30 w-full backdrop-blur-md bg-[var(--bg-page)]/85 border-b border-[var(--border-subtle)] px-4 sm:px-6 lg:px-8 py-2.5 transition-colors">
+              {/* Top Global Control Bar (Solid High-Contrast Surface, Zero Glassmorphism) */}
+              <header className="sticky top-0 z-30 w-full bg-[var(--bg-page)] border-b border-[var(--border-subtle)] px-4 sm:px-6 lg:px-8 py-2.5 transition-colors">
                 <div className="max-w-6xl mx-auto flex items-center justify-between">
                   <div className="flex items-center space-x-2 text-xs font-mono pl-10 lg:pl-0">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span className="w-2 h-2 rounded-[6px] bg-emerald-500"></span>
                     <span className="font-semibold text-[var(--text-primary)]">Prompt AI PNIT</span>
                     <span className="hidden sm:inline text-[var(--text-muted)]">•</span>
                     <span className="hidden sm:inline text-[var(--text-muted)] text-[11px]">v3.2 AST Heuristics</span>
@@ -48,14 +48,14 @@ export default function App() {
                   <div className="flex items-center space-x-2.5">
                     <Link
                       to="/guide"
-                      className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg border border-[var(--border-subtle)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono transition-colors"
+                      className="flex items-center space-x-1.5 px-2.5 py-1 rounded-[6px] border border-[var(--border-subtle)] hover:bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs font-mono transition-colors"
                       title="Hướng dẫn sử dụng website"
                     >
-                      <HelpCircle className="w-3.5 h-3.5 text-indigo-400" />
+                      <HelpCircle className="w-3.5 h-3.5 text-blue-500" />
                       <span className="hidden sm:inline">Hướng dẫn</span>
                     </Link>
                     <LanguageSwitcher compact={false} />
-                    <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg border border-emerald-800/40 bg-emerald-950/20 text-emerald-400 text-[10px] font-mono">
+                    <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-[6px] border border-emerald-800/40 bg-emerald-950/20 text-emerald-400 text-[10px] font-mono">
                       <ShieldCheck className="w-3 h-3" />
                       <span>reCAPTCHA v3</span>
                     </div>

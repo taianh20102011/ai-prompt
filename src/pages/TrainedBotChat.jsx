@@ -230,7 +230,7 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
 
           {/* Storage Options Dropdown */}
           {showStorageMenu && (
-            <div className="absolute right-0 mt-2 w-72 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-2 shadow-2xl z-50 space-y-1.5 text-xs font-mono animate-fadeIn">
+            <div className="absolute right-0 mt-2 w-72 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-2 z-50 space-y-1.5 text-xs font-mono animate-fadeIn">
               <div className="px-2 py-1 text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider border-b border-[var(--border-subtle)]">
                 {lang === 'vi' ? 'Chọn chế độ lưu trữ' : 'Select Storage Mode'}
               </div>
@@ -355,7 +355,7 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
         <div className="px-4 py-2.5 bg-[var(--bg-elevated)] border-b border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
           <div className="flex items-center space-x-3">
             <span className="flex items-center space-x-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span className="w-1.5 h-1.5 rounded-[6px] bg-emerald-400"></span>
               <span className="text-[var(--text-secondary)]">Lõi: v{adminConfig.analyzerVersion}</span>
             </span>
             <span>•</span>

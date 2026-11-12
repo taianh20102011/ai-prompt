@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import gsap from 'gsap';
 import { 
   Compass, 
   Bot, 
@@ -17,22 +18,50 @@ import { useLanguage } from '../context/LanguageContext';
 
 export default function LandingPage() {
   const { t, lang } = useLanguage();
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion || !containerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from('.gsap-hero-item', {
+        y: 14,
+        opacity: 0,
+        duration: 0.55,
+        stagger: 0.07,
+        ease: 'power3.out',
+        clearProps: 'transform,opacity'
+      });
+      gsap.from('.gsap-module-card', {
+        y: 16,
+        opacity: 0,
+        duration: 0.5,
+        stagger: 0.06,
+        delay: 0.15,
+        ease: 'power3.out',
+        clearProps: 'transform,opacity'
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <div className="space-y-12 pb-10">
+    <div ref={containerRef} className="space-y-12 pb-10">
       {/* 1. HERO INTRO SECTION (Pure Introduction + Primary "Bắt đầu" CTA) */}
       <div className="text-center space-y-6 max-w-3xl mx-auto pt-6 sm:pt-10">
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-mono text-[var(--text-secondary)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        <div className="gsap-hero-item flex flex-wrap items-center justify-center gap-2">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-mono text-[var(--text-secondary)]">
+            <span className="w-1.5 h-1.5 rounded-[6px] bg-emerald-500"></span>
             <span>{lang === 'vi' ? 'Công cụ kiểm định Prompt mã nguồn mở' : 'Open-source Prompt Engineering Suite'}</span>
             <span className="text-[var(--text-muted)]">•</span>
-            <span className="text-indigo-400 font-semibold">Apache 2.0</span>
+            <span className="text-[#2563EB] dark:text-blue-400 font-semibold">Apache 2.0</span>
           </div>
         </div>
 
-        <div className="space-y-3">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[var(--text-primary)]">
+        <div className="gsap-hero-item space-y-3">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-[-0.03em] text-[var(--text-primary)]">
             {t.brand.name}
           </h1>
 
@@ -44,10 +73,10 @@ export default function LandingPage() {
         </div>
 
         {/* Primary CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+        <div className="gsap-hero-item flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
           <Link
             to="/inspector"
-            className="w-full sm:w-auto px-7 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-sm font-semibold flex items-center justify-center space-x-2 transition-all shadow-sm cursor-pointer active:scale-[0.98]"
+            className="w-full sm:w-auto px-7 py-3 rounded-[6px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-mono text-sm font-semibold flex items-center justify-center space-x-2 transition-colors cursor-pointer active:scale-[0.98]"
           >
             <Sparkles className="w-4 h-4" />
             <span>{lang === 'vi' ? 'Bắt đầu ngay' : 'Get Started'}</span>
@@ -56,40 +85,40 @@ export default function LandingPage() {
 
           <Link
             to="/guide"
-            className="w-full sm:w-auto px-6 py-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-primary)] font-mono text-sm font-medium flex items-center justify-center space-x-2 transition-colors"
+            className="w-full sm:w-auto px-6 py-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-primary)] font-mono text-sm font-medium flex items-center justify-center space-x-2 transition-colors"
           >
-            <HelpCircle className="w-4 h-4 text-indigo-400" />
+            <HelpCircle className="w-4 h-4 text-[#2563EB] dark:text-blue-400" />
             <span>{lang === 'vi' ? 'Xem hướng dẫn' : 'User Guide'}</span>
           </Link>
         </div>
 
         {/* Compact Key Capabilities Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 text-left">
+        <div className="gsap-hero-item grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 text-left">
           <div className="craft-card p-3.5 space-y-1">
-            <div className="flex items-center space-x-1.5 text-indigo-400 font-mono text-xs font-bold">
+            <div className="flex items-center space-x-1.5 text-[#2563EB] dark:text-blue-400 font-mono text-xs font-bold">
               <Layers className="w-3.5 h-3.5" />
               <span>{t.landing.stat2Value}</span>
             </div>
             <div className="text-[11px] text-[var(--text-muted)] font-mono">{t.landing.stat2Label}</div>
           </div>
           <div className="craft-card p-3.5 space-y-1">
-            <div className="flex items-center space-x-1.5 text-emerald-400 font-mono text-xs font-bold">
+            <div className="flex items-center space-x-1.5 text-emerald-500 font-mono text-xs font-bold">
               <Cpu className="w-3.5 h-3.5" />
               <span>{lang === 'vi' ? '6+ Mô hình AI' : '6+ AI Models'}</span>
             </div>
             <div className="text-[11px] text-[var(--text-muted)] font-mono">
-              {lang === 'vi' ? 'Gemini, Cursor, Claude...' : 'Gemini, Cursor, Claude...'}
+              Gemini, Cursor, Claude...
             </div>
           </div>
           <div className="craft-card p-3.5 space-y-1">
-            <div className="flex items-center space-x-1.5 text-amber-400 font-mono text-xs font-bold">
+            <div className="flex items-center space-x-1.5 text-amber-500 font-mono text-xs font-bold">
               <Sparkles className="w-3.5 h-3.5" />
               <span>{t.landing.stat3Value}</span>
             </div>
             <div className="text-[11px] text-[var(--text-muted)] font-mono">{t.landing.stat3Label}</div>
           </div>
           <div className="craft-card p-3.5 space-y-1">
-            <div className="flex items-center space-x-1.5 text-sky-400 font-mono text-xs font-bold">
+            <div className="flex items-center space-x-1.5 text-sky-500 font-mono text-xs font-bold">
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>{t.landing.stat4Value}</span>
             </div>
@@ -104,17 +133,17 @@ export default function LandingPage() {
           {lang === 'vi' ? 'Các phân hệ trong nền tảng' : 'Platform Modules'}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Module 1: Inspector */}
-          <Link to="/inspector" className="block group">
-            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-indigo-500/40 transition-colors">
+          <Link to="/inspector" className="gsap-module-card block group">
+            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-[#2563EB]/50 transition-colors">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2 font-semibold text-sm text-[var(--text-primary)]">
-                    <Compass className="w-4 h-4 text-indigo-400" />
+                    <Compass className="w-4 h-4 text-[#2563EB] dark:text-blue-400" />
                     <span>{t.nav.inspector}</span>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-indigo-400 transition-colors" />
+                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[#2563EB] dark:group-hover:text-blue-400 transition-colors" />
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                   {lang === 'vi' 
@@ -131,15 +160,15 @@ export default function LandingPage() {
           </Link>
 
           {/* Module 2: Cortex Bot */}
-          <Link to="/trained-bot" className="block group">
-            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-indigo-500/40 transition-colors">
+          <Link to="/trained-bot" className="gsap-module-card block group">
+            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-[#2563EB]/50 transition-colors">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2 font-semibold text-sm text-[var(--text-primary)]">
-                    <Bot className="w-4 h-4 text-purple-400" />
+                    <Bot className="w-4 h-4 text-sky-500" />
                     <span>{t.nav.bot}</span>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-purple-400 transition-colors" />
+                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-sky-500 transition-colors" />
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                   {lang === 'vi'
@@ -156,15 +185,15 @@ export default function LandingPage() {
           </Link>
 
           {/* Module 3: Research Hub */}
-          <Link to="/research-guide" className="block group">
-            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-indigo-500/40 transition-colors">
+          <Link to="/research-guide" className="gsap-module-card block group">
+            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-[#2563EB]/50 transition-colors">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2 font-semibold text-sm text-[var(--text-primary)]">
-                    <BookOpen className="w-4 h-4 text-amber-400" />
+                    <BookOpen className="w-4 h-4 text-amber-500" />
                     <span>{t.nav.research}</span>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-amber-400 transition-colors" />
+                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-amber-500 transition-colors" />
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                   {lang === 'vi'
@@ -181,15 +210,15 @@ export default function LandingPage() {
           </Link>
 
           {/* Module 4: Repos */}
-          <Link to="/news" className="block group">
-            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-indigo-500/40 transition-colors">
+          <Link to="/news" className="gsap-module-card block group">
+            <div className="craft-card p-5 space-y-2 h-full flex flex-col justify-between hover:border-[#2563EB]/50 transition-colors">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2 font-semibold text-sm text-[var(--text-primary)]">
-                    <GitBranch className="w-4 h-4 text-emerald-400" />
+                    <GitBranch className="w-4 h-4 text-emerald-500" />
                     <span>{t.nav.repos}</span>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-emerald-400 transition-colors" />
+                  <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-emerald-500 transition-colors" />
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
                   {lang === 'vi'
@@ -200,17 +229,17 @@ export default function LandingPage() {
               <div className="pt-2 text-[11px] font-mono text-[var(--text-muted)] flex items-center space-x-3">
                 <span>Live GitHub Sync</span>
                 <span>•</span>
-                <span>50+ Top Repos</span>
+                <span>60+ Curated Repos</span>
               </div>
             </div>
           </Link>
         </div>
       </div>
 
-      {/* 4. JOIN THE TEAM BANNER ("Hãy là một thành viên của đội ngũ Prompt AI PNIT") */}
-      <div className="max-w-4xl mx-auto craft-card p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-indigo-500/25 bg-[var(--bg-elevated)]/30">
+      {/* 3. JOIN THE TEAM BANNER ("Hãy là một thành viên của đội ngũ Prompt AI PNIT") */}
+      <div className="gsap-module-card max-w-4xl mx-auto craft-card p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-[#2563EB]/30 bg-[var(--bg-elevated)]/40">
         <div className="space-y-1.5 max-w-xl">
-          <div className="flex items-center space-x-2 text-xs font-mono text-indigo-400 font-semibold uppercase tracking-wider">
+          <div className="flex items-center space-x-2 text-xs font-mono text-[#2563EB] dark:text-blue-400 font-semibold uppercase tracking-wider">
             <Users className="w-4 h-4" />
             <span>{t.landing.joinTeamBtn}</span>
           </div>
@@ -224,7 +253,7 @@ export default function LandingPage() {
 
         <Link
           to="/dev-studio"
-          className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer shrink-0 shadow-xs"
+          className="px-5 py-2.5 rounded-[6px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-mono text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer shrink-0"
         >
           <span>{t.landing.joinTeamBtn}</span>
           <ArrowRight className="w-3.5 h-3.5" />

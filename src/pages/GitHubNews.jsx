@@ -22,19 +22,19 @@ import { fetchAIGitHubNews } from '../services/promptService';
 import { useLanguage } from '../context/LanguageContext';
 
 const CATEGORIES_VI = [
-  { id: 'all', name: '🔥 Tất Cả AI Nổi Bật', tag: 'Top AI & LLMs' },
-  { id: 'agents', name: '🤖 AI Agents & Tự Trị', tag: 'Multi-Agent Frameworks' },
-  { id: 'prompts', name: '📝 Prompt Engineering', tag: 'Benchmarks & Guides' },
-  { id: 'gemini', name: '⚡ Google Gemini Ecosystem', tag: 'Gemini SDKs & Tools' },
-  { id: 'openmodels', name: '🧠 Llama / DeepSeek / Ollama', tag: 'Open-Weight LLMs' }
+  { id: 'all', name: 'Tất Cả AI Nổi Bật', tag: 'Top AI & LLMs' },
+  { id: 'agents', name: 'AI Agents & Tự Trị', tag: 'Multi-Agent Frameworks' },
+  { id: 'prompts', name: 'Prompt Engineering', tag: 'Benchmarks & Guides' },
+  { id: 'gemini', name: 'Google Gemini Ecosystem', tag: 'Gemini SDKs & Tools' },
+  { id: 'openmodels', name: 'Llama / DeepSeek / Ollama', tag: 'Open-Weight LLMs' }
 ];
 
 const CATEGORIES_EN = [
-  { id: 'all', name: '🔥 Top Trending AI', tag: 'Top AI & LLMs' },
-  { id: 'agents', name: '🤖 AI Agents & Autonomy', tag: 'Multi-Agent Frameworks' },
-  { id: 'prompts', name: '📝 Prompt Engineering', tag: 'Benchmarks & Guides' },
-  { id: 'gemini', name: '⚡ Google Gemini Ecosystem', tag: 'Gemini SDKs & Tools' },
-  { id: 'openmodels', name: '🧠 Llama / DeepSeek / Ollama', tag: 'Open-Weight LLMs' }
+  { id: 'all', name: 'Top Trending AI', tag: 'Top AI & LLMs' },
+  { id: 'agents', name: 'AI Agents & Autonomy', tag: 'Multi-Agent Frameworks' },
+  { id: 'prompts', name: 'Prompt Engineering', tag: 'Benchmarks & Guides' },
+  { id: 'gemini', name: 'Google Gemini Ecosystem', tag: 'Gemini SDKs & Tools' },
+  { id: 'openmodels', name: 'Llama / DeepSeek / Ollama', tag: 'Open-Weight LLMs' }
 ];
 
 export default function GitHubNews() {
@@ -144,7 +144,7 @@ export default function GitHubNews() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder={t.repos.searchPlaceholder}
-          className="w-full pl-10 pr-28 py-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+          className="w-full pl-10 pr-28 py-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]/30 transition-colors"
         />
         {searchTerm && (
           <button
@@ -157,7 +157,7 @@ export default function GitHubNews() {
         )}
         <button
           type="submit"
-          className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs font-mono cursor-pointer transition-colors shadow-xs flex items-center justify-center"
+          className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3.5 py-1.5 rounded-[6px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-medium text-xs font-mono cursor-pointer transition-colors flex items-center justify-center"
         >
           {t.repos.btnSearch}
         </button>
@@ -296,9 +296,9 @@ export default function GitHubNews() {
                 key={p}
                 disabled={loading || isActive}
                 onClick={() => loadPage(p, activeQuery, activeCategory)}
-                className={`w-8 h-8 rounded-lg text-xs font-mono flex items-center justify-center transition-all shrink-0 ${
+                className={`w-8 h-8 rounded-[6px] text-xs font-mono flex items-center justify-center transition-all shrink-0 tabular-nums ${
                   isActive
-                    ? 'bg-indigo-600 text-white font-bold shadow-xs cursor-default'
+                    ? 'bg-[#2563EB] text-white font-bold cursor-default'
                     : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer'
                 }`}
               >
