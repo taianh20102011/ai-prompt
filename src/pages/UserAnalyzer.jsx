@@ -22,11 +22,12 @@ import {
 } from 'lucide-react';
 import { analyzePromptLocally } from '../services/promptService';
 import { getStorageData, DEFAULT_BENCHMARKS } from '../services/mockStorage';
+import { useLanguage } from '../context/LanguageContext';
 import SpotlightCard from '../components/react-bits/SpotlightCard';
 import ShinyText from '../components/react-bits/ShinyText';
 import DecryptedText from '../components/react-bits/DecryptedText';
 
-const CATEGORIES = [
+const CATEGORIES_VI = [
   'Tự động phát hiện (Auto-detect)',
   'Công nghệ thông tin (Engineering)',
   'Tâm lý & Tư vấn (Persona / Empathy)',
@@ -35,12 +36,23 @@ const CATEGORIES = [
   'Kinh doanh & Đàm phán'
 ];
 
+const CATEGORIES_EN = [
+  'Auto-detect (Recommended)',
+  'Information Technology (Engineering)',
+  'Psychology & Empathy (Persona)',
+  'Marketing & Growth Content',
+  'Education & Academics',
+  'Business & Negotiation'
+];
+
 export default function UserAnalyzer() {
+  const { t, lang } = useLanguage();
+  const categories = lang === 'vi' ? CATEGORIES_VI : CATEGORIES_EN;
   const location = useLocation();
   const [promptInput, setPromptInput] = useState(() => {
     return location.state?.initialPrompt || '';
   });
-  const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
   const [copiedUpgraded, setCopiedUpgraded] = useState(false);
@@ -91,14 +103,14 @@ export default function UserAnalyzer() {
           </div>
           <span className="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-950/40 text-emerald-400 border border-emerald-800/50 text-[11px] font-mono">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Bảo vệ bởi Google reCAPTCHA v3</span>
+            <span>{t.security.recaptchaBadge}</span>
           </span>
         </div>
         <h1>
-          <ShinyText text="Prompt Inspector & Synthesizer" speed={4} className="text-2xl sm:text-3xl font-semibold tracking-tight block" />
+          <ShinyText text={t.inspector.title} speed={4} className="text-2xl sm:text-3xl font-semibold tracking-tight block" />
         </h1>
         <p className="text-sm text-[var(--text-secondary)] max-w-2xl leading-relaxed">
-          Phân tích cấu trúc prompt thô, phát hiện thiếu hụt bối cảnh, vai trò hoặc chỉ dẫn ngữ điệu. Tự động biên dịch ra Prompt 2.0 có tính thực thi cao.
+          {t.inspector.subtitle}
         </p>
       </section>
 
@@ -108,14 +120,14 @@ export default function UserAnalyzer() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <span className="text-xs font-mono font-medium text-[var(--text-secondary)] uppercase tracking-wider flex items-center space-x-1.5">
               <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Phân Loại Miền Kiến Thức:</span>
+              <span>{t.inspector.categoryLabel}</span>
             </span>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="text-xs font-mono px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-primary)] w-full sm:w-auto focus:outline-none focus:border-indigo-500 transition-colors"
             >
-              {CATEGORIES.map((c) => (
+              {categories.map((c) => (
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
@@ -125,23 +137,23 @@ export default function UserAnalyzer() {
             <textarea
               value={promptInput}
               onChange={(e) => setPromptInput(e.target.value)}
-              placeholder="Nhập prompt cần kiểm định (VD: 'Nâng cấp hệ thống web này', 'Nói chuyện khi tôi bế tắc', 'Refactor hàm này')..."
+              placeholder={t.inspector.placeholder}
               rows={4}
               className="w-full p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-sm font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-indigo-500 transition-colors resize-y leading-relaxed"
             />
             <div className="flex justify-between items-center text-[11px] font-mono text-[var(--text-muted)]">
-              <span>Độ dài: {promptInput.trim() ? promptInput.trim().split(/\s+/).length : 0} từ</span>
-              <span>Parser: AST Rule-based Engine</span>
+              <span>{lang === 'vi' ? `Độ dài: ${promptInput.trim() ? promptInput.trim().split(/\s+/).length : 0} từ` : `Length: ${promptInput.trim() ? promptInput.trim().split(/\s+/).length : 0} words`}</span>
+              <span>{t.inspector.parserEngine}</span>
             </div>
           </div>
 
           <div className="flex items-center justify-between pt-1">
             <button
               type="button"
-              onClick={() => setPromptInput('nâng cấp hệ thống web này')}
+              onClick={() => setPromptInput(lang === 'vi' ? 'nâng cấp hệ thống web này' : 'upgrade this web application architecture')}
               className="px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-page)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
             >
-              → Thử test case mẫu
+              {t.inspector.btnSample}
             </button>
 
             <button
@@ -150,10 +162,10 @@ export default function UserAnalyzer() {
               className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold font-mono disabled:opacity-40 flex items-center space-x-2 transition-colors cursor-pointer"
             >
               {isAnalyzing ? (
-                <span>Đang phân tích...</span>
+                <span>{t.inspector.btnInspecting}</span>
               ) : (
                 <>
-                  <span>Kiểm Định Prompt</span>
+                  <span>{t.inspector.btnInspect}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </>
               )}

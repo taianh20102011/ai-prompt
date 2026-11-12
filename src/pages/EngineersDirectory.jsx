@@ -13,9 +13,11 @@ import {
   GitBranch
 } from 'lucide-react';
 import { getStorageData, DEFAULT_DEVS, DEFAULT_BENCHMARKS } from '../services/mockStorage';
+import { useLanguage } from '../context/LanguageContext';
 import UserAvatar from '../components/UserAvatar';
 
 export default function EngineersDirectory() {
+  const { t, lang } = useLanguage();
   const [devs] = useState(() => getStorageData('promptcraft_verified_devs', DEFAULT_DEVS));
   const [benchmarks] = useState(() => getStorageData('promptcraft_benchmarks', DEFAULT_BENCHMARKS));
   const [selectedProfile, setSelectedProfile] = useState(null);
@@ -26,13 +28,13 @@ export default function EngineersDirectory() {
       <div className="border-b border-[var(--border-subtle)] pb-5 space-y-2">
         <div className="inline-flex items-center space-x-2 text-xs font-mono text-[var(--text-muted)] uppercase tracking-wider px-3 py-1 rounded-full craft-card">
           <Users className="w-3.5 h-3.5 text-indigo-400" />
-          <span>VERIFIED CREATIVE ENCLAVE / PEERS & ADMINS</span>
+          <span>{lang === 'vi' ? 'ĐỘI NGŨ KỸ SƯ & QUẢN TRỊ VIÊN' : 'CERTIFIED ENGINEERS & ADMINISTRATORS'}</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--text-primary)]">
-          Đội Ngũ Kỹ Sư & Quản Trị Viên (Devs & Admins)
+          {t.directory.title}
         </h1>
         <p className="text-xs sm:text-sm text-[var(--text-secondary)] max-w-2xl leading-relaxed">
-          Danh bạ công khai các kỹ sư có chứng chỉ kiểm định và quản trị viên của hệ thống. Nhấp vào bất kỳ ai để xem Profile chuyên sâu và các prompt đã đóng góp.
+          {t.directory.subtitle}
         </p>
       </div>
 

@@ -20,12 +20,18 @@ import {
   Award,
   Users
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 import ShinyText from '../components/react-bits/ShinyText';
 import SpotlightCard from '../components/react-bits/SpotlightCard';
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const [samplePrompt, setSamplePrompt] = useState('Nâng cấp hệ thống web này chuẩn Anti-Slop và bảo mật cao');
+  const { t, lang } = useLanguage();
+  const [samplePrompt, setSamplePrompt] = useState(
+    lang === 'vi' 
+      ? 'Nâng cấp hệ thống web này chuẩn Anti-Slop và bảo mật cao' 
+      : 'Upgrade this web system with strict Anti-Slop principles and zero-trust security'
+  );
 
   const handleStartInspection = (e) => {
     e?.preventDefault();
@@ -40,7 +46,7 @@ export default function LandingPage() {
         <div className="inline-flex flex-wrap items-center justify-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/25 text-emerald-400 font-mono text-xs">
           <span className="flex items-center space-x-1 font-semibold">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>ĐƯỢC BẢO VỆ BỞI GOOGLE RECAPTCHA V3</span>
+            <span>{t.security.recaptchaBadge.toUpperCase()}</span>
           </span>
           <span className="opacity-40">•</span>
           <span className="text-[var(--text-secondary)]">ZERO-TRUST ENCLAVE</span>
@@ -51,31 +57,31 @@ export default function LandingPage() {
         {/* Main Title */}
         <div className="space-y-3">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--text-primary)] leading-[1.15]">
-            <ShinyText text="Prompt AI PNIT" speed={4} />
+            <ShinyText text={t.brand.name} speed={4} />
           </h1>
           <p className="text-lg sm:text-xl font-medium text-indigo-400 font-mono">
-            Hệ Thống Kiểm Định, Tinh Chỉnh & Nâng Tầm Prompt AI Tiêu Chuẩn Quốc Tế
+            {t.brand.subtitle}
           </p>
         </div>
 
         {/* Description */}
         <p className="text-sm sm:text-base text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
-          Nền tảng kỹ thuật loại bỏ triệt để <strong>AI Slop</strong>, rà soát cấu trúc Prompt 6 chiều (Role, Context, Objective, Constraints), trang bị trợ lý Cortex Bot chuỗi suy luận Chain-of-Thought và tài liệu nghiên cứu Prompt Thấu Cảm.
+          {t.landing.heroSubtitle}
         </p>
 
         {/* Author Attribution Highlight */}
         <div className="inline-block px-4 py-1.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-xs font-mono text-[var(--text-muted)]">
-          Tác giả & Kiến trúc sư: <strong className="text-[var(--text-primary)]">Phạm Ngọc Tài Anh</strong> • Giấy phép Mã Nguồn Mở: <span className="text-indigo-400 font-semibold">Apache License 2.0</span>
+          {t.footer.authorPrefix} <strong className="text-[var(--text-primary)]">{t.common.authorName}</strong> • {lang === 'vi' ? 'Giấy phép:' : 'License:'} <span className="text-indigo-400 font-semibold">Apache License 2.0</span>
         </div>
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <button
             onClick={() => navigate('/inspector')}
-            className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-semibold flex items-center space-x-2 transition-all cursor-pointer shadow-md shadow-indigo-600/20"
+            className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-semibold flex items-center space-x-2 transition-colors cursor-pointer shadow-md shadow-indigo-600/20"
           >
             <Compass className="w-4 h-4" />
-            <span>Bắt Đầu Kiểm Định Prompt</span>
+            <span>{t.landing.btnInspect}</span>
             <ArrowRight className="w-4 h-4 ml-1" />
           </button>
 
@@ -84,7 +90,7 @@ export default function LandingPage() {
             className="neu-button px-5 py-3 text-xs font-mono font-semibold flex items-center space-x-2 text-indigo-400 cursor-pointer"
           >
             <Bot className="w-4 h-4" />
-            <span>Trò Chuyện Cortex Bot (Miễn Phí ∞)</span>
+            <span>{t.landing.btnChatBot}</span>
           </button>
 
           <button
@@ -92,7 +98,7 @@ export default function LandingPage() {
             className="neu-button px-5 py-3 text-xs font-mono font-semibold flex items-center space-x-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer"
           >
             <BookOpen className="w-4 h-4 text-amber-400" />
-            <span>Tài Liệu Nghiên Cứu Thấu Cảm</span>
+            <span>{t.landing.btnResearch}</span>
           </button>
         </div>
       </div>
@@ -102,13 +108,15 @@ export default function LandingPage() {
         <div className="space-y-1">
           <div className="flex items-center space-x-2 text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">
             <ShieldCheck className="w-4 h-4" />
-            <span>LỚP PHÒNG THỦ & BẢO MẬT HỆ THỐNG</span>
+            <span>{lang === 'vi' ? 'LỚP PHÒNG THỦ & BẢO MẬT HỆ THỐNG' : 'SYSTEM SECURITY & DEFENSE MATRIX'}</span>
           </div>
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">
-            Hệ Thống Được Bảo Vệ Bởi Những Công Nghệ Nào?
+            {lang === 'vi' ? 'Hệ Thống Được Bảo Vệ Bởi Những Công Nghệ Nào?' : 'What Technologies Protect This System?'}
           </h2>
           <p className="text-xs text-[var(--text-secondary)]">
-            Mọi thao tác, phiên đăng nhập và dữ liệu trao đổi trong Prompt AI PNIT được giám sát bởi 3 lớp phòng ngự độc lập:
+            {lang === 'vi' 
+              ? 'Mọi thao tác, phiên đăng nhập và dữ liệu trao đổi trong Prompt AI PNIT được giám sát bởi 3 lớp phòng ngự độc lập:' 
+              : 'Every session, inspection payload, and administrative action in Prompt AI PNIT is governed by 3 distinct defense layers:'}
           </p>
         </div>
 
@@ -128,7 +136,9 @@ export default function LandingPage() {
                 Google reCAPTCHA v3
               </h3>
               <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                Đánh giá rủi ro vô hình theo thời gian thực (Realtime Risk Score 0.0 - 1.0). Ngăn chặn 100% bot spam, bot tự động quét và tấn công vét cạn tài nguyên mà không làm phiền người dùng bằng captcha giải đố hình ảnh.
+                {lang === 'vi'
+                  ? 'Đánh giá rủi ro vô hình theo thời gian thực (Realtime Risk Score 0.0 - 1.0). Ngăn chặn 100% bot spam, bot tự động quét và tấn công vét cạn tài nguyên mà không làm phiền người dùng bằng captcha giải đố hình ảnh.'
+                  : 'Frictionless, invisible risk scoring (Score 0.0 - 1.0). Neutralizes automated scraping and denial-of-service spam with zero disruptive puzzle challenges.'}
               </p>
             </div>
           </SpotlightCard>
@@ -148,7 +158,9 @@ export default function LandingPage() {
                 SHA-256 Enclave Session
               </h3>
               <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                Phiên làm việc quản trị được mã hóa bằng Cookie HttpOnly 4 giờ và chữ ký số HMAC SHA-256 Client Fingerprinting. Miễn nhiễm với tấn công XSS trộm Session Storage hay CSRF đánh cắp quyền hạn.
+                {lang === 'vi'
+                  ? 'Phiên làm việc quản trị được mã hóa bằng Cookie HttpOnly 4 giờ và chữ ký số HMAC SHA-256 Client Fingerprinting. Miễn nhiễm với tấn công XSS trộm Session Storage hay CSRF đánh cắp quyền hạn.'
+                  : 'Administrative sessions backed by 4-hour HttpOnly cookies and HMAC SHA-256 client fingerprinting, resilient against XSS storage hijacking and CSRF threats.'}
               </p>
             </div>
           </SpotlightCard>
@@ -165,10 +177,12 @@ export default function LandingPage() {
             </div>
             <div className="space-y-1">
               <h3 className="text-sm font-bold text-[var(--text-primary)]">
-                Mã Hóa Ẩn ID (Anti-IDOR)
+                {lang === 'vi' ? 'Mã Hóa Ẩn ID (Anti-IDOR)' : 'Masked Hash Anti-IDOR'}
               </h3>
               <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                ID thực trong cơ sở dữ liệu bị che giấu hoàn toàn trước client và thay thế bằng chuỗi Masked Hash an toàn một chiều. Ngăn chặn triệt để hành vi trích xuất dữ liệu trái phép (Insecure Direct Object Reference).
+                {lang === 'vi'
+                  ? 'ID thực trong cơ sở dữ liệu bị che giấu hoàn toàn trước client và thay thế bằng chuỗi Masked Hash an toàn một chiều. Ngăn chặn triệt để hành vi trích xuất dữ liệu trái phép (Insecure Direct Object Reference).'
+                  : 'Real database identifiers are completely concealed behind one-way cryptographic hashes, preventing Insecure Direct Object Reference data leakage.'}
               </p>
             </div>
           </SpotlightCard>
@@ -180,10 +194,10 @@ export default function LandingPage() {
         <div className="space-y-1">
           <div className="flex items-center space-x-2 text-xs font-mono text-indigo-400 font-bold uppercase tracking-wider">
             <Layers className="w-4 h-4" />
-            <span>KIẾN TRÚC PHÂN HỆ CÔNG CỤ</span>
+            <span>{lang === 'vi' ? 'KIẾN TRÚC PHÂN HỆ CÔNG CỤ' : 'CORE MODULE ARCHITECTURE'}</span>
           </div>
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">
-            Các Module Chuyên Nghiệp Trong Prompt AI PNIT
+            {lang === 'vi' ? 'Các Module Chuyên Nghiệp Trong Prompt AI PNIT' : 'Professional Modules in Prompt AI PNIT'}
           </h2>
         </div>
 
@@ -197,20 +211,20 @@ export default function LandingPage() {
                     <Compass className="w-5 h-5" />
                   </div>
                   <span className="text-xs font-mono text-indigo-400 flex items-center space-x-1 transition-colors">
-                    <span>Mở công cụ</span>
+                    <span>{lang === 'vi' ? 'Mở công cụ' : 'Open Module'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
                 <h3 className="text-base font-bold text-[var(--text-primary)]">
-                  Bộ Kiểm Định Prompt (Heuristic 6D Inspector)
+                  {t.landing.feature1Title}
                 </h3>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  Rà soát cấu trúc 4 trụ cột R-C-O-C (Role, Context, Objective, Constraints), đo lường độ đa dạng từ vựng Lexical Diversity và lọc sạch từ ngữ mơ hồ gây ra hiện tượng sinh văn bản rác (AI Slop).
+                  {t.landing.feature1Desc}
                 </p>
               </div>
               <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
-                <span>Chấm điểm /100</span>
-                <span>Tự động viết lại Prompt chuẩn</span>
+                <span>{lang === 'vi' ? 'Chấm điểm /100' : 'Score /100'}</span>
+                <span>{lang === 'vi' ? 'Tự động viết lại Prompt chuẩn' : 'Auto Standardized Rewrite'}</span>
               </div>
             </div>
           </Link>
@@ -224,19 +238,19 @@ export default function LandingPage() {
                     <Bot className="w-5 h-5" />
                   </div>
                   <span className="text-xs font-mono text-purple-400 flex items-center space-x-1 transition-colors">
-                    <span>Mở trợ lý</span>
+                    <span>{lang === 'vi' ? 'Mở trợ lý' : 'Open Assistant'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
                 <h3 className="text-base font-bold text-[var(--text-primary)]">
-                  Trợ Lý AI Cortex Bot (Chain-of-Thought)
+                  {t.landing.feature2Title}
                 </h3>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  Trợ lý thông minh miễn phí 100% không giới hạn lượt hỏi, hiển thị quá trình suy luận (Chain-of-Thought), tích hợp tri thức RAG và tự động đồng bộ Edge Storage tránh tràn bộ nhớ.
+                  {t.landing.feature2Desc}
                 </p>
               </div>
               <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
-                <span>4 Chế độ suy luận</span>
+                <span>{lang === 'vi' ? '4 Chế độ suy luận' : '4 Reasoning Modes'}</span>
                 <span>Vercel Edge DB Sync</span>
               </div>
             </div>
@@ -251,20 +265,20 @@ export default function LandingPage() {
                     <BookOpen className="w-5 h-5" />
                   </div>
                   <span className="text-xs font-mono text-amber-400 flex items-center space-x-1 transition-colors">
-                    <span>Đọc tài liệu</span>
+                    <span>{lang === 'vi' ? 'Đọc tài liệu' : 'Read Paper'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
                 <h3 className="text-base font-bold text-[var(--text-primary)]">
-                  Nghiên Cứu Prompt Thấu Cảm & Docs Hub
+                  {t.landing.feature3Title}
                 </h3>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  Tài liệu giải mã nguyên nhân AI trả lời khô khan theo cơ chế Alignment Tax của RLHF và giải pháp Protocol H-E-A-R. Hỗ trợ đọc toàn văn, tải file .md và nạp file tài liệu cá nhân.
+                  {t.landing.feature3Desc}
                 </p>
               </div>
               <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
-                <span>4 Ngôn ngữ: VI, EN, FR, DE</span>
-                <span>Tải lên & Tải về .md</span>
+                <span>{lang === 'vi' ? 'Song ngữ VI & EN' : 'Bilingual VI & EN'}</span>
+                <span>{lang === 'vi' ? 'Tải lên & Tải về .md' : 'Upload & Download .md'}</span>
               </div>
             </div>
           </Link>
@@ -278,15 +292,15 @@ export default function LandingPage() {
                     <GitBranch className="w-5 h-5" />
                   </div>
                   <span className="text-xs font-mono text-emerald-400 flex items-center space-x-1 transition-colors">
-                    <span>Xem kho repos</span>
+                    <span>{lang === 'vi' ? 'Xem kho repos' : 'Browse Repos'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
                 <h3 className="text-base font-bold text-[var(--text-primary)]">
-                  Kho 50+ GitHub AI Repositories Toàn Cầu
+                  {t.landing.feature4Title}
                 </h3>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  Tra cứu trực tiếp hệ sinh thái AI mã nguồn mở chất lượng cao: Google Gemini SDKs, Microsoft AutoGen, DeepSeek-R1, Ollama, LangChain và các công cụ hàng đầu.
+                  {t.landing.feature4Desc}
                 </p>
               </div>
               <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
@@ -303,13 +317,15 @@ export default function LandingPage() {
         <div className="space-y-1">
           <div className="flex items-center space-x-2 text-xs font-mono text-indigo-400 font-bold uppercase tracking-wider">
             <Zap className="w-4 h-4" />
-            <span>TRẢI NGHIỆM TRỰC TIẾP</span>
+            <span>{lang === 'vi' ? 'TRẢI NGHIỆM TRỰC TIẾP' : 'INTERACTIVE TEST DRIVE'}</span>
           </div>
           <h3 className="text-lg font-bold text-[var(--text-primary)]">
-            Nhập Thử Một Prompt Để Xem Điểm Kiểm Định
+            {t.landing.quickTrialTitle}
           </h3>
           <p className="text-xs text-[var(--text-secondary)]">
-            Điền câu lệnh bất kỳ của bạn, hệ thống sẽ mở ngay trang Kiểm Định để tính điểm 4 trụ cột và đề xuất Prompt tối ưu:
+            {lang === 'vi' 
+              ? 'Điền câu lệnh bất kỳ của bạn, hệ thống sẽ mở ngay trang Kiểm Định để tính điểm 4 trụ cột và đề xuất Prompt tối ưu:' 
+              : 'Enter any prompt to instantly compute 4-pillar AST scores and receive a standardized rewrite:'}
           </p>
         </div>
 
@@ -319,21 +335,21 @@ export default function LandingPage() {
             value={samplePrompt}
             onChange={(e) => setSamplePrompt(e.target.value)}
             className="craft-input w-full p-4 text-xs font-mono text-[var(--text-primary)] resize-y leading-relaxed"
-            placeholder="Nhập prompt cần kiểm thử tại đây..."
+            placeholder={t.landing.quickTrialPlaceholder}
           />
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
             <div className="flex items-center space-x-2 text-[11px] font-mono text-[var(--text-muted)]">
-              <span>Độ dài: {samplePrompt.trim().split(/\s+/).filter(Boolean).length} từ</span>
+              <span>{lang === 'vi' ? `Độ dài: ${samplePrompt.trim().split(/\s+/).filter(Boolean).length} từ` : `Length: ${samplePrompt.trim().split(/\s+/).filter(Boolean).length} words`}</span>
               <span>•</span>
-              <span className="text-emerald-400">AST Heuristic Parser sẵn sàng</span>
+              <span className="text-emerald-400">{lang === 'vi' ? 'AST Heuristic Parser sẵn sàng' : 'AST Heuristic Parser Ready'}</span>
             </div>
 
             <button
               type="submit"
               className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-semibold flex items-center justify-center space-x-2 transition-colors cursor-pointer shadow-xs"
             >
-              <span>Tiến Hành Kiểm Định Chi Tiết</span>
+              <span>{t.landing.quickTrialBtn}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>

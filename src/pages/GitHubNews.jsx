@@ -21,8 +21,9 @@ import {
 import { fetchAIGitHubNews } from '../services/promptService';
 import SpotlightCard from '../components/react-bits/SpotlightCard';
 import ShinyText from '../components/react-bits/ShinyText';
+import { useLanguage } from '../context/LanguageContext';
 
-const CATEGORIES = [
+const CATEGORIES_VI = [
   { id: 'all', name: '🔥 Tất Cả AI Nổi Bật', tag: 'Top AI & LLMs' },
   { id: 'agents', name: '🤖 AI Agents & Tự Trị', tag: 'Multi-Agent Frameworks' },
   { id: 'prompts', name: '📝 Prompt Engineering', tag: 'Benchmarks & Guides' },
@@ -30,7 +31,17 @@ const CATEGORIES = [
   { id: 'openmodels', name: '🧠 Llama / DeepSeek / Ollama', tag: 'Open-Weight LLMs' }
 ];
 
+const CATEGORIES_EN = [
+  { id: 'all', name: '🔥 Top Trending AI', tag: 'Top AI & LLMs' },
+  { id: 'agents', name: '🤖 AI Agents & Autonomy', tag: 'Multi-Agent Frameworks' },
+  { id: 'prompts', name: '📝 Prompt Engineering', tag: 'Benchmarks & Guides' },
+  { id: 'gemini', name: '⚡ Google Gemini Ecosystem', tag: 'Gemini SDKs & Tools' },
+  { id: 'openmodels', name: '🧠 Llama / DeepSeek / Ollama', tag: 'Open-Weight LLMs' }
+];
+
 export default function GitHubNews() {
+  const { t, lang } = useLanguage();
+  const categories = lang === 'vi' ? CATEGORIES_VI : CATEGORIES_EN;
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -89,10 +100,10 @@ export default function GitHubNews() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-[var(--text-primary)] flex items-center space-x-2">
-              <ShinyText text="Kho Mã Nguồn Mở & Hệ Sinh Thái AI" speed={4} />
+              <ShinyText text={t.repos.title} speed={4} />
             </h1>
             <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-              Khám phá hàng chục nghìn repository AI mã nguồn mở chất lượng cao từ cộng đồng thế giới.
+              {t.repos.subtitle}
             </p>
           </div>
 
@@ -102,21 +113,21 @@ export default function GitHubNews() {
             className="self-start sm:self-auto neu-button px-3.5 py-1.5 text-xs font-mono flex items-center space-x-2 disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
-            <span>Tải Lại Dữ Liệu</span>
+            <span>{lang === 'vi' ? 'Tải Lại Dữ Liệu' : 'Refresh Data'}</span>
           </button>
         </div>
       </div>
 
       {/* Category Pills Bar */}
       <div className="flex items-center space-x-2 overflow-x-auto pb-1 text-xs font-mono">
-        {CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <button
             key={cat.id}
             onClick={() => {
               setActiveCategory(cat.id);
               setCurrentPage(1);
             }}
-            className={`px-3.5 py-2 rounded-xl transition-all cursor-pointer shrink-0 ${
+            className={`px-3.5 py-2 rounded-xl transition-colors cursor-pointer shrink-0 ${
               activeCategory === cat.id
                 ? 'bg-indigo-600 text-white font-bold shadow-sm'
                 : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] hover:bg-[var(--bg-elevated)]'
@@ -134,7 +145,7 @@ export default function GitHubNews() {
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Tìm kiếm repo AI (VD: 'gemini', 'agents', 'deepseek', 'langchain', 'ollama')..."
+          placeholder={t.repos.searchPlaceholder}
           className="w-full pl-10 pr-28 py-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
         />
         {searchTerm && (
@@ -150,7 +161,7 @@ export default function GitHubNews() {
           type="submit"
           className="absolute right-1.5 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs font-mono cursor-pointer transition-colors shadow-xs"
         >
-          Tìm Kiếm
+          {t.repos.btnSearch}
         </button>
       </form>
 
@@ -249,8 +260,7 @@ export default function GitHubNews() {
                   rel="noreferrer"
                   className="text-indigo-400 hover:text-indigo-300 font-semibold flex items-center space-x-1"
                 >
-                  <span>Mở Repo</span>
-                  <ExternalLink className="w-3 h-3" />
+                  <span>{t.repos.visitRepo}</span>
                 </a>
               </div>
             </SpotlightCard>

@@ -31,9 +31,24 @@ import {
 import { RESEARCH_LANGUAGES, RESEARCH_DATA } from '../data/researchGuideData';
 import { DEFAULT_DOC_CONTENT, DEFAULT_DOC_PATH, DEFAULT_DOC_FILENAME } from '../data/defaultDocContent';
 import { SCIENTIFIC_PAPERS } from '../data/scientificPapers';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ResearchGuide() {
-  const [lang, setLang] = useState('vi'); // 'vi' | 'en' | 'fr' | 'de'
+  const { lang: globalLang, setLang: setGlobalLang } = useLanguage();
+  const [lang, setLang] = useState(() => globalLang || 'vi');
+
+  useEffect(() => {
+    if (globalLang && (globalLang === 'vi' || globalLang === 'en')) {
+      setLang(globalLang);
+    }
+  }, [globalLang]);
+
+  const handleSelectLang = (code) => {
+    setLang(code);
+    if (code === 'vi' || code === 'en') {
+      setGlobalLang(code);
+    }
+  };
   const [activeProtocolTab, setActiveProtocolTab] = useState('companion');
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedMaster, setCopiedMaster] = useState(false);
@@ -165,7 +180,7 @@ export default function ResearchGuide() {
           {RESEARCH_LANGUAGES.map((l) => (
             <button
               key={l.code}
-              onClick={() => setLang(l.code)}
+              onClick={() => handleSelectLang(l.code)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center space-x-1.5 cursor-pointer ${
                 lang === l.code
                   ? 'bg-indigo-600 text-white shadow-sm font-semibold'

@@ -16,28 +16,32 @@ import {
   ShieldCheck,
   Sun,
   Moon,
-  Users
+  Users,
+  Sparkles
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
+import LanguageSwitcher from './LanguageSwitcher';
 import ShinyText from './react-bits/ShinyText';
 
 export default function Sidebar({ isCollapsed, setIsCollapsed }) {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { t } = useLanguage();
 
   const publicLinks = [
-    { name: 'Giới Thiệu & Bắt Đầu', path: '/', icon: Sparkles, badge: 'Intro' },
-    { name: 'Kiểm Định Prompt (6D)', path: '/inspector', icon: Compass, badge: 'Core' },
-    { name: 'Cortex Bot (Trained)', path: '/trained-bot', icon: Bot, badge: 'Free ∞' },
-    { name: 'Đội Ngũ Devs & Admins', path: '/directory', icon: Users, badge: 'Profiles' },
-    { name: 'Kho 50+ GitHub Repos', path: '/news', icon: GitBranch, badge: 'Live' },
-    { name: 'Nghiên Cứu Thấu Cảm', path: '/research-guide', icon: BookOpen },
+    { name: t.nav.home, path: '/', icon: Sparkles, badge: 'Intro' },
+    { name: t.nav.inspector, path: '/inspector', icon: Compass, badge: 'Core' },
+    { name: t.nav.bot, path: '/trained-bot', icon: Bot, badge: 'Free ∞' },
+    { name: t.nav.directory, path: '/directory', icon: Users, badge: 'Profiles' },
+    { name: t.nav.repos, path: '/news', icon: GitBranch, badge: 'Live' },
+    { name: t.nav.research, path: '/research-guide', icon: BookOpen },
   ];
 
   const privilegedLinks = [
-    { name: 'Kỹ Sư Kiểm Định', path: '/dev-studio', icon: Terminal, role: 'Enclave' },
-    { name: 'Hệ Thống Quản Trị', path: '/admin-portal', icon: ShieldCheck, role: 'Auth' },
+    { name: t.nav.devStudio, path: '/dev-studio', icon: Terminal, role: 'Enclave' },
+    { name: t.nav.adminPortal, path: '/admin-portal', icon: ShieldCheck, role: 'Auth' },
   ];
 
   return (
@@ -198,8 +202,20 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
           </div>
         </div>
 
-        {/* Footer Area with Theme Switcher & Status */}
+        {/* Footer Area with Language, Theme Switcher & Status */}
         <div className="p-3 border-t border-[var(--border-subtle)] space-y-2">
+          {/* Ngôn ngữ (Language Switcher) */}
+          {(!isCollapsed || mobileOpen) ? (
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[11px] font-mono text-[var(--text-muted)]">{t.common.language}:</span>
+              <LanguageSwitcher compact={false} />
+            </div>
+          ) : (
+            <div className="flex justify-center">
+              <LanguageSwitcher compact={true} />
+            </div>
+          )}
+
           {/* Nút chuyển đổi Sáng / Tối */}
           <button
             onClick={toggleTheme}
@@ -213,7 +229,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                 <Moon className="w-4 h-4 text-indigo-500" />
               )}
               {(!isCollapsed || mobileOpen) && (
-                <span>Giao diện: {theme === 'dark' ? 'Tối (Dark)' : 'Sáng (Light)'}</span>
+                <span>{t.common.theme}: {theme === 'dark' ? t.common.dark : t.common.light}</span>
               )}
             </div>
             {(!isCollapsed || mobileOpen) && (
@@ -226,8 +242,8 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
           {/* Author Badge */}
           {(!isCollapsed || mobileOpen) && (
             <div className="px-2 py-1 text-[10px] font-mono text-[var(--text-muted)] flex items-center justify-between">
-              <span>Tác giả:</span>
-              <span className="text-[var(--text-primary)] font-semibold">Phạm Ngọc Tài Anh</span>
+              <span>{t.common.author}:</span>
+              <span className="text-[var(--text-primary)] font-semibold">{t.common.authorName}</span>
             </div>
           )}
 

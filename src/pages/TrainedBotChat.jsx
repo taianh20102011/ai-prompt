@@ -35,10 +35,12 @@ import {
 } from '../services/mockStorage';
 import SpotlightCard from '../components/react-bits/SpotlightCard';
 import ShinyText from '../components/react-bits/ShinyText';
+import { useLanguage } from '../context/LanguageContext';
 
 const CHAT_STORAGE_KEY = 'promptcraft_bot_chat_history';
 
 export default function TrainedBotChat() {
+  const { t, lang } = useLanguage();
   const [messages, setMessages] = useState(() => {
     return getStorageData(CHAT_STORAGE_KEY, [
       {
@@ -171,10 +173,10 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
           </div>
           <h1 className="text-2xl font-semibold text-[var(--text-primary)] flex items-center space-x-2.5">
             <Bot className="w-6 h-6 text-indigo-400" />
-            <ShinyText text="Cortex AI Assistant Pro" speed={4} />
+            <ShinyText text={t.cortexBot.title} speed={4} />
           </h1>
           <p className="text-xs text-[var(--text-secondary)]">
-            Trợ lý AI đa chế độ thông minh, có chuỗi suy luận Chain-of-Thought và tự động đồng bộ Vercel DB chống tràn bộ nhớ.
+            {t.cortexBot.subtitle}
           </p>
         </div>
 
@@ -186,7 +188,7 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
             title="Đồng bộ ngay lên Vercel Database / Edge Storage"
           >
             <Database className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Đồng Bộ Cloud</span>
+            <span className="hidden sm:inline">{t.cortexBot.syncVercel}</span>
           </button>
 
           <button
@@ -195,13 +197,13 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
             title="Tải toàn bộ lịch sử tin nhắn về máy tính (.json)"
           >
             <Download className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Tải JSON</span>
+            <span className="hidden sm:inline">JSON</span>
           </button>
 
           <button
             onClick={clearChat}
             className="neu-button px-3 py-1.5 text-xs font-mono flex items-center space-x-1.5 text-rose-400 hover:text-rose-300 cursor-pointer"
-            title="Xóa lịch sử"
+            title={t.cortexBot.clearHistory}
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
@@ -392,42 +394,42 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
 
         {/* Quick prompt chips (Flat Minimalist Pills, No Heavy Neumorphic Buttons) */}
         <div className="px-4 py-2 bg-[var(--bg-elevated)] border-t border-[var(--border-subtle)] flex items-center space-x-2 overflow-x-auto text-[11px] font-mono">
-          <span className="text-[var(--text-muted)] shrink-0">Gợi ý:</span>
+          <span className="text-[var(--text-muted)] shrink-0">{t.cortexBot.suggestedPrompts}</span>
           <button
             onClick={() => {
               setActiveMode('empathy');
-              setInputValue('Tôi vừa trải qua một đợt sa thải bất ngờ và thấy mình vô dụng...');
+              setInputValue(lang === 'vi' ? 'Tôi vừa trải qua một đợt sa thải bất ngờ và thấy mình vô dụng...' : 'I was just unexpectedly laid off and feel completely lost and worthless...');
             }}
             className="px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-page)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-indigo-500/50 shrink-0 cursor-pointer transition-colors"
           >
-            💖 Thấu cảm khi sa thải
+            {t.cortexBot.chipEmpathy}
           </button>
           <button
             onClick={() => {
               setActiveMode('architect');
-              setInputValue('Thiết kế kiến trúc Web App Anti-Slop với GSAP và Lenis');
+              setInputValue(lang === 'vi' ? 'Thiết kế kiến trúc Web App Anti-Slop với GSAP và Lenis' : 'Design an Anti-Slop Web Application architecture with GSAP and Lenis');
             }}
             className="px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-page)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-indigo-500/50 shrink-0 cursor-pointer transition-colors"
           >
-            🧠 Kiến trúc Anti-Slop
+            {t.cortexBot.chipArchitect}
           </button>
           <button
             onClick={() => {
               setActiveMode('security');
-              setInputValue('Kiểm tra phòng thủ IDOR và chống Prompt Injection');
+              setInputValue(lang === 'vi' ? 'Kiểm tra phòng thủ IDOR và chống Prompt Injection' : 'Audit IDOR defense and mitigate Prompt Injection vectors');
             }}
             className="px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-page)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-indigo-500/50 shrink-0 cursor-pointer transition-colors"
           >
-            🛡️ Bảo mật OWASP & IDOR
+            {t.cortexBot.chipSecurity}
           </button>
           <button
             onClick={() => {
               setActiveMode('socratic');
-              setInputValue('Tôi đang phân vân giữa việc tự khởi nghiệp hay tiếp tục đi làm thuê?');
+              setInputValue(lang === 'vi' ? 'Tôi đang phân vân giữa việc tự khởi nghiệp hay tiếp tục đi làm thuê?' : 'Should I start my own startup or continue as an engineering employee?');
             }}
             className="px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-page)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-indigo-500/50 shrink-0 cursor-pointer transition-colors"
           >
-            🧭 Khai vấn định hướng
+            {t.cortexBot.chipSocratic}
           </button>
         </div>
 
@@ -437,7 +439,7 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder={`Nhập câu hỏi (Chế độ: ${BOT_MODES.find(m => m.id === activeMode)?.name})...`}
+            placeholder={t.cortexBot.inputPlaceholder}
             className="craft-input flex-1 px-4 py-3 text-xs font-mono"
           />
           <button
@@ -445,7 +447,7 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
             disabled={!inputValue.trim() || isThinking}
             className="neu-button px-5 py-3 text-xs font-semibold font-mono disabled:opacity-40 flex items-center space-x-2 text-[var(--text-primary)] cursor-pointer"
           >
-            <span>Gửi</span>
+            <span>{t.cortexBot.btnSend}</span>
             <Send className="w-3.5 h-3.5 text-indigo-400" />
           </button>
         </form>
