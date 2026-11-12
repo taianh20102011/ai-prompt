@@ -205,20 +205,15 @@ export default function UserAnalyzer() {
                         handleInspect(promptInput, model.id);
                       }
                     }}
-                    className={`p-2.5 rounded-lg border text-left flex flex-col justify-between transition-all active:scale-[0.98] cursor-pointer ${
+                    className={`px-3 py-2.5 rounded-[6px] border text-left flex items-center justify-between transition-all active:scale-[0.98] cursor-pointer ${
                       isSelected
-                        ? 'border-indigo-500 bg-indigo-500/15 text-[var(--text-primary)] shadow-xs ring-1 ring-indigo-500/40'
-                        : 'border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-neutral-600'
+                        ? 'border-[#2563EB] bg-[#2563EB]/12 text-[var(--text-primary)] ring-1 ring-[#2563EB]/40'
+                        : 'border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)]'
                     }`}
                     title={model.description}
                   >
-                    <div className="flex items-center justify-between text-xs font-semibold">
-                      <span className="truncate">{model.shortName}</span>
-                      {isSelected && <Check className="w-3 h-3 text-indigo-400 shrink-0 ml-1" />}
-                    </div>
-                    <span className="text-[9px] font-mono text-[var(--text-muted)] mt-1 truncate">
-                      {model.badge}
-                    </span>
+                    <span className="text-xs font-semibold truncate">{model.shortName}</span>
+                    {isSelected && <Check className="w-3.5 h-3.5 text-blue-500 shrink-0 ml-1.5" />}
                   </button>
                 );
               })}
@@ -500,7 +495,7 @@ export default function UserAnalyzer() {
               {/* Target AI Architecture Hint Banner */}
               <div className="px-3 py-2 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[11px] font-mono text-[var(--text-secondary)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
                 <span>
-                  💡 {lang === 'vi' ? 'Định dạng kiến trúc:' : 'Architecture Format:'} <strong className="text-[var(--text-primary)]">{result.targetAIDetails?.badge}</strong> • {result.targetAIDetails?.recommendedFor}
+                  {lang === 'vi' ? 'Định dạng kiến trúc:' : 'Architecture Format:'} <strong className="text-[var(--text-primary)]">{result.targetAIDetails?.badge}</strong> • {result.targetAIDetails?.recommendedFor}
                 </span>
                 {result.suggestedParams?.systemPrompt && (
                   <span className="text-[10px] text-indigo-400">

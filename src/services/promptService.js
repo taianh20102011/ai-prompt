@@ -10,13 +10,13 @@ export const TARGET_AI_MODELS = [
     badge: 'R-C-O-C Core', 
     description: 'Tương thích tiêu chuẩn với tất cả các mô hình AI lớn',
     recommendedFor: 'Tất cả các tác vụ chung, prompt đa nền tảng',
-    accentColor: 'indigo'
+    accentColor: 'blue'
   },
   { 
     id: 'gemini', 
     name: 'Google Gemini', 
     shortName: 'Gemini',
-    badge: '1.5 Pro / 2.0 Flash', 
+    badge: 'System Instruction', 
     description: 'Cấu trúc System Instruction, Multimodal Grounding & Phân tầng nhiệm vụ',
     recommendedFor: 'Suy luận bối cảnh lớn (Large Context), Google Workspace, Phân tích dữ liệu',
     accentColor: 'blue'
@@ -34,7 +34,7 @@ export const TARGET_AI_MODELS = [
     id: 'qwen', 
     name: 'Qwen (Alibaba)', 
     shortName: 'Qwen',
-    badge: '2.5 Coder', 
+    badge: 'Code-First & Logic', 
     description: 'Code-first structure, tối ưu thuật toán và dịch thuật đa ngôn ngữ chính xác',
     recommendedFor: 'Xử lý mã nguồn, suy luận toán học và hiểu ngữ nghĩa tiếng Việt sâu sắc',
     accentColor: 'teal'
@@ -43,7 +43,7 @@ export const TARGET_AI_MODELS = [
     id: 'deepseek', 
     name: 'DeepSeek', 
     shortName: 'DeepSeek',
-    badge: 'V3 / R1 CoT', 
+    badge: 'Chain-of-Thought', 
     description: 'Chuỗi tư duy Chain-of-Thought từng bước, kiểm chứng logic và phản biện sắc bén',
     recommendedFor: 'Bài toán logic phức tạp, thuật toán hóc búa, phân tích phản biện',
     accentColor: 'sky'
@@ -52,7 +52,7 @@ export const TARGET_AI_MODELS = [
     id: 'claude', 
     name: 'Claude (Anthropic)', 
     shortName: 'Claude',
-    badge: '3.5 / 3.7 Sonnet XML', 
+    badge: 'XML Tags', 
     description: 'Chuẩn cấu trúc XML Tags (<role>, <context>, <rules>), loại bỏ 100% mở bài sáo rỗng',
     recommendedFor: 'Viết code chuyên sâu, bài luận học thuật, tư duy chiến lược',
     accentColor: 'purple'
@@ -61,7 +61,7 @@ export const TARGET_AI_MODELS = [
     id: 'chatgpt', 
     name: 'ChatGPT (OpenAI)', 
     shortName: 'ChatGPT',
-    badge: 'GPT-4o / o1 / o3', 
+    badge: 'Markdown Headers', 
     description: 'Markdown Headers phân đoạn rõ ràng, thiết lập Persona & High Burstiness tự nhiên',
     recommendedFor: 'Hội thoại tự nhiên, sáng tạo nội dung, tư vấn chiến lược và xử lý văn bản',
     accentColor: 'rose'
