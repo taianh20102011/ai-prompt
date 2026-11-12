@@ -94,8 +94,11 @@ export default function EngineersDirectory() {
               </div>
 
               <div className="pt-3 border-t border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
-                <span>Chứng chỉ: <code className="text-[var(--text-secondary)]">{person.certificateId}</code></span>
-                <span className="text-indigo-400 font-semibold group-hover:underline">Xem Profile $\rightarrow$</span>
+                <span>{t.directory.certId} <code className="text-[var(--text-secondary)]">{person.certificateId}</code></span>
+                <span className="text-indigo-400 font-semibold group-hover:underline flex items-center space-x-1">
+                  <span>{lang === 'vi' ? 'Xem Profile' : 'View Profile'}</span>
+                  <span>→</span>
+                </span>
               </div>
             </div>
           );

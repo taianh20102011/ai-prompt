@@ -448,7 +448,7 @@ export default function DevStudio() {
                 {/* TAB 2: Không dùng ảnh thông báo */}
                 {avatarTab === 'none' && (
                   <div className="p-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-page)] text-xs font-mono text-[var(--text-secondary)] animate-fadeIn">
-                    Hệ thống sẽ hiển thị thẻ chữ cái viết tắt của tên kỹ sư (VD: <strong>{currentDev.name}</strong> $\rightarrow$ ký hiệu phẳng tối giản).
+                    Hệ thống sẽ hiển thị thẻ chữ cái viết tắt của tên kỹ sư (VD: <strong>{currentDev.name}</strong> → ký hiệu phẳng tối giản).
                   </div>
                 )}
 
