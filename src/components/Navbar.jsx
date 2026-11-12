@@ -29,8 +29,6 @@ export default function Navbar() {
     { name: 'Khám Phá & Phân Tích', path: '/', icon: Sparkles },
     { name: 'Tin Tức GitHub AI', path: '/news', icon: GitBranch, badge: newsAlert ? 'Mới' : null },
     { name: 'Đọc Nghiên Cứu AI', path: '/research-guide', icon: BookOpen },
-    { name: 'Dev Studio (Chứng Chỉ)', path: '/dev-studio', icon: Terminal, role: 'Dev Only' },
-    { name: 'Admin Portal', path: '/admin-portal', icon: ShieldCheck, role: 'Secret Key' },
   ];
 
   return (
@@ -89,17 +87,9 @@ export default function Navbar() {
           {/* Right Status Pill */}
           <div className="flex items-center space-x-3">
             <div className="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-slate-800 text-xs text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
               <span>Hệ thống AI: Hoạt động</span>
             </div>
-
-            <Link
-              to="/admin-portal"
-              className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-xs transition-colors"
-            >
-              <Lock className="w-3.5 h-3.5" />
-              <span>Admin Key</span>
-            </Link>
           </div>
         </div>
       </div>

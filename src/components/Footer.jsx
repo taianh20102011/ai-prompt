@@ -122,7 +122,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Cột 3: Phân hệ Nhà phát triển */}
+        {/* Cột 3: Đội ngũ & Dự án */}
         <div className="space-y-2.5">
           <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-primary)] flex items-center space-x-1.5">
             <Cpu className="w-3.5 h-3.5 text-emerald-400" />
@@ -130,27 +130,26 @@ export default function Footer() {
           </h4>
           <ul className="space-y-2 text-xs">
             <li>
-              <Link to="/dev-studio" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5">
-                <Terminal className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-                <span>{t.nav.devStudio}</span>
-              </Link>
-            </li>
-            <li>
               <Link to="/directory" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5">
                 <Users className="w-3.5 h-3.5 text-[var(--text-muted)]" />
                 <span>{t.nav.directory}</span>
               </Link>
             </li>
             <li>
-              <Link to="/admin-portal" className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-                <span>{t.nav.adminPortal}</span>
-              </Link>
+              <a
+                href="https://github.com/taianh20102011/ai-prompt"
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[var(--text-primary)] transition-colors flex items-center space-x-1.5"
+              >
+                <GitBranch className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                <span>GitHub Source</span>
+              </a>
             </li>
             <li>
               <span className="text-[var(--text-muted)] flex items-center space-x-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Vercel Edge DB Synchronizer</span>
+                <span>IndexedDB Client Persistence</span>
               </span>
             </li>
           </ul>

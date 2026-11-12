@@ -38,11 +38,6 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
     { name: t.nav.research, path: '/research-guide', icon: BookOpen },
   ];
 
-  const privilegedLinks = [
-    { name: t.nav.devStudio, path: '/dev-studio', icon: Terminal, role: 'Enclave' },
-    { name: t.nav.adminPortal, path: '/admin-portal', icon: ShieldCheck, role: 'Auth' },
-  ];
-
   return (
     <>
       {/* Mobile Menu Button */}
@@ -156,45 +151,6 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                           {item.badge}
                         </span>
                       )}
-                    </div>
-                  )}
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* Privileged Group */}
-          <div className="space-y-1 pt-2 border-t border-[var(--border-subtle)]">
-            {(!isCollapsed || mobileOpen) && (
-              <div className="px-2.5 pb-1 text-[10px] font-mono font-medium text-[var(--text-muted)] uppercase tracking-wider flex items-center justify-between">
-                <span>Privileged Access</span>
-                <span className="text-[8px] text-[var(--text-muted)]">ZERO-TRUST</span>
-              </div>
-            )}
-            {privilegedLinks.map((item) => {
-              const Icon = item.icon;
-              const isActive = location.pathname === item.path;
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setMobileOpen(false)}
-                  title={isCollapsed ? item.name : undefined}
-                  className={`flex items-center rounded-md text-xs font-medium transition-all ${
-                    isCollapsed && !mobileOpen ? 'justify-center p-2.5' : 'px-2.5 py-2 space-x-2.5'
-                  } ${
-                    isActive
-                      ? 'bg-[var(--border-subtle)] text-[var(--text-primary)] font-semibold border border-[var(--border-hover)]'
-                      : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--border-subtle)]'
-                  }`}
-                >
-                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-emerald-500' : 'text-[var(--text-muted)]'}`} />
-                  {(!isCollapsed || mobileOpen) && (
-                    <div className="flex-1 flex items-center justify-between min-w-0">
-                      <span className="truncate">{item.name}</span>
-                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[var(--bg-elevated)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
-                        {item.role}
-                      </span>
                     </div>
                   )}
                 </Link>
