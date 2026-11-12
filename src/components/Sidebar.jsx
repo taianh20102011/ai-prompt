@@ -222,6 +222,14 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
             )}
           </button>
 
+          {/* Author Badge */}
+          {(!isCollapsed || mobileOpen) && (
+            <div className="px-2 py-1 text-[10px] font-mono text-[var(--text-muted)] flex items-center justify-between">
+              <span>Tác giả:</span>
+              <span className="text-[var(--text-primary)] font-semibold">Phạm Ngọc Tài Anh</span>
+            </div>
+          )}
+
           {/* Enclave Status */}
           {(!isCollapsed || mobileOpen) ? (
             <div className="p-2 rounded-md bg-[var(--bg-page)] border border-[var(--border-subtle)] text-[11px] font-mono flex items-center justify-between text-[var(--text-secondary)]">

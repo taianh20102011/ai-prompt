@@ -1,11 +1,14 @@
 # Prompt AI PNIT
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Author](https://img.shields.io/badge/Author-Ph%E1%BA%A1m%20Ng%E1%BB%8Dc%20T%C3%A0i%20Anh-indigo.svg)](https://github.com/taianh20102011)
 [![React](https://img.shields.io/badge/React-19-61dafb.svg)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff.svg)](https://vite.dev)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-38bdf8.svg)](https://tailwindcss.com)
 
 **Prompt AI PNIT** là nền tảng kiểm định, phân tích và tối ưu hóa System Prompt AI theo chuẩn Anti-Slop, tích hợp trợ lý Cortex Bot, bộ công cụ phân tích Heuristic đa chiều, kho mã nguồn mở AI toàn cầu và hệ thống bảo mật Enclave Zero-Trust.
+
+- **Tác giả (Author):** **Phạm Ngọc Tài Anh** ([@taianh20102011](https://github.com/taianh20102011))
 
 ---
 
@@ -52,7 +55,7 @@ Dự án này được phát hành theo giấy phép **[Apache License 2.0](LICE
 - **Ghi Nhận Bản Quyền (Attribution)**: Giữ nguyên thông báo bản quyền và tệp [NOTICE](NOTICE) kèm theo.
 
 ```
-Copyright 2026 PromptCraft AI Studio Authors & Contributors
+Copyright 2026 Phạm Ngọc Tài Anh (Prompt AI PNIT)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
