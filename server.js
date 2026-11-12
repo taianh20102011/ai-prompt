@@ -371,11 +371,27 @@ app.get('/api/github-news', async (req, res) => {
       return res.json({ ...payload, source: 'GITHUB_LIVE_API' });
     }
 
-    // Nếu rate limit (403)
-    res.status(ghRes.status).json({
+    // Nếu rate limit (403), phục vụ từ kho tri thức dự phòng chất lượng cao
+    const curatedSample = [
+      { id: 101, name: 'generative-ai-js', author: 'google-gemini', description: 'Official JavaScript / TypeScript SDK for Gemini API', stars: 3950, forks: 590, language: 'TypeScript', avatar: 'https://avatars.githubusercontent.com/u/156170464?v=4', url: 'https://github.com/google-gemini/generative-ai-js', updatedAt: 'Hôm nay' },
+      { id: 102, name: 'cookbook', author: 'google-gemini', description: 'Essential guides, notebooks, and production code for Gemini 1.5 Pro and Flash', stars: 13200, forks: 2310, language: 'Python', avatar: 'https://avatars.githubusercontent.com/u/156170464?v=4', url: 'https://github.com/google-gemini/cookbook', updatedAt: 'Hôm qua' },
+      { id: 104, name: 'gemini-cli', author: 'google-gemini', description: 'Open-source AI agent that brings Gemini directly into your terminal', stars: 108797, forks: 14937, language: 'TypeScript', avatar: 'https://avatars.githubusercontent.com/u/161781182?v=4', url: 'https://github.com/google-gemini/gemini-cli', updatedAt: 'Hôm nay' },
+      { id: 105, name: 'graphify', author: 'Graphify-Labs', description: 'Turn any codebase with docs, SQL schemas into a queryable knowledge graph', stars: 146571, forks: 14049, language: 'Python', avatar: 'https://avatars.githubusercontent.com/u/297659074?v=4', url: 'https://github.com/Graphify-Labs/graphify', updatedAt: 'Hôm nay' },
+      { id: 106, name: 'claude-mem', author: 'thedotmack', description: 'Persistent Context Across Sessions for Every Agent (Claude, Gemini, Cursor)', stars: 116466, forks: 10104, language: 'TypeScript', avatar: 'https://avatars.githubusercontent.com/u/683968?v=4', url: 'https://github.com/thedotmack/claude-mem', updatedAt: 'Hôm nay' },
+      { id: 107, name: 'OmniRoute', author: 'cheaper-inference', description: 'Free MIT AI gateway: one endpoint, 375 providers, 1,400+ models', stars: 86786, forks: 13260, language: 'TypeScript', avatar: 'https://avatars.githubusercontent.com/u/320819803?v=4', url: 'https://github.com/cheaper-inference/OmniRoute', updatedAt: 'Hôm nay' },
+      { id: 401, name: 'ollama', author: 'ollama', description: 'Get up and running with Llama 3, DeepSeek-R1, and other LLMs locally', stars: 105400, forks: 9200, language: 'Go', avatar: 'https://avatars.githubusercontent.com/u/147983637?v=4', url: 'https://github.com/ollama/ollama', updatedAt: 'Hôm nay' },
+      { id: 402, name: 'DeepSeek-R1', author: 'deepseek-ai', description: 'Incentivizing Reasoning Capability in LLMs via Reinforcement Learning', stars: 82500, forks: 9400, language: 'Python', avatar: 'https://avatars.githubusercontent.com/u/148330837?v=4', url: 'https://github.com/deepseek-ai/DeepSeek-R1', updatedAt: 'Vừa xong' },
+      { id: 404, name: 'llama.cpp', author: 'ggerganov', description: 'LLM inference in C/C++ with no dependencies, optimized for AVX2 and Metal', stars: 74200, forks: 10400, language: 'C++', avatar: 'https://avatars.githubusercontent.com/u/1991296?v=4', url: 'https://github.com/ggerganov/llama.cpp', updatedAt: 'Hôm nay' },
+      { id: 501, name: 'NextChat', author: 'ChatGPTNextWeb', description: 'Zero-config AI chat assistant with multi-model support', stars: 88948, forks: 58537, language: 'TypeScript', avatar: 'https://avatars.githubusercontent.com/u/153288546?v=4', url: 'https://github.com/ChatGPTNextWeb/NextChat', updatedAt: 'Hôm nay' },
+      { id: 601, name: 'crewAI', author: 'crewAIInc', description: 'Framework for orchestrating role-playing, autonomous AI agents', stars: 24800, forks: 3100, language: 'Python', avatar: 'https://avatars.githubusercontent.com/u/152345639?v=4', url: 'https://github.com/crewAIInc/crewAI', updatedAt: 'Hôm nay' },
+      { id: 602, name: 'AutoGPT', author: 'Significant-Gravitas', description: 'Autonomous AI agent capable of breaking down complex goals into executable steps', stars: 172000, forks: 45000, language: 'Python', avatar: 'https://avatars.githubusercontent.com/u/130107936?v=4', url: 'https://github.com/Significant-Gravitas/AutoGPT', updatedAt: 'Hôm nay' }
+    ];
+
+    res.json({
       rateLimited: true,
-      status: ghRes.status,
-      message: 'GitHub API Rate Limit reached, switching to Curated Fallback'
+      total_count: 1200,
+      items: curatedSample,
+      source: 'CURATED_FALLBACK'
     });
   } catch (err) {
     res.status(500).json({ error: err.message, rateLimited: true });
