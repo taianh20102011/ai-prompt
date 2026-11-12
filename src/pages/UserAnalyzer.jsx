@@ -20,7 +20,7 @@ import {
   Sliders,
   HelpCircle
 } from 'lucide-react';
-import { analyzePromptLocally } from '../services/promptService';
+import { analyzePromptLocally, TARGET_AI_MODELS } from '../services/promptService';
 import { getStorageData, DEFAULT_BENCHMARKS } from '../services/mockStorage';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -50,6 +50,7 @@ export default function UserAnalyzer() {
     return location.state?.initialPrompt || '';
   });
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [targetAI, setTargetAI] = useState('universal');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
   const [copiedUpgraded, setCopiedUpgraded] = useState(false);
@@ -66,13 +67,14 @@ export default function UserAnalyzer() {
   );
   const [searchBenchmark, setSearchBenchmark] = useState('');
 
-  const handleInspect = async (promptOverride) => {
+  const handleInspect = async (promptOverride, targetAIOverride) => {
     const textToAnalyze = typeof promptOverride === 'string' ? promptOverride : promptInput;
     if (!textToAnalyze || !textToAnalyze.trim()) return;
 
+    const activeTarget = targetAIOverride || targetAI;
     setIsAnalyzing(true);
     try {
-      const data = await analyzePromptLocally(textToAnalyze, selectedCategory);
+      const data = await analyzePromptLocally(textToAnalyze, selectedCategory, activeTarget);
       setResult(data);
     } catch (err) {
       console.error('Error analyzing prompt:', err);
@@ -144,6 +146,56 @@ export default function UserAnalyzer() {
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
+          </div>
+
+          {/* Target AI Model Selector (Khuyên dùng / Recommended) */}
+          <div className="space-y-2 pt-2 border-t border-[var(--border-subtle)]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+              <span className="text-xs font-mono font-medium text-[var(--text-secondary)] uppercase tracking-wider flex items-center space-x-1.5">
+                <Cpu className="w-3.5 h-3.5 text-indigo-400" />
+                <span>{t.inspector.targetAiLabel}</span>
+              </span>
+              <span className="inline-flex items-center space-x-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold self-start sm:self-auto">
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                <span>{t.inspector.targetAiBadge}</span>
+              </span>
+            </div>
+
+            <p className="text-[11px] font-mono text-[var(--text-muted)]">
+              {t.inspector.targetAiDesc}
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 pt-1">
+              {TARGET_AI_MODELS.map((model) => {
+                const isSelected = targetAI === model.id;
+                return (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => {
+                      setTargetAI(model.id);
+                      if (result && promptInput.trim()) {
+                        handleInspect(promptInput, model.id);
+                      }
+                    }}
+                    className={`p-2 rounded-lg border text-left flex flex-col justify-between transition-all cursor-pointer ${
+                      isSelected
+                        ? 'border-indigo-500 bg-indigo-500/15 text-[var(--text-primary)] shadow-xs ring-1 ring-indigo-500/40'
+                        : 'border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-neutral-600'
+                    }`}
+                    title={model.description}
+                  >
+                    <div className="flex items-center justify-between text-xs font-semibold">
+                      <span className="truncate">{model.shortName}</span>
+                      {isSelected && <Check className="w-3 h-3 text-indigo-400 shrink-0 ml-1" />}
+                    </div>
+                    <span className="text-[9px] font-mono text-[var(--text-muted)] mt-1 truncate">
+                      {model.badge}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -364,23 +416,66 @@ export default function UserAnalyzer() {
               </div>
             </div>
 
-            {/* Generated Prompt 2.0 Codeview */}
-            <div className="space-y-2.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-medium text-[var(--text-secondary)] uppercase tracking-wider flex items-center space-x-1.5">
-                  <CornerDownRight className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Prompt 2.0 (Biên dịch hoàn chỉnh có Ràng buộc phủ định)</span>
-                </span>
-                <button
-                  onClick={() => copyToClipboard(result.upgradedPrompt)}
-                  className="flex items-center space-x-1.5 text-xs font-mono px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-page)] text-[var(--text-primary)] transition-colors cursor-pointer"
-                >
-                  {copiedUpgraded ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-indigo-400" />}
-                  <span>{copiedUpgraded ? 'Copied' : 'Copy Spec'}</span>
-                </button>
+            {/* Generated Prompt 2.0 Codeview (Tailored for Target AI) */}
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs font-mono font-medium text-[var(--text-secondary)] uppercase tracking-wider flex items-center space-x-1.5">
+                    <CornerDownRight className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Prompt 2.0</span>
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 font-bold flex items-center space-x-1">
+                    <Sparkles className="w-3 h-3 text-indigo-400" />
+                    <span>{result.targetAIDetails?.name || 'Tối ưu chuẩn AI'}</span>
+                  </span>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  {/* Quick AI Model Switcher in Result */}
+                  <div className="hidden md:flex items-center space-x-1 p-0.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[10px] font-mono">
+                    {TARGET_AI_MODELS.map(m => (
+                      <button
+                        key={m.id}
+                        type="button"
+                        onClick={() => {
+                          setTargetAI(m.id);
+                          handleInspect(promptInput, m.id);
+                        }}
+                        className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
+                          targetAI === m.id 
+                            ? 'bg-indigo-600 text-white font-bold' 
+                            : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+                        }`}
+                        title={m.description}
+                      >
+                        {m.shortName}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => copyToClipboard(result.upgradedPrompt)}
+                    className="flex items-center space-x-1.5 text-xs font-mono px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-page)] text-[var(--text-primary)] transition-colors cursor-pointer shadow-xs"
+                  >
+                    {copiedUpgraded ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-indigo-400" />}
+                    <span>{copiedUpgraded ? (lang === 'vi' ? 'Đã sao chép!' : 'Copied!') : (lang === 'vi' ? 'Sao chép Prompt' : 'Copy Prompt')}</span>
+                  </button>
+                </div>
               </div>
 
-              <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] font-mono text-xs text-[var(--text-primary)] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto">
+              {/* Target AI Architecture Hint Banner */}
+              <div className="px-3 py-2 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[11px] font-mono text-[var(--text-secondary)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
+                <span>
+                  💡 {lang === 'vi' ? 'Định dạng kiến trúc:' : 'Architecture Format:'} <strong className="text-[var(--text-primary)]">{result.targetAIDetails?.badge}</strong> • {result.targetAIDetails?.recommendedFor}
+                </span>
+                {result.suggestedParams?.systemPrompt && (
+                  <span className="text-[10px] text-indigo-400">
+                    {result.suggestedParams.systemPrompt}
+                  </span>
+                )}
+              </div>
+
+              <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] font-mono text-xs text-[var(--text-primary)] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto select-text">
                 {result.upgradedPrompt}
               </div>
             </div>

@@ -1,7 +1,258 @@
 import { getStorageData, setStorageData, DEFAULT_ADMIN_CONFIG } from './mockStorage.js';
 import { CURATED_AI_REPOS } from '../data/curatedRepos.js';
 
-// Danh mục từ mơ hồ dễ dẫn đến AI Slop (Ambiguity Buzzwords)
+// Target AI Models Registry (Chức năng khuyên dùng)
+export const TARGET_AI_MODELS = [
+  { 
+    id: 'universal', 
+    name: 'Đa Năng (Universal)', 
+    shortName: 'Universal',
+    badge: 'R-C-O-C Core', 
+    description: 'Tương thích tiêu chuẩn với tất cả các mô hình AI lớn',
+    recommendedFor: 'Tất cả các tác vụ chung, prompt đa nền tảng',
+    accentColor: 'indigo'
+  },
+  { 
+    id: 'gemini', 
+    name: 'Google Gemini', 
+    shortName: 'Gemini',
+    badge: '1.5 Pro / 2.0 Flash', 
+    description: 'Cấu trúc System Instruction, Multimodal Grounding & Phân tầng nhiệm vụ',
+    recommendedFor: 'Suy luận bối cảnh lớn (Large Context), Google Workspace, Phân tích dữ liệu',
+    accentColor: 'blue'
+  },
+  { 
+    id: 'cursor', 
+    name: 'Cursor AI', 
+    shortName: 'Cursor',
+    badge: '.cursorrules Agent', 
+    description: 'Chuẩn quy tắc Agentic Coding, không nói dài dòng, phẫu thuật mã nguồn tối thiểu',
+    recommendedFor: 'Lập trình, Refactor code, Sửa lỗi dự án trực tiếp trong IDE',
+    accentColor: 'emerald'
+  },
+  { 
+    id: 'qwen', 
+    name: 'Qwen (Alibaba)', 
+    shortName: 'Qwen',
+    badge: '2.5 Coder', 
+    description: 'Code-first structure, tối ưu thuật toán và dịch thuật đa ngôn ngữ chính xác',
+    recommendedFor: 'Xử lý mã nguồn, suy luận toán học và hiểu ngữ nghĩa tiếng Việt sâu sắc',
+    accentColor: 'teal'
+  },
+  { 
+    id: 'deepseek', 
+    name: 'DeepSeek', 
+    shortName: 'DeepSeek',
+    badge: 'V3 / R1 CoT', 
+    description: 'Chuỗi tư duy Chain-of-Thought từng bước, kiểm chứng logic và phản biện sắc bén',
+    recommendedFor: 'Bài toán logic phức tạp, thuật toán hóc búa, phân tích phản biện',
+    accentColor: 'sky'
+  },
+  { 
+    id: 'claude', 
+    name: 'Claude (Anthropic)', 
+    shortName: 'Claude',
+    badge: '3.5 / 3.7 Sonnet XML', 
+    description: 'Chuẩn cấu trúc XML Tags (<role>, <context>, <rules>), loại bỏ 100% mở bài sáo rỗng',
+    recommendedFor: 'Viết code chuyên sâu, bài luận học thuật, tư duy chiến lược',
+    accentColor: 'purple'
+  },
+  { 
+    id: 'chatgpt', 
+    name: 'ChatGPT (OpenAI)', 
+    shortName: 'ChatGPT',
+    badge: 'GPT-4o / o1 / o3', 
+    description: 'Markdown Headers phân đoạn rõ ràng, thiết lập Persona & High Burstiness tự nhiên',
+    recommendedFor: 'Hội thoại tự nhiên, sáng tạo nội dung, tư vấn chiến lược và xử lý văn bản',
+    accentColor: 'rose'
+  }
+];
+
+export const buildTailoredPrompt = ({
+  userPrompt,
+  detectedRole,
+  detectedCategory,
+  targetAI = 'universal',
+  isEmpathetic = false,
+  negativeConstraints,
+  assignedLibraries = []
+}) => {
+  const libSummary = assignedLibraries.length > 0 
+    ? assignedLibraries.map(l => `- Thư viện: ${l.name} (${l.npm}) • Vai trò: ${l.role}`).join('\n')
+    : '- Thư viện tiêu chuẩn: Kiến trúc mã nguồn sạch, TypeScript Type-Safety, Zero-Slop primitives.';
+
+  if (targetAI === 'claude') {
+    return `<role>
+Bạn là ${detectedRole}. Bạn luôn phản hồi với mức độ chặt chẽ cao nhất, tư duy phản biện sắc bén và đi thẳng vào trọng tâm kỹ thuật mà không cần bất kỳ câu chào hỏi hay mào đầu thừa thãi nào.
+</role>
+
+<context>
+Yêu cầu từ người dùng: "${userPrompt}"
+Lĩnh vực mục tiêu: ${detectedCategory}
+${libSummary}
+</context>
+
+<instructions>
+1. Tiếp cận vấn đề theo nguyên lý nền tảng (First Principles).
+2. Trình bày giải pháp mạch lạc, phân tích rõ ràng các trade-off (hiệu năng, độ phức tạp, tính mở rộng).
+3. Cung cấp mã nguồn hoặc kế hoạch chi tiết, có xử lý lỗi và các trường hợp biên (edge cases).
+</instructions>
+
+<negative_constraints>
+${negativeConstraints}
+- Tuyệt đối KHÔNG có lời mở đầu như: "Chắc chắn rồi", "Tuyệt vời, dưới đây là...", "Dưới đây là một số bước...".
+- KHÔNG tóm tắt lại câu hỏi của người dùng nếu không được yêu cầu.
+- Loại bỏ hoàn toàn các câu sáo rỗng vô thưởng vô phạt (AI Slop).
+</negative_constraints>
+
+<output_format>
+Định dạng câu trả lời bằng Markdown phân cấp chuẩn xác, khối code có định danh ngôn ngữ và chú thích giải thích ngắn gọn, súc tích.
+</output_format>`;
+  }
+
+  if (targetAI === 'cursor') {
+    return `# SYSTEM DIRECTIVE FOR CURSOR CODING AGENT (.cursorrules pattern)
+You are an elite ${detectedRole} working directly inside the codebase.
+
+## TASK SPECIFICATION
+Target Request: "${userPrompt}"
+Domain: ${detectedCategory}
+${libSummary}
+
+## STRICT AGENT EXECUTION RULES
+- Be direct and concise. Zero conversational filler, pleasantries, apologies, or lecturing explanations.
+- Output production-ready, fully typed code. Never emit lazy placeholders like "// TODO: add logic here" or "// rest of code remains the same".
+- Follow surgical edit principles: prioritize minimal diffs, protect adjacent working features, and maintain existing architectural patterns.
+- Ensure strict security hardening (IDOR prevention, input sanitization, runtime validation).
+
+## DELIVERABLES
+1. Architectural summary (Max 3 concise bullet points).
+2. Complete, executable code implementation with explicit imports and type contracts.
+3. Edge case considerations & verification checklist.
+
+## NEGATIVE CONSTRAINTS (ANTI-SLOP)
+${negativeConstraints}
+- Do not explain obvious syntax or repeat basic programming theory.`;
+  }
+
+  if (targetAI === 'gemini') {
+    return `[SYSTEM INSTRUCTION: ROLE & MULTIMODAL GROUNDING]
+Vai trò: Bạn là ${detectedRole} với tư duy hệ thống và khả năng suy luận logic đa tầng.
+Mục tiêu: Xử lý bài toán của người dùng với tính chuẩn xác cao, căn cứ dữ liệu thực tế và loại bỏ 100% phản xạ sinh văn bản sáo rỗng.
+
+[GROUNDED CONTEXT]
+- Yêu cầu người dùng: "${userPrompt}"
+- Phân loại nghiệp vụ: ${detectedCategory}
+${libSummary}
+
+[STRUCTURED EXECUTION PROTOCOL]
+1. Đào sâu bản chất: Phân tích nguyên nhân gốc rễ và phạm vi ảnh hưởng trước khi đưa ra giải pháp.
+2. Giải pháp thực chứng: Cung cấp giải pháp có dẫn chứng kỹ thuật, tuân thủ các chuẩn công nghiệp được công nhận.
+3. Tối ưu hiệu năng: Ưu tiên các giải pháp có độ trễ thấp, tiết kiệm tài nguyên và dễ bảo trì lâu dài.
+
+[STRICT NEGATIVE CONSTRAINTS]
+${negativeConstraints}
+- Không đưa ra các nhận định chung chung vô căn cứ.
+- Cấm dùng văn phong hoa mỹ nhưng rỗng tuếch; mọi khuyến nghị đều phải có giá trị thực thi.`;
+  }
+
+  if (targetAI === 'deepseek') {
+    return `[TARGET ENGINE: DEEPSEEK REASONING & CHAIN-OF-THOUGHT]
+Đóng vai trò là ${detectedRole}. Hãy giải quyết bài toán sau bằng chuỗi suy luận logic nghiêm ngặt (Rigorous Step-by-Step Chain of Thought).
+
+[BÀI TOÁN & DỮ LIỆU ĐẦU VÀO]
+"${userPrompt}"
+Phân loại: ${detectedCategory}
+
+[QUY TRÌNH SUY LUẬN BẮT BUỘC (CHAIN OF THOUGHT)]
+Bước 1 | Điều kiện biên & Giả định:
+- Xác định rõ các giả định nền tảng, ràng buộc dữ liệu và các trường hợp biên (edge cases).
+Bước 2 | Đánh giá & So sánh phương án (Trade-off Analysis):
+- So sánh ít nhất 2 phương án khả thi (về độ phức tạp thời gian/không gian, chi phí triển khai, độ ổn định).
+Bước 3 | Triển khai giải pháp tối ưu:
+- Trình bày giải pháp tốt nhất một cách chi tiết, có mã nguồn hoặc tài liệu kế hoạch hoàn chỉnh.
+Bước 4 | Tự kiểm chứng (Self-Verification):
+- Rà soát lại toàn bộ quy trình để phát hiện lỗi logic tiềm ẩn trước khi đưa ra kết luận cuối cùng.
+
+[TIÊU CHUẨN ANTI-SLOP]
+${negativeConstraints}
+- Lập luận dựa trên logic toán học, kỹ thuật và thực nghiệm; loại bỏ hoàn toàn các nhận định máy móc sáo rỗng.`;
+  }
+
+  if (targetAI === 'chatgpt') {
+    return `# ROLE & PERSONA
+Bạn là ${detectedRole}. Phong cách phản hồi: trực diện, sắc sảo, tự nhiên, giàu tính biến thiên câu (high burstiness) và hoàn toàn không mang âm hưởng máy móc của AI.
+
+# CONTEXT
+Nhiệm vụ: "${userPrompt}"
+Lĩnh vực chuyên môn: ${detectedCategory}
+${libSummary}
+
+# STEP-BY-STEP INSTRUCTIONS
+1. Tiếp cận trực diện: Bắt đầu câu trả lời ngay bằng luận điểm hoặc giải pháp cốt lõi, không dùng câu mào đầu như "Chắc chắn rồi", "Dưới đây là...".
+2. Chi tiết chuyên sâu: Cung cấp kiến trúc giải pháp chuẩn công nghiệp kèm ví dụ minh họa cụ thể.
+3. Khuyến nghị thực chiến: Nêu rõ các rủi ro tiềm ẩn và phương án phòng ngừa.
+
+# NEGATIVE CONSTRAINTS (ANTI-SLOP)
+${negativeConstraints}
+- CẤM các từ: "Đáng chú ý là", "Trong kỷ nguyên số", "Là một mô hình ngôn ngữ lớn".
+- Không chia nhỏ danh sách một cách máy móc nếu không thực sự cần thiết.`;
+  }
+
+  if (targetAI === 'qwen') {
+    return `[SYSTEM DIRECTIVE: QWEN CODER & MULTILINGUAL SPECIALIST]
+Role: ${detectedRole} with deep expertise in clean software engineering, algorithmic efficiency, and multilingual comprehension.
+
+[TASK DESCRIPTION]
+Request: "${userPrompt}"
+Domain: ${detectedCategory}
+${libSummary}
+
+[GUIDELINES FOR QWEN]
+1. Code-First Approach: When code is requested, provide the complete, compilable, idiomatic solution first, followed by concise explanations.
+2. High Precision: Follow syntax standards strictly. Optimize for execution speed and low memory footprint.
+3. Clear Language Alignment: Maintain fluent, natural Vietnamese/English terminology without mechanical translation artifacts.
+
+[CONSTRAINTS]
+${negativeConstraints}
+- No generic theoretical introductions.
+- Ensure edge cases and boundary conditions are explicitly guarded.`;
+  }
+
+  // Default: Universal R-C-O-C
+  if (isEmpathetic) {
+    return `[VAI TRÒ & NHÂN CÁCH]
+Bạn là một người bạn tri kỷ điềm đạm, ấm áp, sâu sắc và am hiểu tự nhiên về tâm lý học Narrative Therapy (Liệu pháp Tường thuật). Bạn không phải là cỗ máy giải quyết vấn đề, bạn ở đây để đồng hành và phản chiếu cảm xúc.
+
+[BỐI CẢNH & NỖI NIỀM]
+Người dùng đang chia sẻ: "${userPrompt}"
+
+[QUY TẮC PHẢN HỒI (H-E-A-R 2.0)]
+1. PHẢN CHIẾU CẢM XÚC TRƯỚC: Thừa nhận cảm giác cô đơn hoặc đau đớn mà người nói đang gánh chịu. Khẳng định rằng cảm xúc đó hoàn toàn xứng đáng được tôn trọng.
+2. NHỊP ĐIỆU CHẬM RÃI: Viết bằng văn phong mộc mạc, gần gũi như hai người bạn tâm sự đêm khuya.
+3. CÂU HỎI MỞ: Kết bài bằng một câu hỏi mở dịu dàng để gợi mở người nói tự giãi bày thêm.
+
+[RÀNG BUỘC PHỦ ĐỊNH]
+${negativeConstraints}`;
+  }
+
+  return `[ROLE & AUTHORITY]
+Bạn là ${detectedRole} hàng đầu, chuyên gia về Anti-Slop Software Architecture và Clean Code Engineering.
+
+[CONTEXT & TASK DEFINITION]
+Người dùng yêu cầu thực thi: "${userPrompt}"
+- Lĩnh vực mục tiêu: ${detectedCategory}
+- Tiêu chuẩn giao diện & hiệu năng: Tailwind CSS v4, Radix UI Primitives, GSAP ScrollTrigger, Lenis 60fps.
+${libSummary}
+
+[TECHNICAL DELIVERABLES]
+1. Cung cấp kiến trúc giải pháp chuẩn xác, đi thẳng vào nguyên lý cốt lõi (First Principles).
+2. Viết mã nguồn hoàn chỉnh, có type safety, xử lý edge-cases và tuân thủ nguyên tắc phòng thủ IDOR.
+3. Liệt kê các thư viện chuyên dụng cần cài đặt kèm lý do lựa chọn.
+
+[NEGATIVE CONSTRAINTS]
+${negativeConstraints}`;
+};
 const AMBIGUOUS_BUZZWORDS = [
   { word: 'tốt nhất', fix: 'Chỉ định rõ tiêu chí định lượng (e.g., tốc độ load < 1s, đạt chuẩn WCAG AAA)' },
   { word: 'nâng cấp', fix: 'Xác định cụ thể nâng cấp thành phần nào (UI, logic state, database, hay security)' },
@@ -58,7 +309,7 @@ const LIBRARY_ECOSYSTEM = [
 ];
 
 // Bộ Heuristics phân tích cấu trúc 6 chiều chuyên sâu (Inspector Pro 6D)
-export const analyzePromptLocally = async (userPrompt, industry = 'Tự động phát hiện') => {
+export const analyzePromptLocally = async (userPrompt, industry = 'Tự động phát hiện', targetAI = 'universal') => {
   await new Promise(res => setTimeout(res, 350));
 
   const trimmed = userPrompt.trim();
@@ -177,53 +428,56 @@ export const analyzePromptLocally = async (userPrompt, industry = 'Tự động 
     });
   }
 
-  // 9. Biên dịch Prompt 2.0 Hoàn Chỉnh
-  let upgradedPrompt = '';
+  // 9. Biên dịch Prompt 2.0 Tối Ưu Hóa Riêng Biệt Cho AI Đích (Target AI Specialization)
+  const isEmpathetic = detectedCategory.includes('Tâm lý') || /(buồn|cảm xúc|tình cảm)/i.test(lower);
+
   let negativeConstraints = '';
   let suggestedParams = { temp: 0.3, topP: 0.95, repPenalty: 1.1 };
 
-  if (detectedCategory.includes('Tâm lý') || /(buồn|cảm xúc|tình cảm)/i.test(lower)) {
+  if (isEmpathetic) {
     suggestedParams.temp = 0.7;
     negativeConstraints = `1. CẤM các câu xin lỗi vô cảm: "Tôi rất tiếc khi biết...", "Là một mô hình AI...".
 2. CẤM liệt kê giải pháp gạch đầu dòng vội vã khi người nói chưa được lắng nghe.
 3. CẤM các lời khuyên sáo rỗng mang tính độc hại (Toxic Positivity).`;
-
-    upgradedPrompt = `[VAI TRÒ & NHÂN CÁCH]
-Bạn là một người bạn tri kỷ điềm đạm, ấm áp, sâu sắc và am hiểu tự nhiên về tâm lý học Narrative Therapy (Liệu pháp Tường thuật). Bạn không phải là cỗ máy giải quyết vấn đề, bạn ở đây để đồng hành và phản chiếu cảm xúc.
-
-[BỐI CẢNH & NỖI NIỀM]
-Người dùng đang chia sẻ: "${userPrompt}"
-
-[QUY TẮC PHẢN HỒI (H-E-A-R 2.0)]
-1. PHẢN CHIẾU CẢM XÚC TRƯỚC: Thừa nhận cảm giác cô đơn hoặc đau đớn mà người nói đang gánh chịu. Khẳng định rằng cảm xúc đó hoàn toàn xứng đáng được tôn trọng.
-2. NHỊP ĐIỆU CHẬM RÃI: Viết bằng văn phong mộc mạc, gần gũi như hai người bạn tâm sự đêm khuya.
-3. CÂU HỎI MỞ: Kết bài bằng một câu hỏi mở dịu dàng để gợi mở người nói tự giãi bày thêm.
-
-[RÀNG BUỘC PHỦ ĐỊNH]
-${negativeConstraints}`;
   } else {
     suggestedParams.temp = 0.2;
     negativeConstraints = `1. CẤM đưa ra giải thích lý thuyết chung chung không gắn với code thực tế.
 2. CẤM sử dụng các công nghệ cũ lỗi thời (e.g. Redux cũ, CSS thuần không tối ưu).
 3. CẤM bỏ sót việc kiểm tra lỗ hổng bảo mật (OWASP Top 10, IDOR).`;
-
-    upgradedPrompt = `[ROLE & AUTHORITY]
-Bạn là ${detectedRole} hàng đầu, chuyên gia về Anti-Slop Software Architecture và Clean Code Engineering.
-
-[CONTEXT & TASK DEFINITION]
-Người dùng yêu cầu thực thi: "${userPrompt}"
-- Lĩnh vực mục tiêu: ${detectedCategory}
-- Tiêu chuẩn giao diện & hiệu năng: Tailwind CSS v4, Radix UI Primitives, GSAP ScrollTrigger, Lenis 60fps.
-- Tiêu chuẩn cơ sở dữ liệu: Vercel Cloud Database / Hybrid LocalStorage với cơ chế phòng ngừa tràn bộ nhớ Quota Guard.
-
-[TECHNICAL DELIVERABLES]
-1. Cung cấp kiến trúc giải pháp chuẩn xác, đi thẳng vào nguyên lý cốt lõi (First Principles).
-2. Viết mã nguồn hoàn chỉnh, có type safety, xử lý edge-cases và tuân thủ nguyên tắc phòng thủ IDOR.
-3. Liệt kê các thư viện chuyên dụng cần cài đặt kèm lý do lựa chọn.
-
-[NEGATIVE CONSTRAINTS]
-${negativeConstraints}`;
   }
+
+  // Cấu hình tham số tối ưu theo mô hình AI đích
+  if (targetAI === 'claude') {
+    suggestedParams.temp = isEmpathetic ? 0.6 : 0.2;
+    suggestedParams.systemPrompt = 'Hỗ trợ thẻ XML Tags chuẩn Anthropic Claude 3.5 Sonnet';
+  } else if (targetAI === 'cursor') {
+    suggestedParams.temp = 0.1;
+    suggestedParams.systemPrompt = 'Chuẩn .cursorrules quy định tác tử IDE thực thi không dài dòng';
+  } else if (targetAI === 'deepseek') {
+    suggestedParams.temp = 0.2;
+    suggestedParams.systemPrompt = 'Hỗ trợ chuỗi suy luận Chain-of-Thought (CoT) DeepSeek R1';
+  } else if (targetAI === 'gemini') {
+    suggestedParams.temp = isEmpathetic ? 0.7 : 0.3;
+    suggestedParams.systemPrompt = 'Hỗ trợ System Instruction & Multimodal Grounding Gemini 1.5/2.0';
+  } else if (targetAI === 'qwen') {
+    suggestedParams.temp = 0.2;
+    suggestedParams.systemPrompt = 'Tối ưu cho Qwen 2.5 Coder & độ chính xác thuật toán';
+  } else if (targetAI === 'chatgpt') {
+    suggestedParams.temp = isEmpathetic ? 0.7 : 0.2;
+    suggestedParams.systemPrompt = 'Markdown phân cấp rõ ràng theo chuẩn OpenAI GPT-4o / o1';
+  }
+
+  const upgradedPrompt = buildTailoredPrompt({
+    userPrompt,
+    detectedRole,
+    detectedCategory,
+    targetAI,
+    isEmpathetic,
+    negativeConstraints,
+    assignedLibraries
+  });
+
+  const selectedModelMeta = TARGET_AI_MODELS.find(m => m.id === targetAI) || TARGET_AI_MODELS[0];
 
   return {
     originalPrompt: userPrompt,
@@ -255,7 +509,9 @@ ${negativeConstraints}`;
     missingPoints,
     negativeConstraints,
     suggestedParams,
-    upgradedPrompt
+    upgradedPrompt,
+    targetAI,
+    targetAIDetails: selectedModelMeta
   };
 };
 

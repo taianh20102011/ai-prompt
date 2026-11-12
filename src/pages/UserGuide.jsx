@@ -20,7 +20,8 @@ import {
   AlertTriangle,
   Lightbulb,
   ExternalLink,
-  ChevronDown
+  ChevronDown,
+  Cpu
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -107,6 +108,9 @@ export default function UserGuide() {
           </a>
           <a href="#benchmarks" className="px-3 py-1.5 rounded-lg border border-indigo-500/40 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition-colors">
             🏆 {lang === 'vi' ? 'Dùng Prompt Benchmarks' : 'Using Benchmarks'}
+          </a>
+          <a href="#target-ai" className="px-3 py-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-colors">
+            ★ {lang === 'vi' ? 'Tối ưu theo AI đích' : 'Target AI Customizer'}
           </a>
           <a href="#rcoc-framework" className="px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] transition-colors">
             📐 {lang === 'vi' ? 'Chuẩn 4 trụ cột R-C-O-C' : 'R-C-O-C Framework'}
@@ -275,12 +279,111 @@ export default function UserGuide() {
         </div>
       </section>
 
-      {/* Section 3: The 4 Pillars R-C-O-C Framework */}
+      {/* Section 2.5: Recommended Feature - Target AI Customizer */}
+      <section id="target-ai" className="space-y-5 border-t border-[var(--border-subtle)] pt-8">
+        <div>
+          <div className="flex items-center space-x-2">
+            <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-mono text-[11px] font-bold">
+              ★ {lang === 'vi' ? 'CHỨC NĂNG KHUYÊN DÙNG' : 'RECOMMENDED FEATURE'}
+            </span>
+            <h2 className="text-xl font-bold text-[var(--text-primary)]">
+              {lang === 'vi' ? '3. Tối Ưu Hóa Riêng Biệt Cho Từng Mô Hình AI' : '3. Model-Specific Prompt Specialization'}
+            </h2>
+          </div>
+          <p className="text-xs text-[var(--text-secondary)] mt-1">
+            {lang === 'vi'
+              ? 'Mỗi mô hình AI (Claude, Cursor, DeepSeek, ChatGPT, Gemini, Qwen) có cấu trúc huấn luyện và điểm mạnh cú pháp hoàn toàn khác nhau. Khi bạn chọn AI đích, hệ thống tự động biên dịch cấu trúc tối ưu nhất cho mô hình đó.'
+              : 'Different LLMs thrive on vastly different syntax patterns. Selecting a target model compiles prompt formats tailored precisely to their internal tokenizers and reasoning engines.'}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Cursor */}
+          <div className="craft-card p-4 space-y-2 border-emerald-500/30">
+            <div className="flex items-center justify-between text-xs font-mono">
+              <span className="font-bold text-emerald-400">⚡ Cursor AI</span>
+              <span className="text-[10px] bg-emerald-950/40 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800/40">.cursorrules</span>
+            </div>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              {lang === 'vi'
+                ? 'Định dạng chỉ thị tác tử (Agent Directive). Cấm nói dài dòng, cấm giải thích lý thuyết thừa. Yêu cầu xuất code runnable đầy đủ (không dùng // TODO) và áp dụng nguyên tắc sửa đổi tối thiểu (minimal surgical diffs).'
+                : 'Direct agent directives. Bans conversational filler and repetitive theory. Enforces full runnable code and minimal surgical diffs.'}
+            </p>
+          </div>
+
+          {/* Claude */}
+          <div className="craft-card p-4 space-y-2 border-purple-500/30">
+            <div className="flex items-center justify-between text-xs font-mono">
+              <span className="font-bold text-purple-400">🟣 Claude (Anthropic)</span>
+              <span className="text-[10px] bg-purple-950/40 text-purple-400 px-1.5 py-0.5 rounded border border-purple-800/40">XML Tags</span>
+            </div>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              {lang === 'vi'
+                ? 'Sử dụng cấu trúc thẻ XML chuẩn mực của Anthropic (<role>, <context>, <negative_constraints>, <output_format>). Loại bỏ 100% lời mở đầu sáo rỗng, phát huy tối đa tư duy phân tích của Claude 3.5 Sonnet.'
+                : 'Leverages Anthropic XML tags (<role>, <context>, <negative_constraints>). Eliminates all conversational preambles and maximizes Claude 3.5 Sonnet analytical depth.'}
+            </p>
+          </div>
+
+          {/* DeepSeek */}
+          <div className="craft-card p-4 space-y-2 border-sky-500/30">
+            <div className="flex items-center justify-between text-xs font-mono">
+              <span className="font-bold text-sky-400">🐋 DeepSeek</span>
+              <span className="text-[10px] bg-sky-950/40 text-sky-400 px-1.5 py-0.5 rounded border border-sky-800/40">V3 / R1 CoT</span>
+            </div>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              {lang === 'vi'
+                ? 'Kích hoạt chuỗi suy luận 4 bước Chain-of-Thought (Điều kiện biên → Phân tích trade-off phương án → Triển khai giải pháp → Tự kiểm chứng Self-Verification) giúp DeepSeek R1 giải toán và thuật toán đỉnh cao.'
+                : 'Triggers a 4-step Chain-of-Thought sequence (Boundary conditions → Trade-off analysis → Optimal implementation → Self-verification) optimized for R1 reasoning.'}
+            </p>
+          </div>
+
+          {/* Google Gemini */}
+          <div className="craft-card p-4 space-y-2 border-blue-500/30">
+            <div className="flex items-center justify-between text-xs font-mono">
+              <span className="font-bold text-blue-400">🔷 Google Gemini</span>
+              <span className="text-[10px] bg-blue-950/40 text-blue-400 px-1.5 py-0.5 rounded border border-blue-800/40">1.5 / 2.0 Flash</span>
+            </div>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              {lang === 'vi'
+                ? 'Thiết lập System Instruction có cấu trúc và Grounding bối cảnh chặt chẽ. Khai thác cửa sổ ngữ cảnh siêu lớn của Gemini để phân tích dữ liệu toàn diện và giảm thiểu ảo giác.'
+                : 'Structures System Instructions and grounded context delimiters. Exploits Gemini extensive context window for hallucination-free data processing.'}
+            </p>
+          </div>
+
+          {/* ChatGPT */}
+          <div className="craft-card p-4 space-y-2 border-rose-500/30">
+            <div className="flex items-center justify-between text-xs font-mono">
+              <span className="font-bold text-rose-400">🤖 ChatGPT (OpenAI)</span>
+              <span className="text-[10px] bg-rose-950/40 text-rose-400 px-1.5 py-0.5 rounded border border-rose-800/40">GPT-4o / o1</span>
+            </div>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              {lang === 'vi'
+                ? 'Định dạng Markdown Headers phân tầng chuyên nghiệp, cân chỉnh Persona tự nhiên và áp dụng nguyên tắc High Burstiness để câu trả lời biến thiên phong phú, không bị máy móc.'
+                : 'Professional hierarchical Markdown headers, calibrated persona, and high burstiness guidelines to ensure organic, engaging prose.'}
+            </p>
+          </div>
+
+          {/* Qwen */}
+          <div className="craft-card p-4 space-y-2 border-teal-500/30">
+            <div className="flex items-center justify-between text-xs font-mono">
+              <span className="font-bold text-teal-400">🟢 Qwen (Alibaba)</span>
+              <span className="text-[10px] bg-teal-950/40 text-teal-400 px-1.5 py-0.5 rounded border border-teal-800/40">2.5 Coder</span>
+            </div>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              {lang === 'vi'
+                ? 'Chiến lược Code-First: ưu tiên mã nguồn chạy được ngay, tối ưu hóa độ phức tạp thuật toán và đảm bảo diễn đạt tiếng Việt/Anh chuẩn mực không bị lỗi dịch máy.'
+                : 'Code-first approach prioritizing compilable, idiomatically typed code, low memory overhead, and fluent multilingual comprehension.'}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 4: The 4 Pillars R-C-O-C Framework */}
       <section id="rcoc-framework" className="space-y-5 border-t border-[var(--border-subtle)] pt-8">
         <div>
           <h2 className="text-xl font-bold text-[var(--text-primary)] flex items-center space-x-2">
             <Layers className="w-5 h-5 text-indigo-400" />
-            <span>{lang === 'vi' ? '3. Chuẩn Kỹ Nghệ 4 Trụ Cột (R-C-O-C Framework)' : '3. The 4 Pillars (R-C-O-C Framework)'}</span>
+            <span>{lang === 'vi' ? '4. Chuẩn Kỹ Nghệ 4 Trụ Cột (R-C-O-C Framework)' : '4. The 4 Pillars (R-C-O-C Framework)'}</span>
           </h2>
           <p className="text-xs text-[var(--text-secondary)] mt-1">
             {lang === 'vi' 
@@ -340,12 +443,12 @@ export default function UserGuide() {
         </div>
       </section>
 
-      {/* Section 4: AI Assistant & Community */}
+      {/* Section 5: AI Assistant & Community */}
       <section id="assistant" className="space-y-5 border-t border-[var(--border-subtle)] pt-8">
         <div>
           <h2 className="text-xl font-bold text-[var(--text-primary)] flex items-center space-x-2">
             <Bot className="w-5 h-5 text-indigo-400" />
-            <span>{lang === 'vi' ? '4. Trợ Lý AI & Hệ Sinh Thái Kỹ Sư' : '4. AI Assistant & Engineer Ecosystem'}</span>
+            <span>{lang === 'vi' ? '5. Trợ Lý AI & Hệ Sinh Thái Kỹ Sư' : '5. AI Assistant & Engineer Ecosystem'}</span>
           </h2>
           <p className="text-xs text-[var(--text-secondary)] mt-1">
             {lang === 'vi' ? 'Khám phá các tính năng phụ trợ mạnh mẽ khác trên trang web.' : 'Explore additional features across the intelligence suite.'}
@@ -400,12 +503,12 @@ export default function UserGuide() {
         </div>
       </section>
 
-      {/* Section 5: FAQ Accordion */}
+      {/* Section 6: FAQ Accordion */}
       <section id="faq" className="space-y-5 border-t border-[var(--border-subtle)] pt-8">
         <div>
           <h2 className="text-xl font-bold text-[var(--text-primary)] flex items-center space-x-2">
             <HelpCircle className="w-5 h-5 text-indigo-400" />
-            <span>{lang === 'vi' ? '5. Các Câu Hỏi Thường Gặp (FAQ)' : '5. Frequently Asked Questions'}</span>
+            <span>{lang === 'vi' ? '6. Các Câu Hỏi Thường Gặp (FAQ)' : '6. Frequently Asked Questions'}</span>
           </h2>
           <p className="text-xs text-[var(--text-secondary)] mt-1">
             {lang === 'vi' ? 'Giải đáp các thắc mắc phổ biến về kỹ thuật và cách vận hành.' : 'Answers to common questions regarding operation and methodologies.'}
