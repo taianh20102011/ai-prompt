@@ -1,11 +1,11 @@
-# PromptCraft AI Studio (Cortex System & AI Intelligence Hub)
+# Prompt AI PNIT
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![React](https://img.shields.io/badge/React-19-61dafb.svg)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff.svg)](https://vite.dev)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-38bdf8.svg)](https://tailwindcss.com)
 
-PromptCraft AI Studio là nền tảng kiểm định, phân tích và tối ưu hóa System Prompt AI theo chuẩn Anti-Slop, tích hợp trợ lý Cortex Bot, bộ công cụ phân tích Heuristic đa chiều, kho mã nguồn mở AI toàn cầu và hệ thống bảo mật Enclave Zero-Trust.
+**Prompt AI PNIT** là nền tảng kiểm định, phân tích và tối ưu hóa System Prompt AI theo chuẩn Anti-Slop, tích hợp trợ lý Cortex Bot, bộ công cụ phân tích Heuristic đa chiều, kho mã nguồn mở AI toàn cầu và hệ thống bảo mật Enclave Zero-Trust.
 
 ---
 

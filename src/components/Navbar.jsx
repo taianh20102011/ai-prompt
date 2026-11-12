@@ -46,10 +46,10 @@ export default function Navbar() {
             </div>
             <div>
               <span className="text-xl font-bold bg-gradient-to-r from-white via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
-                PromptCraft AI
+                Prompt AI PNIT
               </span>
               <span className="block text-[10px] font-mono tracking-wider text-slate-400 uppercase">
-                Architecture & Studio
+                Intelligence Suite
               </span>
             </div>
           </Link>

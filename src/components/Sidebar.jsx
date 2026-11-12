@@ -76,16 +76,16 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
             className={`flex items-center ${
               isCollapsed && !mobileOpen ? 'justify-center' : 'space-x-2.5 overflow-hidden'
             }`}
-            title="PromptCraft Studio"
+            title="Prompt AI PNIT"
           >
             <div className="w-8 h-8 rounded-lg bg-[var(--text-primary)] text-[var(--bg-page)] font-mono font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
-              PC
+              PNIT
             </div>
             {(!isCollapsed || mobileOpen) && (
               <div className="truncate">
-                <ShinyText text="PromptCraft" speed={4} className="text-sm font-semibold tracking-tight block" />
+                <ShinyText text="Prompt AI PNIT" speed={4} className="text-sm font-semibold tracking-tight block" />
                 <span className="text-[10px] text-[var(--text-muted)] font-mono tracking-wider uppercase block -mt-0.5">
-                  Studio v2.4
+                  Intelligence Suite
                 </span>
               </div>
             )}
