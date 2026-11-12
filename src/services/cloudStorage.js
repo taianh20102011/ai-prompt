@@ -5,11 +5,11 @@ const VERCEL_API_BASE = typeof window !== 'undefined' && window.location.hostnam
   ? '/api'
   : 'http://localhost:3001/api';
 
-const MAX_LOCAL_QUOTA_BYTES = 5 * 1024 * 1024; // 5 MB tiêu chuẩn trình duyệt
+const MAX_LOCAL_QUOTA_BYTES = 1024 * 1024 * 1024; // 1 GB hạn mức lưu trữ cục bộ máy người dùng (Client Local Storage)
 
 // 1. Tính toán dung lượng lưu trữ thời gian thực (Storage Metrics)
 export const getStorageMetrics = () => {
-  if (typeof window === 'undefined') return { usedBytes: 0, percent: 0, formatted: '0 KB' };
+  if (typeof window === 'undefined') return { usedBytes: 0, percent: 0, formatted: '0 KB', maxFormatted: '1 GB' };
 
   let totalBytes = 0;
   for (let key in localStorage) {
@@ -19,14 +19,17 @@ export const getStorageMetrics = () => {
   }
 
   const percent = Math.min(100, Math.round((totalBytes / MAX_LOCAL_QUOTA_BYTES) * 100));
-  const formatted = (totalBytes / 1024).toFixed(1) + ' KB';
+  const formatted = totalBytes >= 1024 * 1024
+    ? (totalBytes / (1024 * 1024)).toFixed(1) + ' MB'
+    : (totalBytes / 1024).toFixed(1) + ' KB';
 
   return {
     usedBytes: totalBytes,
     maxBytes: MAX_LOCAL_QUOTA_BYTES,
+    maxFormatted: '1 GB',
     percent,
     formatted,
-    status: percent > 80 ? 'DANGER' : percent > 50 ? 'WARNING' : 'HEALTHY'
+    status: percent > 85 ? 'DANGER' : percent > 60 ? 'WARNING' : 'HEALTHY'
   };
 };
 

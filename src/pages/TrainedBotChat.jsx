@@ -256,10 +256,10 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
             )}
           </div>
 
-          {/* Quota Gauge (Chống tràn LocalStorage) */}
+          {/* Quota Gauge (Bộ nhớ cục bộ máy người dùng - 1 GB Client Storage) */}
           <div className="flex items-center space-x-2">
             <span className="text-[10px] text-[var(--text-secondary)]">
-              Bộ nhớ: <strong className="text-[var(--text-primary)]">{storageMetrics.formatted}</strong> / 5 MB ({storageMetrics.percent}%)
+              {lang === 'vi' ? 'Bộ nhớ máy:' : 'Local Storage:'} <strong className="text-[var(--text-primary)]">{storageMetrics.formatted}</strong> / 1 GB ({storageMetrics.percent}%)
             </span>
             <div className="w-12 h-1.5 rounded-full bg-[var(--border-subtle)] overflow-hidden hidden xs:block">
               <div 
@@ -267,7 +267,7 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
                   storageMetrics.status === 'DANGER' ? 'bg-rose-500' :
                   storageMetrics.status === 'WARNING' ? 'bg-amber-500' : 'bg-emerald-500'
                 }`}
-                style={{ width: `${storageMetrics.percent}%` }}
+                style={{ width: `${Math.max(1, storageMetrics.percent)}%` }}
               />
             </div>
           </div>
