@@ -39,7 +39,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo Brand */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-0.5 shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform duration-300">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-0.5 shadow-sm">
               <div className="w-full h-full bg-[#0a0b10] rounded-[10px] flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-indigo-400 group-hover:text-pink-400 transition-colors" />
               </div>
@@ -95,7 +95,7 @@ export default function Navbar() {
 
             <Link
               to="/admin-portal"
-              className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/30 transition-all hover:scale-105"
+              className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-xs transition-colors"
             >
               <Lock className="w-3.5 h-3.5" />
               <span>Admin Key</span>

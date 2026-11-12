@@ -355,7 +355,7 @@ export default function AdminPortal() {
                 </button>
               </div>
 
-              <div className="space-y-3">
+              <div className="divide-y divide-[var(--border-subtle)]">
                 {licenses.length === 0 ? (
                   <div className="py-8 text-center text-xs font-mono text-[var(--text-muted)]">
                     Đang tải hoặc chưa có license nào được cấp...
@@ -364,18 +364,18 @@ export default function AdminPortal() {
                   licenses.map((lic) => (
                     <div 
                       key={lic.maskedId} 
-                      className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex flex-col sm:flex-row justify-between sm:items-center gap-3"
+                      className="py-3.5 first:pt-0 last:pb-0 flex flex-col sm:flex-row justify-between sm:items-center gap-3"
                     >
                       <div className="space-y-1 text-xs">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-semibold text-[var(--text-primary)] text-sm">{lic.clientName}</span>
-                          <code className="text-[11px] font-mono text-indigo-400 bg-indigo-950/30 px-2 py-0.5 rounded border border-indigo-900/40">
+                          <code className="text-[11px] font-mono text-indigo-400 bg-indigo-950/20 px-2 py-0.5 rounded border border-indigo-900/30">
                             {lic.maskedId}
                           </code>
-                          <span className={`text-[10px] font-mono px-2 py-0.5 rounded border font-semibold ${
+                          <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-semibold ${
                             lic.status === 'ACTIVE' 
-                              ? 'bg-emerald-950/40 text-emerald-400 border-emerald-800/50' 
-                              : 'bg-rose-950/40 text-rose-400 border-rose-800/50'
+                              ? 'bg-emerald-950/30 text-emerald-400 border border-emerald-800/40' 
+                              : 'bg-rose-950/30 text-rose-400 border border-rose-800/40'
                           }`}>
                             {lic.status}
                           </span>
@@ -396,7 +396,7 @@ export default function AdminPortal() {
                       {session.role === 'OWNER' && lic.status === 'ACTIVE' && (
                         <button
                           onClick={() => handleRevokeLicense(lic.maskedId)}
-                          className="neu-button px-3.5 py-1.5 text-rose-400 hover:text-rose-300 text-xs font-mono font-medium transition-colors cursor-pointer shrink-0"
+                          className="px-3.5 py-1.5 rounded-lg border border-rose-900/40 hover:bg-rose-950/20 text-rose-400 hover:text-rose-300 text-xs font-mono font-medium transition-colors cursor-pointer shrink-0"
                         >
                           Thu Hồi License
                         </button>
@@ -423,13 +423,13 @@ export default function AdminPortal() {
                 </div>
               </div>
 
-              <div className="space-y-3">
+              <div className="divide-y divide-[var(--border-subtle)]">
                 {benchmarks.map((bm) => (
-                  <div key={bm.id} className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                  <div key={bm.id} className="py-3.5 first:pt-0 last:pb-0 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
                     <div className="space-y-1 text-xs">
                       <div className="flex items-center space-x-2">
                         <span className="font-semibold text-[var(--text-primary)] text-sm">{bm.title}</span>
-                        <span className="text-[10px] font-mono text-indigo-400 bg-indigo-950/40 px-2 py-0.5 rounded border border-indigo-900/50">
+                        <span className="text-[10px] font-mono text-indigo-400 bg-indigo-950/20 px-2 py-0.5 rounded border border-indigo-900/30">
                           {bm.industry}
                         </span>
                       </div>
@@ -442,7 +442,7 @@ export default function AdminPortal() {
 
                     <button
                       onClick={() => handleDeleteBenchmark(bm.id)}
-                      className="px-3 py-1.5 rounded-lg border border-rose-900/40 bg-rose-950/20 hover:bg-rose-950/40 text-rose-400 text-xs font-mono flex items-center space-x-1 transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg border border-rose-900/40 hover:bg-rose-950/20 text-rose-400 text-xs font-mono flex items-center space-x-1 transition-colors cursor-pointer"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Xóa Khỏi Kho</span>
@@ -489,7 +489,7 @@ export default function AdminPortal() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {devs.map((dev) => (
-                  <div key={dev.id} className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex justify-between items-center gap-3">
+                  <div key={dev.id} className="p-3.5 rounded-xl border border-[var(--border-subtle)] flex justify-between items-center gap-3">
                     <div className="flex items-center space-x-3">
                       <UserAvatar avatar={dev.avatar} name={dev.name} size="w-9 h-9" />
                       <div>
@@ -533,9 +533,9 @@ export default function AdminPortal() {
                 </button>
               </div>
 
-              <div className="space-y-2 max-h-96 overflow-y-auto">
+              <div className="divide-y divide-[var(--border-subtle)] max-h-96 overflow-y-auto">
                 {auditLogs.map((log) => (
-                  <div key={log.logRef} className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-xs font-mono space-y-1">
+                  <div key={log.logRef} className="py-2.5 first:pt-0 last:pb-0 text-xs font-mono space-y-1">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <span className={`px-2 py-0.5 rounded text-[10px] ${

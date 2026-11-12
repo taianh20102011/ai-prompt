@@ -196,7 +196,7 @@ export default function LandingPage() {
                   <div className="p-2 rounded-xl bg-indigo-950/40 text-indigo-400 border border-indigo-900/40">
                     <Compass className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-mono text-indigo-400 flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                  <span className="text-xs font-mono text-indigo-400 flex items-center space-x-1 transition-colors">
                     <span>Mở công cụ</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </span>
@@ -223,7 +223,7 @@ export default function LandingPage() {
                   <div className="p-2 rounded-xl bg-purple-950/40 text-purple-400 border border-purple-900/40">
                     <Bot className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-mono text-purple-400 flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                  <span className="text-xs font-mono text-purple-400 flex items-center space-x-1 transition-colors">
                     <span>Mở trợ lý</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </span>
@@ -250,7 +250,7 @@ export default function LandingPage() {
                   <div className="p-2 rounded-xl bg-amber-950/40 text-amber-400 border border-amber-900/40">
                     <BookOpen className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-mono text-amber-400 flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                  <span className="text-xs font-mono text-amber-400 flex items-center space-x-1 transition-colors">
                     <span>Đọc tài liệu</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </span>
@@ -277,7 +277,7 @@ export default function LandingPage() {
                   <div className="p-2 rounded-xl bg-emerald-950/40 text-emerald-400 border border-emerald-900/40">
                     <GitBranch className="w-5 h-5" />
                   </div>
-                  <span className="text-xs font-mono text-emerald-400 flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                  <span className="text-xs font-mono text-emerald-400 flex items-center space-x-1 transition-colors">
                     <span>Xem kho repos</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </span>

@@ -24,10 +24,13 @@ import {
   Upload,
   RotateCcw,
   Eye,
-  FileCheck2
+  FileCheck2,
+  FileSpreadsheet,
+  GraduationCap
 } from 'lucide-react';
 import { RESEARCH_LANGUAGES, RESEARCH_DATA } from '../data/researchGuideData';
 import { DEFAULT_DOC_CONTENT, DEFAULT_DOC_PATH, DEFAULT_DOC_FILENAME } from '../data/defaultDocContent';
+import { SCIENTIFIC_PAPERS } from '../data/scientificPapers';
 
 export default function ResearchGuide() {
   const [lang, setLang] = useState('vi'); // 'vi' | 'en' | 'fr' | 'de'
@@ -35,6 +38,7 @@ export default function ResearchGuide() {
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedMaster, setCopiedMaster] = useState(false);
   const [copiedFullDoc, setCopiedFullDoc] = useState(false);
+  const [copiedBibtexId, setCopiedBibtexId] = useState(null);
   const [showReader, setShowReader] = useState(false);
 
   // Quản lý tệp Docs nghiên cứu (Tải lên / Tải về / Lưu trữ Browser)
@@ -69,6 +73,12 @@ export default function ResearchGuide() {
     navigator.clipboard.writeText(docContent);
     setCopiedFullDoc(true);
     setTimeout(() => setCopiedFullDoc(false), 2000);
+  };
+
+  const handleCopyBibtex = (id, bibtex) => {
+    navigator.clipboard.writeText(bibtex);
+    setCopiedBibtexId(id);
+    setTimeout(() => setCopiedBibtexId(null), 2000);
   };
 
   const handleDownloadDoc = () => {
@@ -497,50 +507,123 @@ export default function ResearchGuide() {
         </div>
       </div>
 
-      {/* SECTION 6: SCIENTIFIC LITERATURE PAPERS & ARXIV REFS */}
+      {/* SECTION 6: SCIENTIFIC LITERATURE PAPERS & ACADEMIC CITATIONS */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold text-[var(--text-primary)] flex items-center space-x-2">
-          <Lightbulb className="w-5 h-5 text-amber-400" />
-          <span>{t.papers.title}</span>
-        </h2>
+        <div className="space-y-1">
+          <h2 className="text-xl font-bold text-[var(--text-primary)] flex items-center space-x-2">
+            <GraduationCap className="w-5 h-5 text-indigo-400" />
+            <span>{t.papers.title}</span>
+          </h2>
+          <p className="text-xs text-[var(--text-secondary)]">
+            Nguồn trích dẫn học thuật chi tiết kèm định danh DOI, mã lưu trữ arXiv, tập dữ liệu kiểm nghiệm và mẫu trích dẫn BibTeX chuẩn mực quốc tế:
+          </p>
+        </div>
 
-        <div className="space-y-3.5">
-          {t.papers.items.map((p, idx) => (
-            <div key={idx} className="craft-card p-5 space-y-2.5">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--border-subtle)] pb-2">
-                <span className="text-xs font-mono text-indigo-400 font-semibold">{p.venue}</span>
-                <div className="flex items-center space-x-3 text-xs">
-                  <a
-                    href={p.arxiv}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-emerald-400 hover:text-emerald-300 font-mono font-medium flex items-center space-x-1"
+        <div className="space-y-4">
+          {SCIENTIFIC_PAPERS.map((p) => (
+            <div key={p.id} className="craft-card p-5 sm:p-6 space-y-3.5">
+              {/* Header Meta: Institution, Venue & Direct Action Links */}
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-2.5 py-1 rounded-md bg-indigo-950/40 text-indigo-300 border border-indigo-800/50 text-[11px] font-mono font-semibold">
+                    {p.institution}
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-[11px] font-mono text-[var(--text-secondary)] font-medium">
+                    {p.venue}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+                  {p.pdfUrl && (
+                    <a
+                      href={p.pdfUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="neu-button px-2.5 py-1 text-emerald-400 hover:text-emerald-300 font-medium flex items-center space-x-1"
+                      title="Mở toàn văn bài báo định dạng PDF"
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>Toàn Văn PDF</span>
+                    </a>
+                  )}
+
+                  {p.arxivUrl && (
+                    <a
+                      href={p.arxivUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="neu-button px-2.5 py-1 text-indigo-400 hover:text-indigo-300 font-medium flex items-center space-x-1"
+                      title="Trang tóm tắt trên arXiv"
+                    >
+                      <span>{p.arxivId}</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+
+                  {p.doi && (
+                    <a
+                      href={p.doiUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="neu-button px-2.5 py-1 text-amber-400 hover:text-amber-300 font-medium flex items-center space-x-1"
+                      title="Định danh đối tượng số DOI"
+                    >
+                      <span>DOI: {p.doi.length > 18 ? p.doi.substring(0, 18) + '...' : p.doi}</span>
+                    </a>
+                  )}
+
+                  <button
+                    onClick={() => handleCopyBibtex(p.id, p.bibtex)}
+                    className="neu-button px-2.5 py-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-medium flex items-center space-x-1 cursor-pointer"
+                    title="Sao chép mã trích dẫn BibTeX vào clipboard"
                   >
-                    <span>arXiv Paper</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                  <a
-                    href={`https://scholar.google.com/scholar?q=${encodeURIComponent(p.query)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-indigo-400 hover:text-indigo-300 font-semibold flex items-center space-x-1"
-                  >
-                    <span>Google Scholar</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </a>
+                    {copiedBibtexId === p.id ? (
+                      <>
+                        <Check className="w-3 h-3 text-emerald-400" />
+                        <span className="text-emerald-400">Đã chép BibTeX</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3" />
+                        <span>Chép BibTeX</span>
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
 
-              <h3 className="font-bold text-[var(--text-primary)] text-base leading-snug">
-                {p.title}
-              </h3>
-              <div className="text-[11px] font-mono text-[var(--text-muted)]">
-                Tác giả / Authors: {p.authors}
+              {/* Title & Full Authors */}
+              <div className="space-y-1">
+                <h3 className="font-bold text-[var(--text-primary)] text-base leading-snug">
+                  {p.title}
+                </h3>
+                <div className="text-[11px] font-mono text-[var(--text-muted)] flex items-center space-x-1.5">
+                  <span className="font-semibold text-[var(--text-secondary)]">Tác giả:</span>
+                  <span>{p.authors}</span>
+                </div>
               </div>
 
-              <div className="text-xs text-[var(--text-secondary)] craft-input p-3 rounded-lg leading-relaxed border border-[var(--border-subtle)]">
-                <strong className="text-amber-400 font-mono">Ý nghĩa thực nghiệm: </strong>
-                {p.takeaway}
+              {/* Empirical Data & Dataset Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+                <div className="p-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-0.5">
+                  <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider block">TẬP DỮ LIỆU CHUẨN (BENCHMARK DATASET):</span>
+                  <span className="text-[var(--text-primary)] font-medium text-[11px] block">{p.dataset}</span>
+                </div>
+                <div className="p-2.5 rounded-lg border border-emerald-900/30 bg-emerald-950/15 space-y-0.5">
+                  <span className="text-[10px] text-emerald-400 uppercase tracking-wider block font-bold">KẾT QUẢ THỰC NGHIỆM ĐO ĐƯỢC:</span>
+                  <span className="text-emerald-300 font-semibold text-[11px] block">{p.empiricalMetric}</span>
+                </div>
+              </div>
+
+              {/* Empirical Takeaway */}
+              <div className="text-xs text-[var(--text-secondary)] p-3 rounded-lg bg-[var(--bg-surface)] leading-relaxed border border-[var(--border-subtle)] space-y-1">
+                <div className="text-amber-400 font-mono font-bold text-[11px] flex items-center space-x-1">
+                  <Lightbulb className="w-3.5 h-3.5" />
+                  <span>Luận Điểm Khoa Học & Ứng Dụng Thực Tiễn:</span>
+                </div>
+                <p className="pl-4 border-l-2 border-amber-500/40 text-[11px] leading-relaxed">
+                  {p.takeaways[lang] || p.takeaways.vi}
+                </p>
               </div>
             </div>
           ))}
