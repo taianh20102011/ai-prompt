@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { getStorageData, setStorageData, DEFAULT_BENCHMARKS, DEFAULT_DEVS } from '../services/mockStorage';
 import UserAvatar, { PRESET_AVATARS } from '../components/UserAvatar';
+import { useLanguage } from '../context/LanguageContext';
 
 // Danh sách các tổ chức cấp chứng chỉ AI / Cloud uy tín quốc tế được hỗ trợ
 const VERIFIED_PROVIDERS = [
@@ -191,19 +192,23 @@ export default function DevStudio() {
     setTimeout(() => setSuccessMsg(false), 3000);
   };
 
+  const { t, lang } = useLanguage();
+
   return (
     <div className="max-w-5xl mx-auto space-y-10">
       {/* Dev Header */}
       <div className="border-b border-[var(--border-subtle)] pb-5 space-y-2">
         <div className="inline-flex items-center space-x-2 text-xs font-mono text-[var(--text-muted)] uppercase tracking-wider px-3 py-1 rounded-full craft-card">
           <Terminal className="w-4 h-4 text-emerald-400" />
-          <span>GLOBAL ACCREDITED CREDENTIAL VERIFICATION & DEV STUDIO</span>
+          <span>{lang === 'vi' ? 'KHÔNG GIAN KỸ SƯ • GIA NHẬP ĐỘI NGŨ' : 'ENGINEER COMMUNITY & CREDENTIAL ENROLLMENT'}</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--text-primary)]">
-          Kỹ Sư Kiểm Định (Dev Studio)
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text-primary)]">
+          {lang === 'vi' ? 'Hãy là một thành viên của đội ngũ Prompt AI PNIT' : 'Become a Member of the Prompt AI PNIT Team'}
         </h1>
         <p className="text-xs sm:text-sm text-[var(--text-secondary)] max-w-2xl leading-relaxed">
-          Hỗ trợ xác thực chứng chỉ Prompt Engineer nội bộ hoặc liên kết trực tiếp từ các tổ chức uy tín hàng đầu thế giới (Google Cloud, DeepLearning.AI, AWS, Credly).
+          {lang === 'vi'
+            ? 'Liên kết chứng chỉ AI của bạn (Google Cloud, DeepLearning.AI, AWS hoặc AGY-CERT), thiết lập hồ sơ và đóng góp các mẫu prompt chất lượng vào kho dữ liệu chung.'
+            : 'Connect your AI credentials (Google Cloud, DeepLearning.AI, AWS, or AGY-CERT), build your engineer profile, and contribute benchmark prompt templates.'}
         </p>
       </div>
 
@@ -214,9 +219,13 @@ export default function DevStudio() {
           </div>
 
           <div>
-            <h2 className="text-base font-bold text-[var(--text-primary)]">Liên Kết Chứng Chỉ AI Uy Tín</h2>
+            <h2 className="text-base font-bold text-[var(--text-primary)]">
+              {lang === 'vi' ? 'Xác Thực & Kích Hoạt Quyền Đóng Góp' : 'Verify & Activate Contributor Profile'}
+            </h2>
             <p className="text-xs text-[var(--text-muted)] mt-1">
-              Chọn tổ chức cấp chứng chỉ của bạn và nhập mã ID để mở khóa quyền Dev.
+              {lang === 'vi' 
+                ? 'Chọn tổ chức cấp chứng chỉ của bạn và nhập mã ID để gia nhập đội ngũ.' 
+                : 'Select your certificate provider and enter your ID to join the team.'}
             </p>
           </div>
 

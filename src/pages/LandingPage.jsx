@@ -8,7 +8,8 @@ import {
   ArrowRight, 
   Sparkles,
   ShieldCheck,
-  Check
+  Check,
+  Users
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -207,7 +208,31 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* 4. DISCREET ATTRIBUTION & SECURITY FOOTER NOTE */}
+      {/* 4. JOIN THE TEAM BANNER ("Hãy là một thành viên của đội ngũ Prompt AI PNIT") */}
+      <div className="max-w-4xl mx-auto craft-card p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-indigo-500/25 bg-[var(--bg-elevated)]/30">
+        <div className="space-y-1.5 max-w-xl">
+          <div className="flex items-center space-x-2 text-xs font-mono text-indigo-400 font-semibold uppercase tracking-wider">
+            <Users className="w-4 h-4" />
+            <span>{t.landing.joinTeamBtn}</span>
+          </div>
+          <h3 className="text-base sm:text-lg font-bold text-[var(--text-primary)]">
+            {t.landing.joinTeamTitle}
+          </h3>
+          <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+            {t.landing.joinTeamSubtitle}
+          </p>
+        </div>
+
+        <Link
+          to="/dev-studio"
+          className="px-5 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-mono text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer shrink-0 shadow-xs"
+        >
+          <span>{t.landing.joinTeamBtn}</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
+      </div>
+
+      {/* 5. DISCREET ATTRIBUTION & SECURITY FOOTER NOTE */}
       <div className="max-w-4xl mx-auto pt-4 text-center text-xs font-mono text-[var(--text-muted)] space-y-1.5">
         <div>
           <span>{t.footer.authorPrefix} </span>

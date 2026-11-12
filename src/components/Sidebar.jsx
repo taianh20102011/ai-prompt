@@ -34,6 +34,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
     { name: t.nav.inspector, path: '/inspector', icon: Compass, badge: 'Core' },
     { name: t.nav.bot, path: '/trained-bot', icon: Bot, badge: 'Free ∞' },
     { name: t.nav.directory, path: '/directory', icon: Users, badge: 'Profiles' },
+    { name: t.nav.joinTeam, path: '/dev-studio', icon: Terminal, badge: 'Dev' },
     { name: t.nav.repos, path: '/news', icon: GitBranch, badge: 'Live' },
     { name: t.nav.research, path: '/research-guide', icon: BookOpen },
   ];
