@@ -266,19 +266,19 @@ export default function GitHubNews() {
         </div>
       )}
 
-      {/* Pagination Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between p-3 craft-card text-xs font-mono gap-3">
+      {/* Pagination Controls (Modern Minimalist Linear Style) */}
+      <div className="flex flex-col sm:flex-row items-center justify-between pt-6 pb-2 border-t border-[var(--border-subtle)] gap-4 text-xs font-mono">
         <button
           onClick={() => loadPage(currentPage - 1, activeQuery, activeCategory)}
           disabled={currentPage === 1 || loading}
-          className="neu-button px-3 py-1.5 rounded disabled:opacity-30 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer w-full sm:w-auto justify-center"
+          className="px-3.5 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] disabled:opacity-30 disabled:pointer-events-none flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer w-full sm:w-auto justify-center shadow-xs"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
-          <span>Trang Trước</span>
+          <span>{t.repos.prevPage || 'Trang Trước'}</span>
         </button>
 
         {/* Dynamic Page Buttons */}
-        <div className="flex items-center space-x-1 overflow-x-auto max-w-full py-1">
+        <div className="flex items-center gap-1.5 overflow-x-auto max-w-full py-1">
           {Array.from({ length: Math.min(8, totalPages) }, (_, i) => {
             let p;
             if (totalPages <= 8) {
@@ -290,15 +290,16 @@ export default function GitHubNews() {
             } else {
               p = currentPage - 3 + i;
             }
+            const isActive = currentPage === p;
             return (
               <button
                 key={p}
-                disabled={loading}
+                disabled={loading || isActive}
                 onClick={() => loadPage(p, activeQuery, activeCategory)}
-                className={`w-7 h-7 rounded text-xs font-mono transition-colors cursor-pointer shrink-0 ${
-                  currentPage === p
-                    ? '!bg-indigo-600 !text-white font-bold'
-                    : 'neu-button text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                className={`w-8 h-8 rounded-lg text-xs font-mono flex items-center justify-center transition-all shrink-0 ${
+                  isActive
+                    ? 'bg-indigo-600 text-white font-bold shadow-xs cursor-default'
+                    : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer'
                 }`}
               >
                 {p}
@@ -310,9 +311,9 @@ export default function GitHubNews() {
         <button
           onClick={() => loadPage(currentPage + 1, activeQuery, activeCategory)}
           disabled={currentPage === totalPages || loading}
-          className="neu-button px-3 py-1.5 rounded disabled:opacity-30 disabled:cursor-not-allowed flex items-center space-x-1 cursor-pointer w-full sm:w-auto justify-center"
+          className="px-3.5 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] disabled:opacity-30 disabled:pointer-events-none flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer w-full sm:w-auto justify-center shadow-xs"
         >
-          <span>Trang Kế</span>
+          <span>{t.repos.nextPage || 'Trang Kế'}</span>
           <ChevronRight className="w-3.5 h-3.5" />
         </button>
       </div>

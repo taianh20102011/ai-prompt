@@ -251,8 +251,10 @@ export default function AdminPortal() {
           <div className="flex flex-wrap items-center gap-2 border-b border-[var(--border-subtle)] pb-2 text-xs font-mono">
             <button
               onClick={() => handleTabChange('training')}
-              className={`neu-button px-3.5 py-1.5 ${
-                activeTab === 'training' ? '!bg-indigo-600 !text-white !border-indigo-500 font-bold' : 'text-[var(--text-secondary)]'
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
+                activeTab === 'training'
+                  ? 'bg-indigo-600 text-white font-bold shadow-xs'
+                  : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
               System Prompt Lõi
@@ -260,8 +262,10 @@ export default function AdminPortal() {
 
             <button
               onClick={() => handleTabChange('licenses')}
-              className={`neu-button px-3.5 py-1.5 ${
-                activeTab === 'licenses' ? '!bg-indigo-600 !text-white !border-indigo-500 font-bold' : 'text-[var(--text-secondary)]'
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
+                activeTab === 'licenses'
+                  ? 'bg-indigo-600 text-white font-bold shadow-xs'
+                  : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
               Quản Lý License ({licenses.length || 2})
@@ -269,8 +273,10 @@ export default function AdminPortal() {
 
             <button
               onClick={() => handleTabChange('benchmarks')}
-              className={`neu-button px-3.5 py-1.5 ${
-                activeTab === 'benchmarks' ? '!bg-indigo-600 !text-white !border-indigo-500 font-bold' : 'text-[var(--text-secondary)]'
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
+                activeTab === 'benchmarks'
+                  ? 'bg-indigo-600 text-white font-bold shadow-xs'
+                  : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
               Kho Prompt Mẫu ({benchmarks.length})
@@ -278,8 +284,10 @@ export default function AdminPortal() {
 
             <button
               onClick={() => handleTabChange('devs')}
-              className={`neu-button px-3.5 py-1.5 ${
-                activeTab === 'devs' ? '!bg-indigo-600 !text-white !border-indigo-500 font-bold' : 'text-[var(--text-secondary)]'
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
+                activeTab === 'devs'
+                  ? 'bg-indigo-600 text-white font-bold shadow-xs'
+                  : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
               Kỹ Sư Kiểm Định ({devs.length})
@@ -289,8 +297,10 @@ export default function AdminPortal() {
             {session.role === 'OWNER' && (
               <button
                 onClick={() => handleTabChange('audit')}
-                className={`neu-button px-3.5 py-1.5 flex items-center space-x-1.5 ${
-                  activeTab === 'audit' ? '!bg-indigo-600 !text-white !border-indigo-500 font-bold' : 'text-[var(--text-secondary)]'
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-mono flex items-center space-x-1.5 transition-colors cursor-pointer ${
+                  activeTab === 'audit'
+                    ? 'bg-indigo-600 text-white font-bold shadow-xs'
+                    : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
