@@ -349,8 +349,8 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
         ))}
       </div>
 
-      {/* Main Chat Container */}
-      <div className="craft-card flex flex-col h-[650px] overflow-hidden !rounded-2xl">
+      {/* Main Chat Container (Responsive dynamic height for mobile & desktop) */}
+      <div className="craft-card flex flex-col h-[72vh] min-h-[520px] max-h-[750px] overflow-hidden !rounded-2xl">
         {/* Top Active Brain Parameters & Storage Quota Guard */}
         <div className="px-4 py-2.5 bg-[var(--bg-elevated)] border-b border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
           <div className="flex items-center space-x-3">

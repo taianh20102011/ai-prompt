@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Terminal, 
@@ -24,6 +24,18 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { t, lang } = useLanguage();
+
+  // Prevent background scrolling on mobile when navigation drawer is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
 
   const publicLinks = [
     { name: t.nav.home, path: '/', icon: Sparkles, badge: 'Intro' },
@@ -53,13 +65,13 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
       {mobileOpen && (
         <div 
           onClick={() => setMobileOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black/60 z-40 backdrop-blur-xs transition-opacity"
+          className="lg:hidden fixed inset-0 bg-black/60 z-40 backdrop-blur-xs transition-opacity duration-300"
         />
       )}
 
       {/* Sidebar Root */}
       <aside
-        className={`fixed top-0 left-0 h-screen z-40 transition-[width,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[width] craft-card !border-r !border-t-0 !border-b-0 !border-l-0 !rounded-none flex flex-col justify-between overflow-x-hidden ${
+        className={`fixed top-0 left-0 h-screen z-40 transition-[width,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,width] craft-card !border-r !border-t-0 !border-b-0 !border-l-0 !rounded-none flex flex-col justify-between overflow-x-hidden ${
           mobileOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0'
         } ${
           isCollapsed ? 'lg:w-[68px]' : 'lg:w-64'

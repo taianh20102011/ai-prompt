@@ -7,27 +7,31 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }) {
   useEffect(() => {
-    // 1. Initialize Lenis Smooth Scroll (Anti-Slop Golden Rule: Normalized wheel events with dampening)
+    // Check if device is a touch/mobile device
+    const isTouch = typeof window !== 'undefined' && 
+      (window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0);
+
+    // Initialize Lenis with optimized settings for both Desktop and Mobile
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: isTouch ? 0.8 : 1.05,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // smooth exponential ease
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 0.95,
-      touchMultiplier: 1.5,
+      touchMultiplier: 1.0,
+      syncTouch: false, // Ensures native mobile touch inertia is preserved at 60-120fps without lag
     });
 
-    // 2. Sync Lenis scroll with GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
 
-    // 3. Connect GSAP ticker to Lenis requestAnimationFrame
     const tickerCallback = (time) => {
       lenis.raf(time * 1000);
     };
 
     gsap.ticker.add(tickerCallback);
-    gsap.ticker.lagSmoothing(0);
+    // Standard lagSmoothing ensures frames are smoothed instead of skipping during micro-spikes
+    gsap.ticker.lagSmoothing(500, 33);
 
     return () => {
       gsap.ticker.remove(tickerCallback);

@@ -178,7 +178,7 @@ export default function UserAnalyzer() {
                         handleInspect(promptInput, model.id);
                       }
                     }}
-                    className={`p-2 rounded-lg border text-left flex flex-col justify-between transition-all cursor-pointer ${
+                    className={`p-2.5 rounded-lg border text-left flex flex-col justify-between transition-all active:scale-[0.98] cursor-pointer ${
                       isSelected
                         ? 'border-indigo-500 bg-indigo-500/15 text-[var(--text-primary)] shadow-xs ring-1 ring-indigo-500/40'
                         : 'border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-neutral-600'
