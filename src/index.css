@@ -2,24 +2,24 @@
 
 @layer base {
   :root {
-    --bg-page: #08090C;
-    --bg-surface: #0D0F14;
-    --bg-elevated: #13161F;
+    --bg-page: #09090B;
+    --bg-surface: #111113;
+    --bg-elevated: #18181B;
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-hover: rgba(255, 255, 255, 0.18);
-    --text-primary: #F8FAFC;
-    --text-secondary: #94A3B8;
-    --text-muted: #64748B;
-    --input-bg: #13161F;
-    --code-bg: #0D0F14;
+    --text-primary: #FAFAFA;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --input-bg: #18181B;
+    --code-bg: #0E0E10;
     --accent-primary: #2563EB;
     --accent-hover: #1D4ED8;
 
     /* CNC-Milled Sub-pixel 1px Border Formula (Dark Mode) */
-    --neu-flat: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 2px 4px 0 rgba(0, 0, 0, 0.40);
-    --neu-hover: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.40);
+    --neu-flat: inset 0 1px 0 0 rgba(255, 255, 255, 0.07), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 2px 4px 0 rgba(0, 0, 0, 0.45);
+    --neu-hover: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.45);
     --neu-pressed: none;
-    --neu-convex: #0D0F14;
+    --neu-convex: #111113;
   }
 
   /* Light Mode Palette: Alabaster Porcelain Theme */
