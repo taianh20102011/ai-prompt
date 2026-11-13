@@ -50,14 +50,18 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
 
   return (
     <>
-      {/* Mobile Menu Button */}
-      <div className="lg:hidden fixed top-3 left-3 z-50">
+      {/* Mobile Menu Button (hidden when drawer is open so it never overlaps the sidebar brand icon) */}
+      <div
+        className={`lg:hidden fixed top-3 left-3 z-50 transition-opacity duration-200 ${
+          mobileOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
+      >
         <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 rounded-lg craft-card text-neutral-300 shadow-md cursor-pointer"
+          onClick={() => setMobileOpen(true)}
+          className="p-2 rounded-lg craft-card text-[var(--text-secondary)] hover:text-[var(--text-primary)] shadow-md cursor-pointer"
           aria-label="Open mobile navigation"
         >
-          {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          <Menu className="w-4 h-4" />
         </button>
       </div>
 
@@ -82,7 +86,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
           <div 
             onClick={() => isCollapsed && !mobileOpen && setIsCollapsed(false)}
             className={`flex items-center min-w-0 ${isCollapsed && !mobileOpen ? 'cursor-pointer mx-auto' : ''}`}
-            title={isCollapsed && !mobileOpen ? t.common.expandSidebar : 'Prompt AI PNIT'}
+            title={isCollapsed && !mobileOpen ? t.common.expandSidebar : t.brand.name}
           >
             <Link 
               to="/" 
@@ -96,7 +100,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
               }}
               className="w-9 h-9 rounded-[8px] overflow-hidden flex items-center justify-center shrink-0 shadow-xs hover:opacity-90 transition-opacity"
             >
-              <img src="/favicon.svg?v=2" alt="Prompt AI PNIT" className="w-9 h-9 block" />
+              <img src="/favicon.svg?v=2" alt={t.brand.name} className="w-9 h-9 block" />
             </Link>
 
             {/* Title with fluid opacity & max-width animation */}
@@ -107,7 +111,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
             }`}>
               <Link to="/" onClick={() => setMobileOpen(false)}>
                 <span className="text-sm font-bold tracking-tight text-[var(--text-primary)] block truncate">
-                  Prompt AI PNIT
+                  {t.brand.name}
                 </span>
                 <span className="text-[11px] text-[var(--text-muted)] block -mt-0.5 truncate">
                   {lang === 'vi' ? 'Trợ lý câu lệnh AI' : 'Friendly Prompt Helper'}
@@ -116,7 +120,17 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
             </div>
           </div>
 
-          {/* Quick Collapse Button (Header - Visible when Expanded) */}
+          {/* Mobile Close Button (placed cleanly on the right of drawer header) */}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(false)}
+            className="lg:hidden flex w-8 h-8 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] shrink-0 cursor-pointer transition-colors"
+            aria-label="Close mobile navigation"
+          >
+            <X className="w-4 h-4" />
+          </button>
+
+          {/* Quick Collapse Button (Desktop Header - Visible when Expanded) */}
           <button
             onClick={() => setIsCollapsed(true)}
             className={`hidden lg:flex w-7 h-7 rounded-md items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--border-subtle)] shrink-0 cursor-pointer transition-all duration-300 ${
