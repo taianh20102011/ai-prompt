@@ -395,10 +395,10 @@ export const analyzePromptLocally = async (userPrompt, industry = 'Tự động 
 
   // 7. Bảng khuyến nghị Model Compatibility
   const modelReadiness = [
-    { name: 'Claude 3.5 Sonnet', score: totalScore >= 70 ? 98 : 82, note: 'Tối ưu tuyệt đối cho cấu trúc XML & tư duy sâu' },
-    { name: 'GPT-4o', score: totalScore >= 70 ? 96 : 80, note: 'Xuất sắc cho định dạng Markdown & Output Schemas' },
-    { name: 'Gemini 1.5 Pro', score: totalScore >= 70 ? 95 : 78, note: 'Xử lý bối cảnh dài & liên kết đa phương thức' },
-    { name: 'DeepSeek R1', score: totalScore >= 70 ? 94 : 75, note: 'Chuyên gia Chain-of-Thought suy luận từng bước' }
+    { name: 'Claude (Anthropic)', score: totalScore >= 70 ? 98 : 82, note: 'Tối ưu tuyệt đối cho cấu trúc XML & tư duy sâu' },
+    { name: 'ChatGPT (OpenAI)', score: totalScore >= 70 ? 96 : 80, note: 'Xuất sắc cho định dạng Markdown & Output Schemas' },
+    { name: 'Google Gemini', score: totalScore >= 70 ? 95 : 78, note: 'Xử lý bối cảnh dài & liên kết đa phương thức' },
+    { name: 'DeepSeek', score: totalScore >= 70 ? 94 : 75, note: 'Chuyên gia Chain-of-Thought suy luận từng bước' }
   ];
 
   // 8. Tạo Danh Sách Lỗ Hổng Cần Khắc Phục
@@ -449,22 +449,22 @@ export const analyzePromptLocally = async (userPrompt, industry = 'Tự động 
   // Cấu hình tham số tối ưu theo mô hình AI đích
   if (targetAI === 'claude') {
     suggestedParams.temp = isEmpathetic ? 0.6 : 0.2;
-    suggestedParams.systemPrompt = 'Hỗ trợ thẻ XML Tags chuẩn Anthropic Claude 3.5 Sonnet';
+    suggestedParams.systemPrompt = 'Hỗ trợ thẻ XML Tags chuẩn Anthropic Claude';
   } else if (targetAI === 'cursor') {
     suggestedParams.temp = 0.1;
     suggestedParams.systemPrompt = 'Chuẩn .cursorrules quy định tác tử IDE thực thi không dài dòng';
   } else if (targetAI === 'deepseek') {
     suggestedParams.temp = 0.2;
-    suggestedParams.systemPrompt = 'Hỗ trợ chuỗi suy luận Chain-of-Thought (CoT) DeepSeek R1';
+    suggestedParams.systemPrompt = 'Hỗ trợ chuỗi suy luận Chain-of-Thought (CoT) DeepSeek';
   } else if (targetAI === 'gemini') {
     suggestedParams.temp = isEmpathetic ? 0.7 : 0.3;
-    suggestedParams.systemPrompt = 'Hỗ trợ System Instruction & Multimodal Grounding Gemini 1.5/2.0';
+    suggestedParams.systemPrompt = 'Hỗ trợ System Instruction & Multimodal Grounding Google Gemini';
   } else if (targetAI === 'qwen') {
     suggestedParams.temp = 0.2;
-    suggestedParams.systemPrompt = 'Tối ưu cho Qwen 2.5 Coder & độ chính xác thuật toán';
+    suggestedParams.systemPrompt = 'Tối ưu cho Qwen Code-First & độ chính xác thuật toán';
   } else if (targetAI === 'chatgpt') {
     suggestedParams.temp = isEmpathetic ? 0.7 : 0.2;
-    suggestedParams.systemPrompt = 'Markdown phân cấp rõ ràng theo chuẩn OpenAI GPT-4o / o1';
+    suggestedParams.systemPrompt = 'Markdown phân cấp rõ ràng theo chuẩn OpenAI ChatGPT';
   }
 
   const upgradedPrompt = buildTailoredPrompt({

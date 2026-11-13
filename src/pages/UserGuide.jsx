@@ -301,8 +301,8 @@ export default function UserGuide() {
           {/* Cursor */}
           <div className="craft-card p-4 space-y-2 border-emerald-500/30">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="font-bold text-emerald-400">⚡ Cursor AI</span>
-              <span className="text-[10px] bg-emerald-950/40 text-emerald-400 px-1.5 py-0.5 rounded border border-emerald-800/40">.cursorrules</span>
+              <span className="font-bold text-emerald-500">⚡ Cursor AI</span>
+              <span className="px-2 py-0.5 rounded-[6px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-[var(--text-secondary)] text-[10px] font-mono">.cursorrules</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
               {lang === 'vi'
@@ -314,34 +314,34 @@ export default function UserGuide() {
           {/* Claude */}
           <div className="craft-card p-4 space-y-2 border-purple-500/30">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="font-bold text-purple-400">🟣 Claude (Anthropic)</span>
-              <span className="text-[10px] bg-purple-950/40 text-purple-400 px-1.5 py-0.5 rounded border border-purple-800/40">XML Tags</span>
+              <span className="font-bold text-purple-500">🟣 Claude (Anthropic)</span>
+              <span className="px-2 py-0.5 rounded-[6px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-[var(--text-secondary)] text-[10px] font-mono">XML Tags</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
               {lang === 'vi'
-                ? 'Sử dụng cấu trúc thẻ XML chuẩn mực của Anthropic (<role>, <context>, <negative_constraints>, <output_format>). Loại bỏ 100% lời mở đầu sáo rỗng, phát huy tối đa tư duy phân tích của Claude 3.5 Sonnet.'
-                : 'Leverages Anthropic XML tags (<role>, <context>, <negative_constraints>). Eliminates all conversational preambles and maximizes Claude 3.5 Sonnet analytical depth.'}
+                ? 'Sử dụng cấu trúc thẻ XML chuẩn mực của Anthropic (<role>, <context>, <negative_constraints>, <output_format>). Loại bỏ 100% lời mở đầu sáo rỗng, phát huy tối đa tư duy phân tích sâu của các thế hệ Claude.'
+                : 'Leverages Anthropic XML tags (<role>, <context>, <negative_constraints>). Eliminates conversational preambles and maximizes Claude analytical depth.'}
             </p>
           </div>
 
           {/* DeepSeek */}
           <div className="craft-card p-4 space-y-2 border-sky-500/30">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="font-bold text-sky-400">🐋 DeepSeek</span>
-              <span className="text-[10px] bg-sky-950/40 text-sky-400 px-1.5 py-0.5 rounded border border-sky-800/40">V3 / R1 CoT</span>
+              <span className="font-bold text-sky-500">🐋 DeepSeek</span>
+              <span className="px-2 py-0.5 rounded-[6px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-[var(--text-secondary)] text-[10px] font-mono">Chain-of-Thought</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
               {lang === 'vi'
-                ? 'Kích hoạt chuỗi suy luận 4 bước Chain-of-Thought (Điều kiện biên → Phân tích trade-off phương án → Triển khai giải pháp → Tự kiểm chứng Self-Verification) giúp DeepSeek R1 giải toán và thuật toán đỉnh cao.'
-                : 'Triggers a 4-step Chain-of-Thought sequence (Boundary conditions → Trade-off analysis → Optimal implementation → Self-verification) optimized for R1 reasoning.'}
+                ? 'Kích hoạt chuỗi suy luận 4 bước Chain-of-Thought (Điều kiện biên → Phân tích trade-off phương án → Triển khai giải pháp → Tự kiểm chứng Self-Verification) tối ưu cho khả năng giải toán và thuật toán của DeepSeek.'
+                : 'Triggers a 4-step Chain-of-Thought sequence (Boundary conditions → Trade-off analysis → Optimal implementation → Self-verification) tailored for DeepSeek reasoning.'}
             </p>
           </div>
 
           {/* Google Gemini */}
           <div className="craft-card p-4 space-y-2 border-blue-500/30">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="font-bold text-blue-400">🔷 Google Gemini</span>
-              <span className="text-[10px] bg-blue-950/40 text-blue-400 px-1.5 py-0.5 rounded border border-blue-800/40">1.5 / 2.0 Flash</span>
+              <span className="font-bold text-blue-500">🔷 Google Gemini</span>
+              <span className="px-2 py-0.5 rounded-[6px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-[var(--text-secondary)] text-[10px] font-mono">System Instruction</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
               {lang === 'vi'
@@ -353,8 +353,8 @@ export default function UserGuide() {
           {/* ChatGPT */}
           <div className="craft-card p-4 space-y-2 border-rose-500/30">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="font-bold text-rose-400">🤖 ChatGPT (OpenAI)</span>
-              <span className="text-[10px] bg-rose-950/40 text-rose-400 px-1.5 py-0.5 rounded border border-rose-800/40">GPT-4o / o1</span>
+              <span className="font-bold text-rose-500">🤖 ChatGPT (OpenAI)</span>
+              <span className="px-2 py-0.5 rounded-[6px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-[var(--text-secondary)] text-[10px] font-mono">Markdown Headers</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
               {lang === 'vi'
@@ -366,8 +366,8 @@ export default function UserGuide() {
           {/* Qwen */}
           <div className="craft-card p-4 space-y-2 border-teal-500/30">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="font-bold text-teal-400">🟢 Qwen (Alibaba)</span>
-              <span className="text-[10px] bg-teal-950/40 text-teal-400 px-1.5 py-0.5 rounded border border-teal-800/40">2.5 Coder</span>
+              <span className="font-bold text-teal-500">🟢 Qwen (Alibaba)</span>
+              <span className="px-2 py-0.5 rounded-[6px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-[var(--text-secondary)] text-[10px] font-mono">Code-First</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
               {lang === 'vi'
