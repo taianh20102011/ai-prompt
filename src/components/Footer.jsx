@@ -29,9 +29,7 @@ export default function Footer() {
         {/* Cột 1: Thông tin thương hiệu & Tác giả */}
         <div className="space-y-3">
           <div className="flex items-center space-x-2">
-            <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white font-bold text-xs flex items-center justify-center font-mono">
-              PNIT
-            </div>
+            <img src="/favicon.svg?v=2" alt="Prompt AI PNIT" className="w-7 h-7 rounded-[6px] shrink-0" />
             <span className="text-sm font-bold text-[var(--text-primary)]">
               {t.brand.name}
             </span>

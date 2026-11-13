@@ -94,9 +94,9 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                   setMobileOpen(false);
                 }
               }}
-              className="w-9 h-9 rounded-lg bg-[var(--text-primary)] text-[var(--bg-page)] font-mono font-bold text-xs flex items-center justify-center shrink-0 shadow-xs hover:opacity-90 transition-opacity"
+              className="w-9 h-9 rounded-[8px] overflow-hidden flex items-center justify-center shrink-0 shadow-xs hover:opacity-90 transition-opacity"
             >
-              PNIT
+              <img src="/favicon.svg?v=2" alt="Prompt AI PNIT" className="w-9 h-9 block" />
             </Link>
 
             {/* Title with fluid opacity & max-width animation */}
