@@ -9,9 +9,9 @@ const PORT = 3001;
 // Khóa bí mật HMAC chỉ nằm trên RAM của server, không bao giờ gửi ra ngoài
 const HMAC_SECRET = process.env.HMAC_SECRET || crypto.randomBytes(32).toString('hex');
 
-// Hashes bí mật của các tài khoản (Không lưu plaintext)
-const HASH_OWNER = crypto.createHash('sha256').update('ADMIN_MASTER_KEY_2026').digest('hex');
-const HASH_SUPPORT = crypto.createHash('sha256').update('SUPPORT_READONLY_KEY_2026').digest('hex');
+// Hashes bí mật của các tài khoản (Không lưu plaintext, ưu tiên biến môi trường)
+const HASH_OWNER = crypto.createHash('sha256').update(process.env.ADMIN_MASTER_KEY || 'ADMIN_MASTER_KEY_2026').digest('hex');
+const HASH_SUPPORT = crypto.createHash('sha256').update(process.env.SUPPORT_READONLY_KEY || 'SUPPORT_READONLY_KEY_2026').digest('hex');
 
 // 1. GIA CỐ CÁC HTTP RESPONSE HEADERS CHỐNG CLICKJACKING, MIME-SNIFFING VÀ XSS
 app.use((req, res, next) => {
