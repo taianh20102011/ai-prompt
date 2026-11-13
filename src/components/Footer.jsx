@@ -23,34 +23,8 @@ export default function Footer() {
   const { t, lang } = useLanguage();
 
   return (
-    <footer className="mt-16 border-t border-[var(--border-subtle)] bg-[var(--bg-elevated)]/60 text-xs font-mono text-[var(--text-secondary)] transition-colors">
-      {/* 1. Banner Bảo Vệ & An Ninh Hệ Thống (Google reCAPTCHA v3 & Enclave Defense) */}
-      <div className="border-b border-[var(--border-subtle)] px-4 sm:px-6 lg:px-8 py-4 bg-[var(--bg-surface)]">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-            <span className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-emerald-950/40 text-emerald-400 border border-emerald-800/50 font-semibold text-[11px]">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>{t.security.recaptchaBadge}</span>
-            </span>
-            <span className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-indigo-950/40 text-indigo-300 border border-indigo-800/50 text-[11px]">
-              <Lock className="w-3.5 h-3.5" />
-              <span>SHA-256 Zero-Trust Enclave</span>
-            </span>
-            <span className="flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-amber-950/40 text-amber-300 border border-amber-800/50 text-[11px]">
-              <Shield className="w-3.5 h-3.5" />
-              <span>Anti-IDOR Masked Hash</span>
-            </span>
-          </div>
-
-          <p className="text-[11px] text-[var(--text-muted)] max-w-md">
-            {lang === 'vi' 
-              ? 'Hệ thống áp dụng cơ chế đánh giá độ tin cậy tự động của Google reCAPTCHA v3 và tuân thủ các chuẩn mực an toàn không lưu dữ liệu nhạy cảm.'
-              : 'Protected by Google reCAPTCHA v3 automated risk scoring and zero-sensitive data retention standards.'}
-          </p>
-        </div>
-      </div>
-
-      {/* 2. Cột Liên Kết Chi Tiết */}
+    <footer className="mt-16 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs text-[var(--text-secondary)] transition-colors">
+      {/* 1. Cột Liên Kết Chi Tiết */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {/* Cột 1: Thông tin thương hiệu & Tác giả */}
         <div className="space-y-3">
@@ -169,17 +143,17 @@ export default function Footer() {
             <span>{t.footer.colSecurity}</span>
           </h4>
           <div className="space-y-2 text-[11px] leading-relaxed text-[var(--text-muted)]">
-            <div className="p-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] space-y-1">
+            <div className="p-2.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-page)] space-y-1">
               <div className="text-emerald-400 font-semibold flex items-center space-x-1">
+                <span>✓ Miễn phí & Riêng tư</span>
+              </div>
+              <p className="text-[11px]">{lang === 'vi' ? 'Không cần đăng nhập, nội dung câu lệnh được xử lý ngay trên trình duyệt của bạn.' : 'No sign-up needed; prompts are processed safely in your browser.'}</p>
+            </div>
+            <div className="p-2.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-page)] space-y-1">
+              <div className="text-blue-400 font-semibold flex items-center space-x-1">
                 <span>✓ Google reCAPTCHA v3</span>
               </div>
-              <p className="text-[10px]">{lang === 'vi' ? 'Bảo vệ chống bot tự động, tính điểm hành vi theo thời gian thực.' : 'Automated bot defense with realtime risk profiling.'}</p>
-            </div>
-            <div className="p-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] space-y-1">
-              <div className="text-indigo-400 font-semibold flex items-center space-x-1">
-                <span>✓ Zero-Trust Architecture</span>
-              </div>
-              <p className="text-[10px]">{lang === 'vi' ? 'Session HttpOnly Cookie 4H, HMAC SHA-256 Client Fingerprinting.' : 'HttpOnly 4-Hour sessions with HMAC SHA-256 fingerprinting.'}</p>
+              <p className="text-[11px]">{lang === 'vi' ? 'Chống spam tự động, bảo vệ hệ thống ổn định cho mọi người.' : 'Automated anti-spam protection keeping the tool fast and reliable.'}</p>
             </div>
           </div>
         </div>

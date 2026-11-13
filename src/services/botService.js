@@ -4,10 +4,10 @@ import { getStorageData, setStorageData, DEFAULT_ADMIN_CONFIG, DEFAULT_BENCHMARK
 // Multi-turn context awareness, 4 operational modes, inspectable Chain-of-Thought reasoning
 
 export const BOT_MODES = [
-  { id: 'architect', name: 'Kiến Trúc Sư Hệ Thống', icon: 'Cpu', desc: 'Thiết kế kiến trúc phần mềm, code chuẩn Anti-Slop, tối ưu prompt' },
-  { id: 'empathy', name: 'Tri Kỷ Thấu Cảm', icon: 'Heart', desc: 'Lắng nghe sâu sắc, phản chiếu cảm xúc theo liệu pháp Tường thuật (H-E-A-R)' },
-  { id: 'security', name: 'Chuyên Gia Bảo Mật', icon: 'ShieldAlert', desc: 'Rà soát lỗ hổng OWASP, Prompt Injection, phòng thủ IDOR & RLS' },
-  { id: 'socratic', name: 'Khai Vấn Socratic', icon: 'Compass', desc: 'Truy vấn điểm mù, bóc tách giả định ngầm, mở rộng tư duy phản biện' }
+  { id: 'architect', name: 'Cố vấn Kỹ thuật & Code', icon: 'Cpu', desc: 'Giải thích dễ hiểu, thiết kế web/app và tối ưu câu lệnh' },
+  { id: 'empathy', name: 'Người bạn Lắng nghe', icon: 'Heart', desc: 'Trò chuyện chân thành, chia sẻ áp lực và gỡ rối cảm xúc' },
+  { id: 'security', name: 'Cố vấn Bảo mật', icon: 'ShieldAlert', desc: 'Kiểm tra an toàn hệ thống và bảo vệ dữ liệu' },
+  { id: 'socratic', name: 'Người bạn Gợi mở', icon: 'Compass', desc: 'Đặt câu hỏi giúp bạn tự nhìn rõ vấn đề và hướng đi' }
 ];
 
 export const chatWithTrainedBot = async (userMessage, chatHistory = [], activeMode = 'architect') => {

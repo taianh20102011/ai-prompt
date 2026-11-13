@@ -127,70 +127,146 @@ export default function UserAnalyzer() {
     benchmarkPage * benchmarksPerPage
   );
 
+  const quickSamples = lang === 'vi'
+    ? [
+        {
+          label: 'Nhờ góp ý & sửa CV xin việc',
+          prompt: 'Giúp tôi góp ý và viết lại CV xin việc ngành IT sao cho ấn tượng với nhà tuyển dụng'
+        },
+        {
+          label: 'Tâm sự khi đang áp lực công việc',
+          prompt: 'Tôi đang cảm thấy khá áp lực và mất phương hướng trong công việc, hãy lắng nghe và trò chuyện cùng tôi'
+        },
+        {
+          label: 'Tối ưu & sửa lỗi trang web',
+          prompt: 'Nâng cấp hệ thống web này cho mượt mà, dễ dùng và an toàn hơn'
+        }
+      ]
+    : [
+        {
+          label: 'Improve my software engineer CV',
+          prompt: 'Help review and rewrite my software engineering resume so it stands out to hiring managers'
+        },
+        {
+          label: 'Talk through work stress',
+          prompt: 'I am feeling overwhelmed and stuck with work pressure lately, please listen and talk it through with me'
+        },
+        {
+          label: 'Optimize & debug a web app',
+          prompt: 'Upgrade this web application for smoother performance, clarity, and stronger security'
+        }
+      ];
+
   return (
     <div className="space-y-10 max-w-5xl mx-auto">
-      {/* Clean Header */}
-      <section className="space-y-2 border-b border-[var(--border-subtle)] pb-5">
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex items-center space-x-2 text-xs font-mono text-[var(--text-secondary)] px-3 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-            <span>{lang === 'vi' ? 'Kiểm định cấu trúc câu lệnh' : 'Prompt Structure Analyzer'}</span>
+      {/* Clean, Friendly Header */}
+      <section className="space-y-2.5 border-b border-[var(--border-subtle)] pb-5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="inline-flex items-center space-x-2 text-xs text-[var(--text-secondary)] px-3 py-1 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+            <Sparkles className="w-3.5 h-3.5 text-[#2563EB] dark:text-blue-400" />
+            <span>{t.inspector.badge}</span>
           </div>
-          <span className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[11px] font-mono text-[var(--text-muted)]">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Google reCAPTCHA v3</span>
-          </span>
           <Link
             to="/guide"
-            className="flex items-center space-x-1.5 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 text-[11px] font-mono transition-colors"
+            className="flex items-center space-x-1.5 px-3 py-1 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs transition-colors"
           >
-            <HelpCircle className="w-3.5 h-3.5" />
-            <span>{lang === 'vi' ? 'Xem hướng dẫn sử dụng' : 'User Guide & FAQ'}</span>
+            <HelpCircle className="w-3.5 h-3.5 text-[#2563EB] dark:text-blue-400" />
+            <span>{lang === 'vi' ? 'Xem hướng dẫn cách dùng' : 'How to use'}</span>
           </Link>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text-primary)]">
           {t.inspector.title}
         </h1>
-        <p className="text-xs sm:text-sm text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+        <p className="text-sm text-[var(--text-secondary)] max-w-2xl leading-relaxed">
           {t.inspector.subtitle}
         </p>
       </section>
 
-      {/* Input Workbench Card */}
-      <div className="craft-card p-5 sm:p-6 space-y-4">
-        <form onSubmit={handleInspect} className="space-y-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <span className="text-xs font-mono font-medium text-[var(--text-secondary)] uppercase tracking-wider flex items-center space-x-1.5">
-              <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-400" />
-              <span>{t.inspector.categoryLabel}</span>
-            </span>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="text-xs font-mono px-3 py-2 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-primary)] w-full sm:w-auto focus:outline-none focus:border-indigo-500 transition-colors"
-            >
-              {categories.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Target AI Model Selector (Khuyên dùng / Recommended) */}
-          <div className="space-y-2 pt-2 border-t border-[var(--border-subtle)]">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
-              <span className="text-xs font-mono font-medium text-[var(--text-secondary)] uppercase tracking-wider flex items-center space-x-1.5">
-                <Cpu className="w-3.5 h-3.5 text-indigo-400" />
-                <span>{t.inspector.targetAiLabel}</span>
-              </span>
-              <span className="inline-flex items-center space-x-1 text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold self-start sm:self-auto">
-                <Sparkles className="w-3 h-3 text-amber-400" />
-                <span>{t.inspector.targetAiBadge}</span>
+      {/* Step-by-Step Friendly Input Workbench Card */}
+      <div className="craft-card p-5 sm:p-6 space-y-6">
+        <form onSubmit={handleInspect} className="space-y-6">
+          {/* STEP 1: Natural Input + Quick Sample Pills */}
+          <div className="space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <label className="text-sm font-semibold text-[var(--text-primary)]">
+                {lang === 'vi' ? '1. Bạn muốn nhờ AI làm việc gì?' : '1. What would you like AI to help you with?'}
+              </label>
+              <span className="text-xs text-[var(--text-muted)]">
+                {t.inspector.parserEngine}
               </span>
             </div>
 
-            <p className="text-[11px] font-mono text-[var(--text-muted)]">
-              {t.inspector.targetAiDesc}
-            </p>
+            {/* Quick Human Examples Right Above Textarea */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs text-[var(--text-muted)]">
+                {lang === 'vi' ? 'Thử nhanh:' : 'Quick examples:'}
+              </span>
+              {quickSamples.map((sample, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setPromptInput(sample.prompt);
+                    handleInspect(sample.prompt);
+                  }}
+                  className="px-3 py-1 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:border-[#2563EB]/50 hover:text-[var(--text-primary)] text-xs text-[var(--text-secondary)] transition-colors cursor-pointer"
+                >
+                  {sample.label}
+                </button>
+              ))}
+            </div>
+
+            <textarea
+              value={promptInput}
+              onChange={(e) => setPromptInput(e.target.value)}
+              placeholder={t.inspector.placeholder}
+              rows={4}
+              className="w-full p-4 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[#2563EB] transition-colors resize-y leading-relaxed"
+            />
+            <div className="flex justify-between items-center text-xs text-[var(--text-muted)]">
+              <span>
+                {lang === 'vi'
+                  ? `Độ dài hiện tại: ${promptInput.trim() ? promptInput.trim().split(/\s+/).length : 0} từ`
+                  : `Current length: ${promptInput.trim() ? promptInput.trim().split(/\s+/).length : 0} words`}
+              </span>
+              <span>
+                {lang === 'vi' ? 'Mẹo: Cứ viết tự nhiên như đang nhắn tin' : 'Tip: Just write naturally in plain words'}
+              </span>
+            </div>
+          </div>
+
+          {/* STEP 2: Target AI & Optional Topic */}
+          <div className="space-y-3 pt-4 border-t border-[var(--border-subtle)]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="space-y-0.5">
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-semibold text-[var(--text-primary)]">
+                    {lang === 'vi' ? '2. Bạn định dán câu lệnh này vào đâu?' : '2. Which AI will you paste this prompt into?'}
+                  </span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-[8px] bg-[#2563EB]/12 text-[#2563EB] dark:text-blue-400 font-medium">
+                    {t.inspector.targetAiBadge}
+                  </span>
+                </div>
+                <p className="text-xs text-[var(--text-muted)]">
+                  {t.inspector.targetAiDesc}
+                </p>
+              </div>
+
+              {/* Optional Topic Selector */}
+              <div className="flex items-center space-x-2 shrink-0">
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--text-muted)] hidden sm:block" />
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="text-xs px-3 py-2 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-primary)] w-full sm:w-auto focus:outline-none focus:border-[#2563EB] transition-colors"
+                  aria-label={t.inspector.categoryLabel}
+                >
+                  {categories.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 pt-1">
               {TARGET_AI_MODELS.map((model) => {
@@ -205,7 +281,7 @@ export default function UserAnalyzer() {
                         handleInspect(promptInput, model.id);
                       }
                     }}
-                    className={`px-3 py-2.5 rounded-[6px] border text-left flex items-center justify-between transition-all active:scale-[0.98] cursor-pointer ${
+                    className={`px-3 py-2.5 rounded-[8px] border text-left flex items-center justify-between transition-all active:scale-[0.98] cursor-pointer ${
                       isSelected
                         ? 'border-[#2563EB] bg-[#2563EB]/12 text-[var(--text-primary)] ring-1 ring-[#2563EB]/40'
                         : 'border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)]'
@@ -220,21 +296,7 @@ export default function UserAnalyzer() {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <textarea
-              value={promptInput}
-              onChange={(e) => setPromptInput(e.target.value)}
-              placeholder={t.inspector.placeholder}
-              rows={4}
-              className="w-full p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-sm font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-indigo-500 transition-colors resize-y leading-relaxed"
-            />
-            <div className="flex justify-between items-center text-[11px] font-mono text-[var(--text-muted)]">
-              <span>{lang === 'vi' ? `Độ dài: ${promptInput.trim() ? promptInput.trim().split(/\s+/).length : 0} từ` : `Length: ${promptInput.trim() ? promptInput.trim().split(/\s+/).length : 0} words`}</span>
-              <span>{t.inspector.parserEngine}</span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between pt-1">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
             <button
               type="button"
               onClick={() => {
@@ -242,7 +304,7 @@ export default function UserAnalyzer() {
                 setPromptInput(sample);
                 handleInspect(sample);
               }}
-              className="px-3.5 py-2 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-page)] text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+              className="px-4 py-2.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-page)] text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
             >
               {t.inspector.btnSample}
             </button>
@@ -250,282 +312,323 @@ export default function UserAnalyzer() {
             <button
               type="submit"
               disabled={isAnalyzing}
-              className="px-5 py-2.5 rounded-[6px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold font-mono flex items-center space-x-2 transition-all cursor-pointer active:scale-95"
+              className="px-6 py-2.5 rounded-[8px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-semibold flex items-center justify-center space-x-2 transition-all cursor-pointer active:scale-[0.98]"
             >
               {isAnalyzing ? (
                 <>
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <RefreshCw className="w-4 h-4 animate-spin" />
                   <span>{t.inspector.btnInspecting}</span>
                 </>
               ) : (
                 <>
-                  <span>{t.inspector.btnInspect}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <Sparkles className="w-4 h-4" />
+                  <span>{lang === 'vi' ? 'Viết lại & Tối ưu câu lệnh' : 'Rewrite & Optimize Prompt'}</span>
+                  <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
           </div>
         </form>
 
-        {/* Inspection Result Deck (Flat Hierarchy - No Card Lồng Card) */}
+        {/* RESULT SECTION: RESULT-FIRST, STEP-BY-STEP, JARGON-FREE */}
         {result && (
           <div className="pt-6 border-t border-[var(--border-subtle)] space-y-6 animate-fadeIn">
-            {/* Top Score Matrix Bar (Flat Border Surface) */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] gap-3">
-              <div>
-                <div className="text-xs font-mono text-[var(--text-muted)]">CHỈ SỐ THỰC THI (CONFIDENCE SCORE)</div>
-                <div className="text-xs text-[var(--text-secondary)] mt-0.5">
-                  Lĩnh vực nhận diện: <span className="text-[var(--text-primary)] font-semibold">{result.detectedCategory}</span>
-                </div>
-                <div className="text-[11px] text-[var(--text-muted)] font-mono mt-1">
-                  Persona thẩm quyền: <span className="text-indigo-400 font-semibold">{result.detectedRole}</span>
-                </div>
-              </div>
-              <div className="flex items-baseline space-x-1.5 font-mono">
-                <span className={`text-4xl font-extrabold ${
-                  result.score >= 80 ? 'text-emerald-400' :
-                  result.score >= 50 ? 'text-amber-400' : 'text-rose-400'
-                }`}>
-                  {result.score}
-                </span>
-                <span className="text-xs text-[var(--text-muted)]">/ 100</span>
-              </div>
-            </div>
-
-            {/* 4 Pillars Breakdown (R-C-O-C) - Flat Clean Surface */}
-            {result.dimensions && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-                <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)]">
-                  <div className="text-[var(--text-muted)] text-[10px]">ROLE (VAI TRÒ)</div>
-                  <div className="text-[var(--text-primary)] font-bold text-sm mt-0.5">{result.dimensions.roleScore} / 25</div>
-                </div>
-                <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)]">
-                  <div className="text-[var(--text-muted)] text-[10px]">CONTEXT (BỐI CẢNH)</div>
-                  <div className="text-[var(--text-primary)] font-bold text-sm mt-0.5">{result.dimensions.contextScore} / 25</div>
-                </div>
-                <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)]">
-                  <div className="text-[var(--text-muted)] text-[10px]">OBJECTIVE (MỤC TIÊU)</div>
-                  <div className="text-[var(--text-primary)] font-bold text-sm mt-0.5">{result.dimensions.objectiveScore} / 25</div>
-                </div>
-                <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)]">
-                  <div className="text-[var(--text-muted)] text-[10px]">CONSTRAINTS (RÀNG BUỘC)</div>
-                  <div className="text-[var(--text-primary)] font-bold text-sm mt-0.5">{result.dimensions.constraintsScore} / 25</div>
-                </div>
-              </div>
-            )}
-
-            {/* Metrics & Security Audit Row */}
-            {result.metrics && (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
-                <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex items-center justify-between">
-                  <span className="text-[var(--text-secondary)]">Từ ngữ & Token:</span>
-                  <span className="font-bold text-[var(--text-primary)]">
-                    {result.metrics.wordCount} từ (~{result.metrics.estimatedTokens} tokens)
-                  </span>
-                </div>
-                <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex items-center justify-between">
-                  <span className="text-[var(--text-secondary)]">Độ đa dạng từ vựng:</span>
-                  <span className="font-bold text-indigo-400">
-                    {result.metrics.lexicalDiversity}% (Burstiness)
-                  </span>
-                </div>
-                <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex items-center justify-between">
-                  <span className="text-[var(--text-secondary)]">Bảo mật Prompt:</span>
-                  <span className={`font-bold flex items-center space-x-1 ${
-                    result.securityAudit?.hasRisk ? 'text-rose-400' : 'text-emerald-400'
-                  }`}>
-                    {result.securityAudit?.hasRisk ? <ShieldAlert className="w-3.5 h-3.5" /> : <ShieldCheck className="w-3.5 h-3.5" />}
-                    <span>{result.securityAudit?.posture}</span>
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Ambiguous Buzzwords Alert (if found) */}
-            {result.detectedAmbiguities && result.detectedAmbiguities.length > 0 && (
-              <div className="p-4 rounded-xl border border-amber-900/40 bg-amber-950/15 space-y-2 text-xs font-mono">
-                <div className="text-amber-400 font-bold flex items-center space-x-1.5">
-                  <AlertTriangle className="w-4 h-4" />
-                  <span>Phát hiện {result.detectedAmbiguities.length} từ mơ hồ (Nguy cơ sinh AI Slop):</span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                  {result.detectedAmbiguities.map((item, idx) => (
-                    <div key={idx} className="p-2.5 rounded-lg bg-amber-950/30 border border-amber-800/40 text-[11px]">
-                      <span className="font-bold text-amber-300">"{item.word}": </span>
-                      <span className="text-[var(--text-secondary)]">{item.fix}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Multi-Model Compatibility Matrix */}
-            {result.modelReadiness && (
-              <div className="space-y-2.5">
-                <div className="text-xs font-mono font-medium text-[var(--text-secondary)] uppercase tracking-wider">
-                  Độ Tương Thích Mô Hình Đích (Model Readiness Matrix)
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
-                  {result.modelReadiness.map((m, idx) => (
-                    <div key={idx} className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-[var(--text-primary)]">{m.name}</span>
-                        <span className="text-indigo-400 font-bold">{m.score}%</span>
-                      </div>
-                      <div className="w-full h-1.5 rounded-full bg-[var(--border-subtle)] overflow-hidden">
-                        <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${m.score}%` }} />
-                      </div>
-                      <p className="text-[10px] text-[var(--text-muted)] truncate">{m.note}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Hyperparameters & Negative Prompting Panel */}
-            {result.suggestedParams && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 text-xs font-mono">
-                <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
-                  <span className="text-[var(--text-muted)] text-[10px] uppercase">Temperature Khuyến Nghị</span>
-                  <div className="text-lg font-bold text-indigo-400">{result.suggestedParams.temp}</div>
-                  <p className="text-[10px] text-[var(--text-secondary)]">
-                    {result.suggestedParams.temp < 0.5 ? 'Tối ưu cho code & kiến trúc chính xác' : 'Tối ưu cho hội thoại thấu cảm tự nhiên'}
+            {/* 1. FIRST (TOP OF RESULTS): Ready-to-Use Rewritten Prompt */}
+            <div className="p-5 rounded-[8px] border border-[#2563EB]/40 bg-[var(--bg-elevated)] space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-bold text-[var(--text-primary)] flex items-center space-x-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                      <span>
+                        {lang === 'vi'
+                          ? 'Câu lệnh đã viết lại cho bạn (Sẵn sàng sử dụng)'
+                          : 'Your Rewritten Prompt (Ready to Use)'}
+                      </span>
+                    </span>
+                    <span className="text-[11px] px-2 py-0.5 rounded-[8px] bg-[#2563EB]/15 text-[#2563EB] dark:text-blue-400 font-medium">
+                      {result.targetAIDetails?.name || 'Chuẩn AI'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-[var(--text-muted)]">
+                    {lang === 'vi'
+                      ? `Định dạng tối ưu: ${result.targetAIDetails?.badge} • Phù hợp cho ${result.targetAIDetails?.recommendedFor}`
+                      : `Format: ${result.targetAIDetails?.badge} • Best for ${result.targetAIDetails?.recommendedFor}`}
                   </p>
                 </div>
-                <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
-                  <span className="text-[var(--text-muted)] text-[10px] uppercase">Top-P & Repetition Penalty</span>
-                  <div className="text-lg font-bold text-emerald-400">Top-P: {result.suggestedParams.topP}</div>
-                  <p className="text-[10px] text-[var(--text-secondary)]">Penalty: {result.suggestedParams.repPenalty} (Chống lặp từ vựng)</p>
-                </div>
-                <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
-                  <span className="text-[var(--text-muted)] text-[10px] uppercase">Ràng Buộc Phủ Định</span>
-                  <div className="text-xs font-bold text-rose-400">Negative Prompting Active</div>
-                  <p className="text-[10px] text-[var(--text-secondary)]">Đã thiết lập hàng rào cấm sáo rỗng</p>
-                </div>
-              </div>
-            )}
 
-            {/* Assigned Ecosystem Libraries Badge */}
-            {result.assignedLibraries && result.assignedLibraries.length > 0 && (
-              <div className="space-y-2.5">
-                <div className="text-xs font-mono font-medium text-[var(--text-secondary)] uppercase tracking-wider flex items-center justify-between">
-                  <span>Hệ Thống Tự Động Gán Thư Viện Tối Ưu ({result.assignedLibraries.length})</span>
-                  <span className="text-[10px] text-emerald-500 font-bold">Zero-Slop Stack</span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {result.assignedLibraries.map((lib, idx) => (
-                    <div key={idx} className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-xs font-semibold text-[var(--text-primary)]">{lib.name}</span>
-                        <span className="text-[9px] font-mono text-[var(--text-muted)] bg-[var(--bg-page)] border border-[var(--border-subtle)] px-1.5 py-0.5 rounded">npm</span>
-                      </div>
-                      <code className="text-[10px] font-mono text-indigo-400 block truncate">{lib.npm}</code>
-                      <p className="text-[10px] text-[var(--text-secondary)] truncate">{lib.role}</p>
-                    </div>
-                  ))}
-                </div>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(result.upgradedPrompt)}
+                  className="px-4 py-2 rounded-[8px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold flex items-center justify-center space-x-1.5 transition-colors cursor-pointer shrink-0"
+                >
+                  {copiedUpgraded ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>
+                    {copiedUpgraded
+                      ? (lang === 'vi' ? 'Đã sao chép!' : 'Copied!')
+                      : (lang === 'vi' ? 'Sao chép câu lệnh này' : 'Copy this prompt')}
+                  </span>
+                </button>
               </div>
-            )}
 
-            {/* Deficiencies Checklist */}
-            <div className="space-y-2.5">
-              <div className="text-xs font-mono font-medium text-[var(--text-secondary)] uppercase tracking-wider">
-                Lỗ Hổng Cần Bổ Sung ({result.missingPoints.length})
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {result.missingPoints.map((item, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-xs space-y-1">
-                    <div className="flex items-center space-x-1.5 font-semibold text-[var(--text-primary)]">
-                      <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0 shadow-sm" />
-                      <span>{item.item}</span>
-                    </div>
-                    <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed pl-3.5">{item.desc}</p>
-                  </div>
+              {/* Quick AI Switcher for Result */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-[11px] text-[var(--text-muted)] mr-1">
+                  {lang === 'vi' ? 'Đổi nhanh sang AI khác:' : 'Switch AI:'}
+                </span>
+                {TARGET_AI_MODELS.map(m => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => {
+                      setTargetAI(m.id);
+                      handleInspect(promptInput, m.id);
+                    }}
+                    className={`px-2.5 py-1 rounded-[8px] text-[11px] transition-colors cursor-pointer ${
+                      targetAI === m.id
+                        ? 'bg-[#2563EB] text-white font-semibold'
+                        : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                    }`}
+                    title={m.description}
+                  >
+                    {m.shortName}
+                  </button>
                 ))}
               </div>
-            </div>
 
-            {/* Generated Prompt 2.0 Codeview (Tailored for Target AI) */}
-            <div className="space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs font-mono font-medium text-[var(--text-secondary)] uppercase tracking-wider flex items-center space-x-1.5">
-                    <CornerDownRight className="w-3.5 h-3.5 text-indigo-400" />
-                    <span>Prompt 2.0</span>
-                  </span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 font-bold flex items-center space-x-1">
-                    <Sparkles className="w-3 h-3 text-indigo-400" />
-                    <span>{result.targetAIDetails?.name || 'Tối ưu chuẩn AI'}</span>
-                  </span>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  {/* Quick AI Model Switcher in Result */}
-                  <div className="hidden md:flex items-center space-x-1 p-0.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[10px] font-mono">
-                    {TARGET_AI_MODELS.map(m => (
-                      <button
-                        key={m.id}
-                        type="button"
-                        onClick={() => {
-                          setTargetAI(m.id);
-                          handleInspect(promptInput, m.id);
-                        }}
-                        className={`px-2 py-0.5 rounded transition-colors cursor-pointer ${
-                          targetAI === m.id 
-                            ? 'bg-indigo-600 text-white font-bold' 
-                            : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
-                        }`}
-                        title={m.description}
-                      >
-                        {m.shortName}
-                      </button>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={() => copyToClipboard(result.upgradedPrompt)}
-                    className="flex items-center space-x-1.5 text-xs font-mono px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-page)] text-[var(--text-primary)] transition-colors cursor-pointer shadow-xs"
-                  >
-                    {copiedUpgraded ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-indigo-400" />}
-                    <span>{copiedUpgraded ? (lang === 'vi' ? 'Đã sao chép!' : 'Copied!') : (lang === 'vi' ? 'Sao chép Prompt' : 'Copy Prompt')}</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Target AI Architecture Hint Banner */}
-              <div className="px-3 py-2 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[11px] font-mono text-[var(--text-secondary)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
-                <span>
-                  {lang === 'vi' ? 'Định dạng kiến trúc:' : 'Architecture Format:'} <strong className="text-[var(--text-primary)]">{result.targetAIDetails?.badge}</strong> • {result.targetAIDetails?.recommendedFor}
-                </span>
-                {result.suggestedParams?.systemPrompt && (
-                  <span className="text-[10px] text-indigo-400">
-                    {result.suggestedParams.systemPrompt}
-                  </span>
-                )}
-              </div>
-
-              <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] font-mono text-xs text-[var(--text-primary)] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto select-text">
+              <div className="p-4 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-page)] text-xs sm:text-[13px] text-[var(--text-primary)] whitespace-pre-wrap leading-relaxed max-h-96 overflow-y-auto select-text">
                 {result.upgradedPrompt}
               </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1 text-xs">
+                <span className="text-[var(--text-muted)]">
+                  {lang === 'vi'
+                    ? 'Chỉ cần bấm "Sao chép" ở trên rồi dán trực tiếp vào khung chat của AI bạn đang dùng.'
+                    : 'Click Copy above and paste directly into your favorite AI chat window.'}
+                </span>
+                <Link
+                  to="/trained-bot"
+                  state={{ initialPrompt: result.upgradedPrompt }}
+                  className="text-[#2563EB] dark:text-blue-400 hover:underline font-medium flex items-center space-x-1 shrink-0"
+                >
+                  <span>{lang === 'vi' ? 'Mang sang thử với Trợ lý AI →' : 'Try this with AI Companion →'}</span>
+                </Link>
+              </div>
             </div>
+
+            {/* 2. SECOND: Clarity Score & 4 Everyday Elements */}
+            <div className="space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] gap-3">
+                <div className="space-y-1">
+                  <div className="text-sm font-semibold text-[var(--text-primary)]">
+                    {lang === 'vi' ? 'Mức độ rõ ràng của câu lệnh gốc' : 'Clarity of your original prompt'}
+                  </div>
+                  <div className="text-xs text-[var(--text-secondary)]">
+                    {result.score >= 80
+                      ? t.inspector.scoreGradeExcellent
+                      : result.score >= 50
+                      ? t.inspector.scoreGradeGood
+                      : t.inspector.scoreGradeNeedsWork}
+                    {' • '}
+                    <span>{lang === 'vi' ? 'Chủ đề:' : 'Topic:'} <strong className="text-[var(--text-primary)]">{result.detectedCategory}</strong></span>
+                  </div>
+                </div>
+                <div className="flex items-baseline space-x-1.5">
+                  <span className={`text-3xl font-bold tabular-nums ${
+                    result.score >= 80 ? 'text-emerald-400' :
+                    result.score >= 50 ? 'text-amber-400' : 'text-blue-400'
+                  }`}>
+                    {result.score}
+                  </span>
+                  <span className="text-xs text-[var(--text-muted)]">/ 100 điểm</span>
+                </div>
+              </div>
+
+              {result.dimensions && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                  <div className="p-3.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-[var(--text-primary)]">Vai trò (Role)</span>
+                      <span className="font-bold text-[#2563EB] dark:text-blue-400 tabular-nums">{result.dimensions.roleScore}/25</span>
+                    </div>
+                    <p className="text-[11px] text-[var(--text-muted)]">AI đóng vai chuyên gia hay người bạn nào?</p>
+                  </div>
+                  <div className="p-3.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-[var(--text-primary)]">Hoàn cảnh (Context)</span>
+                      <span className="font-bold text-[#2563EB] dark:text-blue-400 tabular-nums">{result.dimensions.contextScore}/25</span>
+                    </div>
+                    <p className="text-[11px] text-[var(--text-muted)]">Tình huống và thông tin nền đã đủ chưa?</p>
+                  </div>
+                  <div className="p-3.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-[var(--text-primary)]">Mục tiêu (Objective)</span>
+                      <span className="font-bold text-[#2563EB] dark:text-blue-400 tabular-nums">{result.dimensions.objectiveScore}/25</span>
+                    </div>
+                    <p className="text-[11px] text-[var(--text-muted)]">Yêu cầu chính cần AI giải quyết là gì?</p>
+                  </div>
+                  <div className="p-3.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-[var(--text-primary)]">Lưu ý riêng (Constraints)</span>
+                      <span className="font-bold text-[#2563EB] dark:text-blue-400 tabular-nums">{result.dimensions.constraintsScore}/25</span>
+                    </div>
+                    <p className="text-[11px] text-[var(--text-muted)]">Cách trình bày và những điều AI cần tránh.</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* 3. THIRD: Friendly Improvement Suggestions (Combined Constructive Guidance) */}
+            {((result.missingPoints && result.missingPoints.length > 0) || (result.detectedAmbiguities && result.detectedAmbiguities.length > 0)) && (
+              <div className="p-4 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-3">
+                <div className="text-sm font-semibold text-[var(--text-primary)]">
+                  {lang === 'vi' ? 'Gợi ý nhỏ để câu lệnh của bạn tốt hơn' : 'Helpful tips to make your prompt even clearer'}
+                </div>
+
+                {result.detectedAmbiguities && result.detectedAmbiguities.length > 0 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {result.detectedAmbiguities.map((item, idx) => (
+                      <div key={`amb-${idx}`} className="p-3 rounded-[8px] bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs space-y-0.5">
+                        <div className="font-semibold text-amber-400">
+                          {lang === 'vi' ? `Từ hơi chung chung: "${item.word}"` : `Somewhat vague: "${item.word}"`}
+                        </div>
+                        <p className="text-[var(--text-secondary)] leading-relaxed">{item.fix}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {result.missingPoints && result.missingPoints.length > 0 && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {result.missingPoints.map((item, idx) => (
+                      <div key={`miss-${idx}`} className="p-3 rounded-[8px] bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs space-y-1">
+                        <div className="flex items-center space-x-2 font-semibold text-[var(--text-primary)]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                          <span>{item.item}</span>
+                        </div>
+                        <p className="text-[var(--text-secondary)] leading-relaxed pl-3.5">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 4. FOURTH: Collapsible Technical Details for Developers */}
+            <details className="rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+              <summary className="px-4 py-3 text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer select-none">
+                {lang === 'vi'
+                  ? 'Xem thêm thông số kỹ thuật nâng cao (Dành cho lập trình viên)'
+                  : 'View advanced technical metrics (For developers)'}
+              </summary>
+              <div className="p-4 pt-2 border-t border-[var(--border-subtle)] space-y-5">
+                {result.metrics && (
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+                    <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex items-center justify-between">
+                      <span className="text-[var(--text-secondary)]">Từ ngữ & Token:</span>
+                      <span className="font-bold text-[var(--text-primary)] tabular-nums">
+                        {result.metrics.wordCount} từ (~{result.metrics.estimatedTokens})
+                      </span>
+                    </div>
+                    <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex items-center justify-between">
+                      <span className="text-[var(--text-secondary)]">Đa dạng từ vựng:</span>
+                      <span className="font-bold text-blue-400 tabular-nums">
+                        {result.metrics.lexicalDiversity}%
+                      </span>
+                    </div>
+                    <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex items-center justify-between">
+                      <span className="text-[var(--text-secondary)]">An toàn câu lệnh:</span>
+                      <span className={`font-bold flex items-center space-x-1 ${
+                        result.securityAudit?.hasRisk ? 'text-rose-400' : 'text-emerald-400'
+                      }`}>
+                        {result.securityAudit?.hasRisk ? <ShieldAlert className="w-3.5 h-3.5" /> : <ShieldCheck className="w-3.5 h-3.5" />}
+                        <span>{result.securityAudit?.posture}</span>
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {result.modelReadiness && (
+                  <div className="space-y-2">
+                    <div className="text-[11px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
+                      Độ tương thích theo từng AI
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
+                      {result.modelReadiness.map((m, idx) => (
+                        <div key={idx} className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="font-semibold text-[var(--text-primary)]">{m.name}</span>
+                            <span className="text-blue-400 font-bold tabular-nums">{m.score}%</span>
+                          </div>
+                          <div className="w-full h-1.5 rounded-full bg-[var(--border-subtle)] overflow-hidden">
+                            <div className="h-full bg-[#2563EB] rounded-full" style={{ width: `${m.score}%` }} />
+                          </div>
+                          <p className="text-[10px] text-[var(--text-muted)] truncate">{m.note}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {result.suggestedParams && (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 text-xs font-mono">
+                    <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
+                      <span className="text-[var(--text-muted)] text-[10px] uppercase">Temperature khuyến nghị</span>
+                      <div className="text-base font-bold text-blue-400 tabular-nums">{result.suggestedParams.temp}</div>
+                    </div>
+                    <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
+                      <span className="text-[var(--text-muted)] text-[10px] uppercase">Top-P & Repetition Penalty</span>
+                      <div className="text-base font-bold text-emerald-400 tabular-nums">Top-P: {result.suggestedParams.topP}</div>
+                      <p className="text-[10px] text-[var(--text-secondary)]">Penalty: {result.suggestedParams.repPenalty}</p>
+                    </div>
+                    <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
+                      <span className="text-[var(--text-muted)] text-[10px] uppercase">Persona nhận diện</span>
+                      <div className="text-xs font-semibold text-[var(--text-primary)]">{result.detectedRole}</div>
+                    </div>
+                  </div>
+                )}
+
+                {result.assignedLibraries && result.assignedLibraries.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-[11px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
+                      Thư viện gợi ý ({result.assignedLibraries.length})
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                      {result.assignedLibraries.map((lib, idx) => (
+                        <div key={idx} className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="font-mono text-xs font-semibold text-[var(--text-primary)]">{lib.name}</span>
+                            <span className="text-[9px] font-mono text-[var(--text-muted)] bg-[var(--bg-page)] border border-[var(--border-subtle)] px-1.5 py-0.5 rounded">npm</span>
+                          </div>
+                          <code className="text-[10px] font-mono text-blue-400 block truncate">{lib.npm}</code>
+                          <p className="text-[10px] text-[var(--text-secondary)] truncate">{lib.role}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </details>
           </div>
         )}
       </div>
 
-      {/* Production Tested Benchmarks Grid */}
+      {/* Humanized Prompt Templates Library */}
       <section className="space-y-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center space-x-2">
-              <h2 className="text-base font-semibold text-[var(--text-primary)]">Prompt Benchmarks</h2>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-                {filteredBenchmarks.length} {lang === 'vi' ? 'mẫu chuẩn' : 'verified templates'} • {lang === 'vi' ? 'Trang' : 'Page'} {benchmarkPage}/{totalBenchmarkPages}
+              <h2 className="text-lg font-bold text-[var(--text-primary)]">
+                {lang === 'vi' ? 'Thư viện Câu lệnh Mẫu (Chép dùng ngay)' : 'Ready-to-Use Prompt Library'}
+              </h2>
+              <span className="text-[11px] px-2.5 py-0.5 rounded-[8px] bg-[#2563EB]/12 text-[#2563EB] dark:text-blue-400 font-medium">
+                {filteredBenchmarks.length} {lang === 'vi' ? 'mẫu' : 'templates'} • {lang === 'vi' ? 'Trang' : 'Page'} {benchmarkPage}/{totalBenchmarkPages}
               </span>
             </div>
-            <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+            <p className="text-xs text-[var(--text-secondary)] mt-1">
               {lang === 'vi' 
-                ? 'Mẫu prompt đã kiểm nghiệm thực tế từ các kỹ sư AI. Chọn "Chép" để dùng ngay trong ChatGPT/Claude, hoặc "Phân tích" để kiểm định câu hỏi gốc.' 
-                : 'Field-tested prompt templates. Click "Copy" to paste into ChatGPT/Claude, or "Inspect" to audit the baseline prompt.'}
+                ? 'Những mẫu câu lệnh đã được biên soạn sẵn cho từng tình huống thực tế. Bấm "Chép" để dùng ngay, hoặc "Thử mẫu này" để tùy biến theo ý bạn.' 
+                : 'Ready-made prompts for real situations. Click "Copy" to use immediately, or "Try this" to customize it.'}
             </p>
           </div>
 
@@ -535,57 +638,41 @@ export default function UserAnalyzer() {
               type="text"
               value={searchBenchmark}
               onChange={(e) => setSearchBenchmark(e.target.value)}
-              placeholder={lang === 'vi' ? 'Lọc theo tag, từ khóa...' : 'Filter by tag, keyword...'}
+              placeholder={lang === 'vi' ? 'Tìm theo chủ đề, từ khóa...' : 'Search by topic, keyword...'}
               className="craft-input w-full text-xs pl-8 pr-3 py-2"
             />
           </div>
-        </div>
-
-        {/* Quick Explainer Callout */}
-        <div className="p-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)]/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-[var(--text-secondary)] font-mono">
-          <div className="flex items-center space-x-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-            <span>
-              {lang === 'vi'
-                ? 'Mẹo sử dụng: Bấm [Chép] để lấy prompt tối ưu, hoặc bấm [Phân tích] để xem hệ thống phân tích AST và lọc bỏ từ sáo rỗng.'
-                : 'Pro Tip: Click [Copy] to use the optimized prompt, or [Inspect] to see AST structure scoring & slop elimination.'}
-            </span>
-          </div>
-          <Link to="/guide#benchmarks" className="text-blue-500 hover:underline shrink-0 text-[11px] font-semibold">
-            {lang === 'vi' ? 'Xem cẩm nang hướng dẫn →' : 'Read Guidebook →'}
-          </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {displayedBenchmarks.map((bm) => (
             <div key={bm.id} className="craft-card p-4 flex flex-col justify-between space-y-3">
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-[11px] font-mono">
-                  <span className="text-indigo-400 font-semibold">{bm.industry}</span>
-                  <span className="text-amber-400 font-medium">★ {bm.rating}</span>
+                <div className="flex items-center justify-between text-[11px]">
+                  <span className="text-[#2563EB] dark:text-blue-400 font-semibold">{bm.industry}</span>
+                  <span className="text-amber-400 font-medium tabular-nums">★ {bm.rating}</span>
                 </div>
                 <h3 className="text-sm font-semibold text-[var(--text-primary)] leading-snug">{bm.title}</h3>
-                <div className="p-2.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[11px] font-mono text-[var(--text-secondary)] max-h-28 overflow-y-auto leading-relaxed select-text">
+                <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-xs text-[var(--text-secondary)] max-h-28 overflow-y-auto leading-relaxed select-text">
                   {bm.optimizedPrompt}
                 </div>
               </div>
 
-              <div className="pt-2.5 border-t border-[var(--border-subtle)] flex items-center justify-between gap-2 text-[11px] font-mono">
-                <span className="text-[var(--text-muted)] truncate max-w-[95px] text-[10px]" title={bm.author}>
+              <div className="pt-2.5 border-t border-[var(--border-subtle)] flex items-center justify-between gap-2 text-xs">
+                <span className="text-[var(--text-muted)] truncate max-w-[100px] text-[11px]" title={bm.author}>
                   {bm.author.split('(')[0].trim()}
                 </span>
                 
                 <div className="flex items-center space-x-1.5 shrink-0">
-                  {/* Nút Sao chép Prompt đã tối ưu */}
                   <button
                     onClick={() => handleCopyBenchmark(bm)}
-                    className="px-2 py-1 rounded-md border border-[var(--border-subtle)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center space-x-1 cursor-pointer transition-colors"
-                    title={lang === 'vi' ? 'Sao chép prompt tối ưu này vào bộ nhớ tạm' : 'Copy optimized prompt to clipboard'}
+                    className="px-2.5 py-1 rounded-[8px] border border-[var(--border-subtle)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center space-x-1 cursor-pointer transition-colors"
+                    title={lang === 'vi' ? 'Sao chép câu lệnh mẫu này' : 'Copy prompt template'}
                   >
                     {copiedBenchmarkId === bm.id ? (
                       <>
                         <Check className="w-3 h-3 text-emerald-400" />
-                        <span className="text-emerald-400 font-bold">{lang === 'vi' ? 'Đã chép' : 'Copied'}</span>
+                        <span className="text-emerald-400 font-semibold">{lang === 'vi' ? 'Đã chép' : 'Copied'}</span>
                       </>
                     ) : (
                       <>
@@ -595,17 +682,16 @@ export default function UserAnalyzer() {
                     )}
                   </button>
 
-                  {/* Nút Thử phân tích mẫu gốc */}
                   <button
                     onClick={() => {
                       setPromptInput(bm.originalPrompt);
                       handleInspect(bm.originalPrompt);
                       window.scrollTo({ top: 120, behavior: 'smooth' });
                     }}
-                    className="px-2.5 py-1 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white flex items-center space-x-1 cursor-pointer transition-colors shadow-xs"
-                    title={lang === 'vi' ? 'Nạp và kiểm định câu hỏi gốc' : 'Load and inspect original prompt'}
+                    className="px-2.5 py-1 rounded-[8px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white flex items-center space-x-1 cursor-pointer transition-colors font-medium"
+                    title={lang === 'vi' ? 'Nạp mẫu này lên khung kiểm tra' : 'Load template into editor'}
                   >
-                    <span>{lang === 'vi' ? 'Phân tích' : 'Inspect'}</span>
+                    <span>{lang === 'vi' ? 'Thử mẫu này' : 'Try this'}</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
@@ -614,15 +700,15 @@ export default function UserAnalyzer() {
           ))}
         </div>
 
-        {/* Thanh Phân Trang 3 Prompt Mẫu / Lượt (Clean Linear Style) */}
+        {/* Pagination (3 templates per page) */}
         {totalBenchmarkPages > 1 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between pt-4 pb-1 border-t border-[var(--border-subtle)] gap-3 text-xs font-mono">
+          <div className="flex flex-col sm:flex-row items-center justify-between pt-4 pb-1 border-t border-[var(--border-subtle)] gap-3 text-xs">
             <button
               onClick={() => {
                 setBenchmarkPage(prev => Math.max(1, prev - 1));
               }}
               disabled={benchmarkPage === 1}
-              className="px-3.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] disabled:opacity-30 disabled:pointer-events-none flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer w-full sm:w-auto justify-center shadow-xs"
+              className="px-3.5 py-1.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] disabled:opacity-30 disabled:pointer-events-none flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer w-full sm:w-auto justify-center"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
               <span>{lang === 'vi' ? '3 Mẫu Trước' : 'Previous 3'}</span>
@@ -636,9 +722,9 @@ export default function UserAnalyzer() {
                   <button
                     key={pageNum}
                     onClick={() => setBenchmarkPage(pageNum)}
-                    className={`w-8 h-8 rounded-lg text-xs font-mono flex items-center justify-center transition-all shrink-0 ${
+                    className={`w-8 h-8 rounded-[8px] text-xs font-medium flex items-center justify-center transition-all shrink-0 tabular-nums ${
                       isActive
-                        ? 'bg-indigo-600 text-white font-bold shadow-xs cursor-default'
+                        ? 'bg-[#2563EB] text-white font-bold cursor-default'
                         : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] cursor-pointer'
                     }`}
                   >
@@ -653,7 +739,7 @@ export default function UserAnalyzer() {
                 setBenchmarkPage(prev => Math.min(totalBenchmarkPages, prev + 1));
               }}
               disabled={benchmarkPage === totalBenchmarkPages}
-              className="px-3.5 py-1.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] disabled:opacity-30 disabled:pointer-events-none flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer w-full sm:w-auto justify-center shadow-xs"
+              className="px-3.5 py-1.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] disabled:opacity-30 disabled:pointer-events-none flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer w-full sm:w-auto justify-center"
             >
               <span>{lang === 'vi' ? '3 Mẫu Kế Tiếp' : 'Next 3'}</span>
               <ChevronRight className="w-3.5 h-3.5" />

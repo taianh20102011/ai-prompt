@@ -2,16 +2,16 @@
 
 @layer base {
   :root {
-    --bg-page: #09090B;
-    --bg-surface: #111113;
-    --bg-elevated: #18181B;
+    --bg-page: #0C0C0E;
+    --bg-surface: #141417;
+    --bg-elevated: #1C1C21;
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-hover: rgba(255, 255, 255, 0.18);
-    --text-primary: #FAFAFA;
+    --text-primary: #F4F4F6;
     --text-secondary: #A1A1AA;
     --text-muted: #71717A;
-    --input-bg: #18181B;
-    --code-bg: #0E0E10;
+    --input-bg: #1C1C21;
+    --code-bg: #111114;
     --accent-primary: #2563EB;
     --accent-hover: #1D4ED8;
 
@@ -19,7 +19,7 @@
     --neu-flat: inset 0 1px 0 0 rgba(255, 255, 255, 0.07), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 2px 4px 0 rgba(0, 0, 0, 0.45);
     --neu-hover: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.12), 0 2px 4px 0 rgba(0, 0, 0, 0.45);
     --neu-pressed: none;
-    --neu-convex: #111113;
+    --neu-convex: #141417;
   }
 
   /* Light Mode Palette: Alabaster Porcelain Theme */
@@ -95,11 +95,11 @@
 /* FLAT MINIMALIST COMPONENT ARCHITECTURE (ANTI-SLOP)       */
 /* ========================================================= */
 
-/* 1. Thẻ giao diện phẳng, sắc nét, CNC 6px radius */
+/* 1. Thẻ giao diện phẳng, sắc nét, bo góc 8px thân thiện */
 .craft-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: var(--neu-flat);
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
@@ -108,11 +108,11 @@
   border-color: var(--border-hover);
 }
 
-/* 2. Nút bấm phẳng tối giản, chuẩn 6px */
+/* 2. Nút bấm phẳng tối giản, chuẩn 8px */
 .neu-button {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: var(--neu-flat);
   transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
   color: var(--text-primary);
@@ -128,12 +128,12 @@
   opacity: 0.9;
 }
 
-/* 3. Ô nhập liệu phẳng, chuẩn 6px */
+/* 3. Ô nhập liệu phẳng, chuẩn 8px */
 .craft-input {
   background-color: var(--input-bg);
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }

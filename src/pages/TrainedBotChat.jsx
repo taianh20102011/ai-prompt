@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { 
   Bot, 
   Send, 
@@ -40,27 +41,29 @@ const CHAT_STORAGE_KEY = 'promptcraft_bot_chat_history';
 
 export default function TrainedBotChat() {
   const { t, lang } = useLanguage();
+  const location = useLocation();
   const [messages, setMessages] = useState(() => {
     return getStorageData(CHAT_STORAGE_KEY, [
       {
         id: 'init-1',
         role: 'assistant',
-        content: `Xin chào. Tôi là **Cortex-AI** — Trợ lý AI được huấn luyện bởi **Admin và Dev có chứng chỉ**. 
-Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt hỏi đáp**. Bạn có thể chọn các chế độ thông minh bên trên (Kiến Trúc Sư, Thấu Cảm, Bảo Mật, Socratic) để nhận câu trả lời phù hợp nhất!`,
+        content: `Chào bạn, mình là **Cortex** — người bạn đồng hành AI trên Prompt AI PNIT.
+
+Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình gợi ý viết câu lệnh, giải thích vấn đề kỹ thuật, hoặc đơn giản là chia sẻ khi bạn thấy áp lực. Hãy chọn một phong cách trò chuyện phù hợp ở phía trên và nhắn cho mình nhé!`,
         timestamp: 'Vừa xong',
         thinking: {
           mode: 'architect',
-          detectedIntent: 'System Initialization',
-          ragReference: 'Default Master Instruction v3.2',
-          rulesApplied: ['Multi-mode Ready', 'Zero-Slop Activated', 'Vercel DB Cloud Mirror Active'],
-          cognitiveNotes: 'Hệ thống đã sẵn sàng tiếp nhận đa tác vụ với dung lượng bộ nhớ được bảo vệ tự động.'
+          detectedIntent: 'Chào hỏi & sẵn sàng hỗ trợ',
+          ragReference: 'Hướng dẫn giao tiếp tự nhiên & thấu cảm',
+          rulesApplied: ['Giải thích dễ hiểu', 'Không dùng từ ngữ máy móc sáo rỗng'],
+          cognitiveNotes: 'Sẵn sàng lắng nghe và trả lời theo nhu cầu thực tế của bạn.'
         }
       }
     ]);
   });
 
   const [activeMode, setActiveMode] = useState('architect');
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(() => location.state?.initialPrompt || '');
   const [isThinking, setIsThinking] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
   const [saveIndicator, setSaveIndicator] = useState(false);
@@ -137,7 +140,7 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
     try {
       const botResponse = await chatWithTrainedBot(userText, messages, activeMode);
       setMessages(prev => [...prev, botResponse]);
-      setOpenThinkingId(botResponse.id); // Tự động mở CoT của câu trả lời mới
+      setOpenThinkingId(null);
     } finally {
       setIsThinking(false);
       setStorageMetrics(getStorageMetrics());
@@ -187,22 +190,15 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
       {/* Bot Identity Header */}
       <div className="border-b border-[var(--border-subtle)] pb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center space-x-2 text-xs font-mono text-[var(--text-muted)] uppercase tracking-wider">
-            <span className="flex items-center space-x-1 text-emerald-400">
-              <InfinityIcon className="w-3.5 h-3.5" />
-              <span>UNLIMITED & 100% FREE</span>
-            </span>
-            <span>/</span>
-            <span className="flex items-center space-x-1 text-indigo-400">
-              <Cloud className="w-3 h-3" />
-              <span>VERCEL DATABASE SYNC</span>
-            </span>
+          <div className="flex items-center space-x-2 text-xs text-emerald-500 font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span>{lang === 'vi' ? 'Trò chuyện tự nhiên • Miễn phí không giới hạn' : 'Natural Chat • Free & Unlimited'}</span>
           </div>
           <h1 className="text-2xl font-bold text-[var(--text-primary)] flex items-center space-x-2.5">
-            <Bot className="w-6 h-6 text-indigo-400" />
+            <Bot className="w-6 h-6 text-[#2563EB] dark:text-blue-400" />
             <span>{t.cortexBot.title}</span>
           </h1>
-          <p className="text-xs text-[var(--text-secondary)]">
+          <p className="text-sm text-[var(--text-secondary)]">
             {t.cortexBot.subtitle}
           </p>
         </div>
@@ -332,46 +328,46 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
       )}
 
       {/* 4 Smart Intelligence Modes Selector */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
         {BOT_MODES.map((mode) => (
           <button
             key={mode.id}
             onClick={() => setActiveMode(mode.id)}
-            className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+            className={`p-3 rounded-[8px] border text-left transition-all cursor-pointer flex flex-col justify-between ${
               activeMode === mode.id
-                ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm font-semibold'
+                ? 'bg-[#2563EB] text-white border-[#2563EB] font-semibold'
                 : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] hover:bg-[var(--bg-elevated)]'
             }`}
           >
             <div className="font-bold text-xs truncate">{mode.name}</div>
-            <div className="text-[10px] opacity-75 truncate mt-0.5">{mode.desc}</div>
+            <div className="text-[11px] opacity-80 line-clamp-1 mt-0.5">{mode.desc}</div>
           </button>
         ))}
       </div>
 
       {/* Main Chat Container (Responsive dynamic height for mobile & desktop) */}
-      <div className="craft-card flex flex-col h-[72vh] min-h-[520px] max-h-[750px] overflow-hidden !rounded-2xl">
-        {/* Top Active Brain Parameters & Storage Quota Guard */}
-        <div className="px-4 py-2.5 bg-[var(--bg-elevated)] border-b border-[var(--border-subtle)] flex items-center justify-between text-[11px] font-mono text-[var(--text-muted)]">
+      <div className="craft-card flex flex-col h-[72vh] min-h-[520px] max-h-[750px] overflow-hidden">
+        {/* Top Active Info & Storage Quota Guard */}
+        <div className="px-4 py-2.5 bg-[var(--bg-elevated)] border-b border-[var(--border-subtle)] flex items-center justify-between text-xs text-[var(--text-muted)]">
           <div className="flex items-center space-x-3">
             <span className="flex items-center space-x-1.5">
-              <span className="w-1.5 h-1.5 rounded-[6px] bg-emerald-400"></span>
-              <span className="text-[var(--text-secondary)]">Lõi: v{adminConfig.analyzerVersion}</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span className="text-[var(--text-secondary)] font-medium">
+                {BOT_MODES.find(m => m.id === activeMode)?.name}
+              </span>
             </span>
-            <span>•</span>
-            <span className="hidden sm:inline">Tri thức: {benchmarks.length} benchmarks</span>
             {saveIndicator && (
               <span className="text-emerald-500 font-semibold flex items-center space-x-1">
                 <Check className="w-3 h-3" />
-                <span>Đã lưu</span>
+                <span>Đã lưu lịch sử</span>
               </span>
             )}
           </div>
 
           {/* Quota Gauge (Bộ nhớ cục bộ máy người dùng - 1 GB Client Storage) */}
           <div className="flex items-center space-x-2">
-            <span className="text-[10px] text-[var(--text-secondary)]">
-              {lang === 'vi' ? 'Bộ nhớ máy:' : 'Local Storage:'} <strong className="text-[var(--text-primary)]">{storageMetrics.formatted}</strong> / 1 GB ({storageMetrics.percent}%)
+            <span className="text-[11px] text-[var(--text-secondary)] tabular-nums">
+              {lang === 'vi' ? 'Đã dùng:' : 'Storage:'} <strong className="text-[var(--text-primary)]">{storageMetrics.formatted}</strong> / 1 GB
             </span>
             <div className="w-12 h-1.5 rounded-full bg-[var(--border-subtle)] overflow-hidden hidden xs:block">
               <div 
@@ -392,52 +388,52 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
               key={msg.id}
               className={`flex items-start space-x-3 ${msg.role === 'user' ? 'flex-row-reverse space-x-reverse' : 'flex-row'}`}
             >
-              {/* Avatar Icon (Flat, No Card inside Card) */}
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-mono font-bold ${
+              {/* Avatar Icon */}
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${
                 msg.role === 'user' 
-                  ? 'bg-indigo-600 text-white' 
-                  : 'bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-indigo-400'
+                  ? 'bg-[#2563EB] text-white' 
+                  : 'bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-[#2563EB] dark:text-blue-400'
               }`}>
                 {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
               </div>
 
-              {/* Message Bubble (Clean Flat Surface, No Double Card Shadow) */}
+              {/* Message Bubble */}
               <div
-                className={`max-w-[85%] sm:max-w-[80%] rounded-2xl p-4 text-xs leading-relaxed space-y-2 relative border ${
+                className={`max-w-[85%] sm:max-w-[80%] rounded-[8px] p-4 text-sm leading-relaxed space-y-2 relative border ${
                   msg.role === 'user'
-                    ? 'bg-indigo-600 text-white border-indigo-500 shadow-xs'
+                    ? 'bg-[#2563EB] text-white border-[#2563EB]'
                     : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)] text-[var(--text-primary)]'
                 }`}
               >
-                <div className={`flex items-center justify-between text-[10px] font-mono pb-1.5 border-b ${
-                  msg.role === 'user' ? 'border-white/20 text-white/80' : 'border-[var(--border-subtle)] opacity-70'
+                <div className={`flex items-center justify-between text-[11px] pb-1.5 border-b ${
+                  msg.role === 'user' ? 'border-white/20 text-white/80' : 'border-[var(--border-subtle)] text-[var(--text-muted)]'
                 }`}>
-                  <span className="font-semibold">{msg.role === 'user' ? 'Bạn' : 'Cortex Bot'}</span>
+                  <span className="font-semibold">{msg.role === 'user' ? 'Bạn' : 'Cortex'}</span>
                   <span>{msg.timestamp}</span>
                 </div>
 
-                {/* Inspectable Chain-of-Thought (Quá trình suy luận) */}
+                {/* Collapsible Thinking Explanation */}
                 {msg.thinking && msg.role !== 'user' && (
-                  <div className="mb-2 p-2.5 rounded-lg border border-indigo-500/30 bg-[var(--bg-page)] text-[11px] font-mono space-y-1.5">
+                  <div className="mb-2 p-2.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-page)] text-xs space-y-1.5">
                     <button
                       onClick={() => setOpenThinkingId(openThinkingId === msg.id ? null : msg.id)}
-                      className="w-full flex items-center justify-between text-indigo-400 font-semibold cursor-pointer"
+                      className="w-full flex items-center justify-between text-[#2563EB] dark:text-blue-400 font-medium cursor-pointer"
                     >
                       <span className="flex items-center space-x-1.5">
                         <BrainCircuit className="w-3.5 h-3.5" />
-                        <span>Quá Trình Suy Luận (Chain-of-Thought)</span>
+                        <span>{t.cortexBot.thinkingHeader}</span>
                       </span>
-                      {openThinkingId === msg.id ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                      {openThinkingId === msg.id ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                     </button>
 
                     {openThinkingId === msg.id && (
-                      <div className="pt-2 border-t border-[var(--border-subtle)] space-y-1 text-[10px] text-[var(--text-secondary)] leading-relaxed animate-fadeIn">
-                        <div>🎯 <strong>Ý định:</strong> {msg.thinking.detectedIntent}</div>
-                        <div>📚 <strong>Tri thức:</strong> {msg.thinking.ragReference}</div>
-                        <div>💡 <strong>Nhận định:</strong> {msg.thinking.cognitiveNotes}</div>
+                      <div className="pt-2 border-t border-[var(--border-subtle)] space-y-1 text-xs text-[var(--text-secondary)] leading-relaxed animate-fadeIn">
+                        <div><strong>{t.cortexBot.detectedIntent}</strong> {msg.thinking.detectedIntent}</div>
+                        <div><strong>{t.cortexBot.ragReference}</strong> {msg.thinking.ragReference}</div>
+                        <div><strong>{t.cortexBot.cognitiveNotes}</strong> {msg.thinking.cognitiveNotes}</div>
                         {msg.thinking.rulesApplied && msg.thinking.rulesApplied.length > 0 && (
                           <div className="pt-1">
-                            <strong>Quy chuẩn áp dụng:</strong>
+                            <strong>{t.cortexBot.rulesApplied}</strong>
                             <ul className="list-disc list-inside space-y-0.5 text-[var(--text-muted)] pl-1">
                               {msg.thinking.rulesApplied.map((r, i) => (
                                 <li key={i}>{r}</li>
@@ -504,10 +500,10 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
 
         {/* Seamless Unified Bottom Action Area (Zero Horizontal Striping) */}
         <div className="p-3.5 bg-[var(--bg-surface)] border-t border-[var(--border-subtle)] space-y-2.5 shrink-0">
-          {/* Quick prompt chips (Clean minimalist pills) */}
-          <div className="flex items-center space-x-1.5 overflow-x-auto text-[11px] font-mono pb-0.5">
+          {/* Quick prompt chips */}
+          <div className="flex items-center space-x-1.5 overflow-x-auto text-xs pb-0.5">
             <span className="text-[var(--text-muted)] shrink-0 flex items-center space-x-1 mr-1">
-              <Sparkles className="w-3 h-3 text-indigo-400" />
+              <Sparkles className="w-3.5 h-3.5 text-[#2563EB] dark:text-blue-400" />
               <span>{t.cortexBot.suggestedPrompts}</span>
             </span>
             <button
@@ -516,7 +512,7 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
                 setActiveMode('empathy');
                 setInputValue(lang === 'vi' ? 'Tôi vừa trải qua một đợt sa thải bất ngờ và thấy mình vô dụng...' : 'I was just unexpectedly laid off and feel completely lost and worthless...');
               }}
-              className="px-2.5 py-1 rounded-lg border border-[var(--border-subtle)] hover:border-indigo-500/40 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] shrink-0 cursor-pointer transition-colors"
+              className="px-3 py-1 rounded-[8px] border border-[var(--border-subtle)] hover:border-[#2563EB]/50 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] shrink-0 cursor-pointer transition-colors"
             >
               {t.cortexBot.chipEmpathy}
             </button>
@@ -524,9 +520,9 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
               type="button"
               onClick={() => {
                 setActiveMode('architect');
-                setInputValue(lang === 'vi' ? 'Thiết kế kiến trúc Web App Anti-Slop với GSAP và Lenis' : 'Design an Anti-Slop Web Application architecture with GSAP and Lenis');
+                setInputValue(lang === 'vi' ? 'Thiết kế giúp tôi một trang web giới thiệu sản phẩm rõ ràng, dễ dùng' : 'Help me design a clear, user-friendly product showcase website');
               }}
-              className="px-2.5 py-1 rounded-lg border border-[var(--border-subtle)] hover:border-indigo-500/40 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] shrink-0 cursor-pointer transition-colors"
+              className="px-3 py-1 rounded-[8px] border border-[var(--border-subtle)] hover:border-[#2563EB]/50 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] shrink-0 cursor-pointer transition-colors"
             >
               {t.cortexBot.chipArchitect}
             </button>
@@ -534,9 +530,9 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
               type="button"
               onClick={() => {
                 setActiveMode('security');
-                setInputValue(lang === 'vi' ? 'Kiểm tra phòng thủ IDOR và chống Prompt Injection' : 'Audit IDOR defense and mitigate Prompt Injection vectors');
+                setInputValue(lang === 'vi' ? 'Kiểm tra giúp tôi cách bảo vệ tài khoản và dữ liệu người dùng trên web' : 'Help me check how to keep user accounts and data safe in my web app');
               }}
-              className="px-2.5 py-1 rounded-lg border border-[var(--border-subtle)] hover:border-indigo-500/40 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] shrink-0 cursor-pointer transition-colors"
+              className="px-3 py-1 rounded-[8px] border border-[var(--border-subtle)] hover:border-[#2563EB]/50 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] shrink-0 cursor-pointer transition-colors"
             >
               {t.cortexBot.chipSecurity}
             </button>
@@ -544,31 +540,31 @@ Tôi hoạt động **hoàn toàn miễn phí và không giới hạn lượt h�
               type="button"
               onClick={() => {
                 setActiveMode('socratic');
-                setInputValue(lang === 'vi' ? 'Tôi đang phân vân giữa việc tự khởi nghiệp hay tiếp tục đi làm thuê?' : 'Should I start my own startup or continue as an engineering employee?');
+                setInputValue(lang === 'vi' ? 'Tôi đang phân vân giữa việc tự khởi nghiệp hay tiếp tục đi làm?' : 'Should I start my own project or continue working full-time?');
               }}
-              className="px-2.5 py-1 rounded-lg border border-[var(--border-subtle)] hover:border-indigo-500/40 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] shrink-0 cursor-pointer transition-colors"
+              className="px-3 py-1 rounded-[8px] border border-[var(--border-subtle)] hover:border-[#2563EB]/50 bg-[var(--bg-elevated)] hover:bg-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] shrink-0 cursor-pointer transition-colors"
             >
               {t.cortexBot.chipSocratic}
             </button>
           </div>
 
-          {/* Unified Input Bar (Modern Integrated Style) */}
+          {/* Unified Input Bar */}
           <form onSubmit={handleSend} className="relative flex items-center">
             <input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={t.cortexBot.inputPlaceholder}
-              className="w-full pl-4 pr-24 py-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-xs font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-indigo-500 transition-colors"
+              className="w-full pl-4 pr-24 py-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[#2563EB] transition-colors"
             />
             <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center">
               <button
                 type="submit"
                 disabled={!inputValue.trim() || isThinking}
-                className="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 text-white font-mono text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer shadow-xs"
+                className="px-4 py-1.5 rounded-[8px] bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-40 text-white text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer"
               >
                 <span>{t.cortexBot.btnSend}</span>
-                <Send className="w-3 h-3" />
+                <Send className="w-3.5 h-3.5" />
               </button>
             </div>
           </form>

@@ -38,13 +38,13 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
   }, [mobileOpen]);
 
   const publicLinks = [
-    { name: t.nav.home, path: '/', icon: Sparkles, badge: 'Intro' },
-    { name: t.nav.inspector, path: '/inspector', icon: Compass, badge: 'Core' },
-    { name: t.nav.guide, path: '/guide', icon: HelpCircle, badge: 'Docs' },
-    { name: t.nav.bot, path: '/trained-bot', icon: Bot, badge: 'Free ∞' },
-    { name: t.nav.directory, path: '/directory', icon: Users, badge: 'Profiles' },
-    { name: t.nav.joinTeam, path: '/dev-studio', icon: Terminal, badge: 'Dev' },
-    { name: t.nav.repos, path: '/news', icon: GitBranch, badge: 'Live' },
+    { name: t.nav.home, path: '/', icon: Sparkles },
+    { name: t.nav.inspector, path: '/inspector', icon: Compass },
+    { name: t.nav.bot, path: '/trained-bot', icon: Bot },
+    { name: t.nav.guide, path: '/guide', icon: HelpCircle },
+    { name: t.nav.directory, path: '/directory', icon: Users },
+    { name: t.nav.joinTeam, path: '/dev-studio', icon: Terminal },
+    { name: t.nav.repos, path: '/news', icon: GitBranch },
     { name: t.nav.research, path: '/research-guide', icon: BookOpen },
   ];
 
@@ -109,8 +109,8 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
                 <span className="text-sm font-bold tracking-tight text-[var(--text-primary)] block truncate">
                   Prompt AI PNIT
                 </span>
-                <span className="text-[10px] text-[var(--text-muted)] font-mono tracking-wider uppercase block -mt-0.5 truncate">
-                  Intelligence Suite
+                <span className="text-[11px] text-[var(--text-muted)] block -mt-0.5 truncate">
+                  {lang === 'vi' ? 'Trợ lý câu lệnh AI' : 'Friendly Prompt Helper'}
                 </span>
               </Link>
             </div>
@@ -134,8 +134,8 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
           <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isCollapsed && !mobileOpen ? 'max-h-0 opacity-0 mb-0' : 'max-h-6 opacity-100 mb-1'
           }`}>
-            <div className="px-2.5 text-[10px] font-mono font-medium text-[var(--text-muted)] uppercase tracking-wider">
-              Platform
+            <div className="px-2.5 text-[11px] font-medium text-[var(--text-muted)] uppercase tracking-wider">
+              {lang === 'vi' ? 'Danh mục chính' : 'Menu'}
             </div>
           </div>
 
@@ -252,41 +252,30 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }) {
             </div>
           </button>
 
-          {/* Author Badge */}
-          <div className={`overflow-hidden whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            isCollapsed && !mobileOpen ? 'max-h-0 opacity-0 py-0 pointer-events-none' : 'max-h-8 opacity-100 py-1'
-          }`}>
-            <div className="px-2 text-[10px] font-mono text-[var(--text-muted)] flex items-center justify-between">
-              <span>{t.common.author}:</span>
-              <span className="text-[var(--text-primary)] font-semibold">{t.common.authorName}</span>
-            </div>
-          </div>
-
-          {/* Enclave & reCAPTCHA v3 Status cross-fade */}
+          {/* Friendly Attribution & Safety Card */}
           <div className="overflow-hidden">
-            {/* Expanded Status Cards */}
-            <div className={`space-y-1 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${
+            {/* Expanded Card */}
+            <div className={`transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden ${
               isCollapsed && !mobileOpen ? 'max-h-0 opacity-0 pointer-events-none' : 'max-h-24 opacity-100'
             }`}>
-              <div className="p-2 rounded-md bg-[var(--bg-page)] border border-[var(--border-subtle)] text-[10px] font-mono flex items-center justify-between text-[var(--text-secondary)]">
-                <span className="flex items-center space-x-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                  <span>Google reCAPTCHA v3</span>
-                </span>
-                <span className="text-emerald-500 text-[10px] font-bold">Active</span>
-              </div>
-              <div className="p-1.5 rounded-[6px] bg-[var(--bg-page)] border border-[var(--border-subtle)] text-[10px] font-mono flex items-center justify-between text-[var(--text-muted)]">
-                <span>SHA-256 Enclave</span>
-                <span className="text-blue-500">Secure</span>
+              <div className="p-2.5 rounded-[8px] bg-[var(--bg-page)] border border-[var(--border-subtle)] text-[11px] space-y-1 text-[var(--text-secondary)]">
+                <div className="flex items-center justify-between">
+                  <span className="text-[var(--text-muted)]">{t.common.author}:</span>
+                  <span className="text-[var(--text-primary)] font-semibold">{t.common.authorName}</span>
+                </div>
+                <div className="flex items-center space-x-1.5 text-emerald-500 text-[10px]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+                  <span>{lang === 'vi' ? 'Miễn phí & An toàn cho mọi người' : 'Free & Safe for Everyone'}</span>
+                </div>
               </div>
             </div>
 
             {/* Collapsed Pill Indicator */}
             <div className={`transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden flex justify-center ${
               isCollapsed && !mobileOpen ? 'max-h-8 opacity-100 pt-1' : 'max-h-0 opacity-0 pointer-events-none'
-            }`} title="Google reCAPTCHA v3 & SHA-256 Enclave Secure">
-              <div className="w-8 h-8 rounded-[6px] bg-[var(--bg-page)] border border-[var(--border-subtle)] flex items-center justify-center">
-                <span className="w-2 h-2 rounded-[6px] bg-emerald-500" />
+            }`} title={lang === 'vi' ? 'Miễn phí & An toàn cho mọi người' : 'Free & Safe for Everyone'}>
+              <div className="w-8 h-8 rounded-[8px] bg-[var(--bg-page)] border border-[var(--border-subtle)] flex items-center justify-center">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
               </div>
             </div>
           </div>
