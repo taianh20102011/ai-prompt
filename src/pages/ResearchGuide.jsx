@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { 
   BookOpen, 
@@ -21,8 +21,6 @@ import {
   Flame,
   HelpCircle,
   Clock,
-  Upload,
-  RotateCcw,
   Eye,
   FileCheck2,
   FileSpreadsheet,
@@ -56,12 +54,11 @@ export default function ResearchGuide() {
   const [copiedBibtexId, setCopiedBibtexId] = useState(null);
   const [showReader, setShowReader] = useState(false);
 
-  // Quản lý tệp Docs nghiên cứu (Tải lên / Tải về / Lưu trữ Browser)
-  const fileInputRef = useRef(null);
-  const [docContent, setDocContent] = useState(() => {
+  // Đọc tài liệu nghiên cứu (Mặc định hoặc bản Admin đã cập nhật trong Storage)
+  const [docContent] = useState(() => {
     return localStorage.getItem('promptcraft_uploaded_doc_content') || DEFAULT_DOC_CONTENT;
   });
-  const [docMeta, setDocMeta] = useState(() => {
+  const [docMeta] = useState(() => {
     const saved = localStorage.getItem('promptcraft_uploaded_doc_meta');
     if (saved) {
       try { return JSON.parse(saved); } catch (e) { /* fallback */ }
@@ -106,46 +103,6 @@ export default function ResearchGuide() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
-
-  const handleUploadDoc = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const content = event.target?.result;
-      if (typeof content === 'string') {
-        const meta = {
-          fileName: file.name,
-          path: `user_uploads/${file.name}`,
-          isCustom: true,
-          size: `${(file.size / 1024).toFixed(1)} KB`,
-          updatedAt: new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN')
-        };
-        setDocContent(content);
-        setDocMeta(meta);
-        localStorage.setItem('promptcraft_uploaded_doc_content', content);
-        localStorage.setItem('promptcraft_uploaded_doc_meta', JSON.stringify(meta));
-        setShowReader(true);
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
-  };
-
-  const handleResetDoc = () => {
-    setDocContent(DEFAULT_DOC_CONTENT);
-    const meta = {
-      fileName: DEFAULT_DOC_FILENAME,
-      path: DEFAULT_DOC_PATH,
-      isCustom: false,
-      size: `${(DEFAULT_DOC_CONTENT.length / 1024).toFixed(1)} KB`,
-      updatedAt: 'Chính thức từ hệ thống'
-    };
-    setDocMeta(meta);
-    localStorage.removeItem('promptcraft_uploaded_doc_content');
-    localStorage.removeItem('promptcraft_uploaded_doc_meta');
   };
 
   const handleCopyActiveProtocol = () => {
@@ -206,90 +163,59 @@ export default function ResearchGuide() {
         </p>
       </div>
 
-      {/* Docs Interactive Hub & File Manager */}
-      <div className="craft-card p-5 sm:p-6 space-y-4 border-indigo-500/30">
-        <input 
-          type="file" 
-          ref={fileInputRef} 
-          onChange={handleUploadDoc} 
-          accept=".md,.txt,.doc,.docx" 
-          className="hidden" 
-        />
-
+      {/* Clean Visitor Reader Card */}
+      <div className="craft-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-col gap-4">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="flex items-center space-x-1.5 text-xs font-mono text-blue-500 font-bold uppercase tracking-wider">
-                <FileText className="w-4 h-4 shrink-0" />
-                <span>{t.meta.docBanner.title}</span>
+              <span className="flex items-center space-x-1.5 text-sm font-bold text-[var(--text-primary)]">
+                <FileText className="w-4 h-4 text-[#2563EB] dark:text-blue-400 shrink-0" />
+                <span>{lang === 'vi' ? 'Bài viết nghiên cứu đầy đủ' : 'Full Research Paper'}</span>
               </span>
-              <span className={`text-[10px] font-mono px-2 py-0.5 rounded-[6px] font-semibold ${
-                docMeta.isCustom 
-                  ? 'bg-amber-950/40 text-amber-300 border border-amber-800/40' 
-                  : 'bg-blue-950/40 text-blue-300 border border-blue-800/40'
-              }`}>
-                {docMeta.isCustom ? 'Tài liệu Tùy biến (Custom Uploaded)' : 'Tài liệu Gốc (Official)'}
+              <span className="text-[11px] px-2.5 py-0.5 rounded-[8px] font-semibold bg-[#2563EB]/12 text-[#2563EB] dark:text-blue-400 border border-[#2563EB]/25">
+                {lang === 'vi' ? 'Đọc trực tiếp hoặc tải về' : 'Read online or download'}
               </span>
             </div>
 
-            <div className="text-sm font-semibold text-[var(--text-primary)] font-mono flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-              <span className="break-all">{docMeta.path}</span>
-              <span className="text-xs text-[var(--text-muted)] font-normal whitespace-nowrap">({docMeta.size} • {docMeta.updatedAt})</span>
-            </div>
-
-            <p className="text-xs text-[var(--text-secondary)] max-w-3xl leading-relaxed">
-              {docMeta.isCustom 
-                ? 'Tệp tài liệu do bạn nạp lên đã được đồng bộ vào bộ nhớ trình duyệt, có thể xem trực tiếp hoặc tải về bất cứ lúc nào.' 
-                : t.meta.docBanner.desc}
+            <p className="text-xs sm:text-sm text-[var(--text-secondary)] max-w-3xl leading-relaxed">
+              {t.meta.docBanner.desc}
             </p>
           </div>
 
-          {/* Action Toolbar */}
-          <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-[var(--border-subtle)]/60">
+          {/* Visitor Action Toolbar */}
+          <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-[var(--border-subtle)]/60">
             <button
               onClick={() => setShowReader(!showReader)}
-              className="neu-button px-3.5 py-2 text-xs font-mono font-semibold flex items-center space-x-1.5 text-blue-500 cursor-pointer"
+              className="px-4 py-2 rounded-[8px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer"
               title="Đọc nội dung tài liệu ngay trên trang"
             >
               <Eye className="w-4 h-4" />
-              <span>{showReader ? 'Thu Gọn Docs' : 'Đọc Toàn Văn Docs'}</span>
+              <span>
+                {showReader
+                  ? (lang === 'vi' ? 'Thu gọn bài viết' : 'Collapse paper')
+                  : (lang === 'vi' ? 'Đọc toàn văn ngay trên trang' : 'Read full paper here')}
+              </span>
             </button>
 
             <button
               onClick={handleDownloadDoc}
-              className="neu-button px-3.5 py-2 text-xs font-mono font-semibold flex items-center space-x-1.5 text-[var(--text-primary)] cursor-pointer"
-              title="Tải tệp tài liệu này về máy tính"
+              className="neu-button px-3.5 py-2 text-xs font-semibold flex items-center space-x-1.5 text-[var(--text-primary)] cursor-pointer"
+              title="Tải bài viết nghiên cứu về máy (.md)"
             >
-              <Download className="w-4 h-4 text-emerald-400" />
-              <span>Tải Tệp (.md)</span>
+              <Download className="w-4 h-4 text-emerald-500" />
+              <span>{lang === 'vi' ? 'Tải bài viết (.md)' : 'Download paper (.md)'}</span>
             </button>
-
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="neu-button px-3.5 py-2 text-xs font-mono font-semibold flex items-center space-x-1.5 text-amber-400 cursor-pointer"
-              title="Tải lên tệp tài liệu mới (.md, .txt, .doc, .docx)"
-            >
-              <Upload className="w-4 h-4" />
-              <span>Tải Lên Docs Mới</span>
-            </button>
-
-            {docMeta.isCustom && (
-              <button
-                onClick={handleResetDoc}
-                className="neu-button px-3 py-2 text-xs font-mono font-semibold flex items-center space-x-1 text-rose-400 cursor-pointer"
-                title="Khôi phục tài liệu gốc hệ thống"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Khôi Phục Gốc</span>
-              </button>
-            )}
 
             <button
               onClick={handleCopyMaster}
-              className="neu-button px-3.5 py-2 text-xs font-mono font-semibold flex items-center space-x-1.5 text-blue-500 cursor-pointer"
+              className="neu-button px-3.5 py-2 text-xs font-semibold flex items-center space-x-1.5 text-[#2563EB] dark:text-blue-400 cursor-pointer"
             >
-              {copiedMaster ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-              <span>{copiedMaster ? t.meta.docBanner.copiedBtn : t.meta.docBanner.copyBtn}</span>
+              {copiedMaster ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+              <span>
+                {copiedMaster
+                  ? (lang === 'vi' ? 'Đã sao chép!' : 'Copied!')
+                  : (lang === 'vi' ? 'Sao chép câu lệnh mẫu' : 'Copy sample prompt')}
+              </span>
             </button>
           </div>
         </div>

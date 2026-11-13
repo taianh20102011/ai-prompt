@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Key, 
   Cpu, 
@@ -21,7 +21,10 @@ import {
   DollarSign,
   Shield,
   Layers,
-  Award
+  Award,
+  Upload,
+  RotateCcw,
+  Download
 } from 'lucide-react';
 import { 
   getStorageData, 
@@ -30,6 +33,7 @@ import {
   DEFAULT_BENCHMARKS, 
   DEFAULT_DEVS 
 } from '../services/mockStorage';
+import { DEFAULT_DOC_CONTENT, DEFAULT_DOC_PATH, DEFAULT_DOC_FILENAME } from '../data/defaultDocContent';
 import UserAvatar from '../components/UserAvatar';
 import { authClient } from '../services/authClient';
 
@@ -58,6 +62,78 @@ export default function AdminPortal() {
   const [newDevName, setNewDevName] = useState('');
   const [newDevCert, setNewDevCert] = useState('');
   const [saveToast, setSaveToast] = useState(false);
+
+  // Quản lý tài liệu nghiên cứu (Docs Markdown) dành riêng cho Admin
+  const fileInputRef = useRef(null);
+  const [showDocPreview, setShowDocPreview] = useState(false);
+  const [docContent, setDocContent] = useState(() => {
+    return localStorage.getItem('promptcraft_uploaded_doc_content') || DEFAULT_DOC_CONTENT;
+  });
+  const [docMeta, setDocMeta] = useState(() => {
+    const saved = localStorage.getItem('promptcraft_uploaded_doc_meta');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { /* fallback */ }
+    }
+    return {
+      fileName: DEFAULT_DOC_FILENAME,
+      path: DEFAULT_DOC_PATH,
+      isCustom: false,
+      size: `${(DEFAULT_DOC_CONTENT.length / 1024).toFixed(1)} KB`,
+      updatedAt: 'Chính thức từ hệ thống'
+    };
+  });
+
+  const handleUploadDoc = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result;
+      if (typeof content === 'string') {
+        const meta = {
+          fileName: file.name,
+          path: `user_uploads/${file.name}`,
+          isCustom: true,
+          size: `${(file.size / 1024).toFixed(1)} KB`,
+          updatedAt: new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN')
+        };
+        setDocContent(content);
+        setDocMeta(meta);
+        localStorage.setItem('promptcraft_uploaded_doc_content', content);
+        localStorage.setItem('promptcraft_uploaded_doc_meta', JSON.stringify(meta));
+        setShowDocPreview(true);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
+  const handleResetDoc = () => {
+    setDocContent(DEFAULT_DOC_CONTENT);
+    const meta = {
+      fileName: DEFAULT_DOC_FILENAME,
+      path: DEFAULT_DOC_PATH,
+      isCustom: false,
+      size: `${(DEFAULT_DOC_CONTENT.length / 1024).toFixed(1)} KB`,
+      updatedAt: 'Chính thức từ hệ thống'
+    };
+    setDocMeta(meta);
+    localStorage.removeItem('promptcraft_uploaded_doc_content');
+    localStorage.removeItem('promptcraft_uploaded_doc_meta');
+  };
+
+  const handleDownloadDoc = () => {
+    const blob = new Blob([docContent], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = docMeta.fileName || 'NGHIEN_CUU_PROMPT_THAU_CAM.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   useEffect(() => {
     checkActiveSession();
@@ -293,6 +369,17 @@ export default function AdminPortal() {
               Kỹ Sư Kiểm Định ({devs.length})
             </button>
 
+            <button
+              onClick={() => handleTabChange('docs')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
+                activeTab === 'docs'
+                  ? 'bg-[#2563EB] text-white font-bold shadow-xs'
+                  : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              Quản Lý Tài Liệu (Docs)
+            </button>
+
             {/* TAB SECURITY AUDIT DÀNH RIÊNG CHO OWNER */}
             {session.role === 'OWNER' && (
               <button
@@ -522,7 +609,95 @@ export default function AdminPortal() {
             </div>
           )}
 
-          {/* TAB 4: SECURITY AUDIT LOG (CHỈ DÀNH RIÊNG CHO OWNER) */}
+          {/* TAB 4: RESEARCH DOCUMENT MANAGER */}
+          {activeTab === 'docs' && (
+            <div className="craft-card p-6 space-y-4">
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleUploadDoc}
+                accept=".md,.txt,.doc,.docx"
+                className="hidden"
+              />
+
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="flex items-center space-x-1.5 text-xs font-mono text-[#2563EB] dark:text-blue-400 font-bold uppercase tracking-wider">
+                    <FileText className="w-4 h-4 shrink-0" />
+                    <span>TÀI LIỆU NGHIÊN CỨU CHUYÊN SÂU ĐỘC QUYỀN</span>
+                  </span>
+                  <span
+                    className={`text-[11px] font-mono px-2.5 py-0.5 rounded-[8px] font-semibold ${
+                      docMeta.isCustom
+                        ? 'bg-amber-500/15 text-amber-600 dark:text-amber-300 border border-amber-500/30'
+                        : 'bg-[#2563EB]/12 text-[#2563EB] dark:text-blue-400 border border-[#2563EB]/25'
+                    }`}
+                  >
+                    {docMeta.isCustom ? 'Tài liệu Tùy biến (Custom Uploaded)' : 'Tài liệu Gốc (Official)'}
+                  </span>
+                </div>
+
+                <div className="text-sm font-semibold text-[var(--text-primary)] font-mono flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                  <span className="break-all">{docMeta.path}</span>
+                  <span className="text-xs text-[var(--text-muted)] font-normal whitespace-nowrap">
+                    ({docMeta.size} • {docMeta.updatedAt})
+                  </span>
+                </div>
+
+                <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+                  Admin có thể tải lên tệp Markdown/Text mới để thay thế nội dung tài liệu hiển thị trên trang Góc nghiên cứu, hoặc khôi phục lại tệp gốc hệ thống bất cứ lúc nào.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[var(--border-subtle)]">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-3.5 py-2 rounded-[8px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-mono font-semibold flex items-center space-x-1.5 cursor-pointer transition-colors"
+                >
+                  <Upload className="w-4 h-4" />
+                  <span>Tải Lên Docs Mới</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleDownloadDoc}
+                  className="neu-button px-3.5 py-2 text-xs font-mono font-semibold flex items-center space-x-1.5 text-[var(--text-primary)] cursor-pointer"
+                >
+                  <Download className="w-4 h-4 text-emerald-500" />
+                  <span>Tải Tệp (.md)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowDocPreview(!showDocPreview)}
+                  className="neu-button px-3.5 py-2 text-xs font-mono font-semibold flex items-center space-x-1.5 text-[#2563EB] dark:text-blue-400 cursor-pointer"
+                >
+                  <Eye className="w-4 h-4" />
+                  <span>{showDocPreview ? 'Ẩn Xem Trước' : 'Xem Trước Nội Dung'}</span>
+                </button>
+
+                {docMeta.isCustom && (
+                  <button
+                    type="button"
+                    onClick={handleResetDoc}
+                    className="neu-button px-3.5 py-2 text-xs font-mono font-semibold flex items-center space-x-1.5 text-rose-500 cursor-pointer"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Khôi Phục Gốc</span>
+                  </button>
+                )}
+              </div>
+
+              {showDocPreview && (
+                <div className="p-4 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] font-mono text-xs text-[var(--text-secondary)] whitespace-pre-wrap max-h-96 overflow-y-auto leading-relaxed">
+                  {docContent}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 5: SECURITY AUDIT LOG (CHỈ DÀNH RIÊNG CHO OWNER) */}
           {activeTab === 'audit' && session.role === 'OWNER' && (
             <div className="craft-card p-6 space-y-4">
               <div className="flex items-center justify-between">
