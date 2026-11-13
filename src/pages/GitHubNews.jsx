@@ -86,21 +86,23 @@ export default function GitHubNews() {
   const totalPages = Math.min(50, Math.max(1, Math.ceil(totalCount / perPage)));
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 animate-fadeIn pb-12">
+    <div className="max-w-5xl mx-auto space-y-6 animate-fadeIn pb-12 min-w-0 w-full overflow-x-hidden">
       {/* Header Bar */}
       <div className="border-b border-[var(--border-subtle)] pb-5 space-y-2">
-        <div className="flex items-center space-x-2 text-xs font-mono text-[var(--text-muted)] uppercase tracking-wider">
-          <GitBranch className="w-3.5 h-3.5 text-indigo-400" />
-          <span>GITHUB REALTIME ECOSYSTEM</span>
-          <span>/</span>
-          <span className="text-[var(--text-secondary)]">GLOBAL AI & PROMPT REPOSITORIES</span>
+        <div className="flex flex-wrap items-center gap-1.5 text-xs text-[var(--text-muted)]">
+          <GitBranch className="w-3.5 h-3.5 text-[#2563EB] dark:text-blue-400 shrink-0" />
+          <span>
+            {lang === 'vi'
+              ? 'Thư viện mã nguồn mở • Cập nhật trực tiếp từ GitHub'
+              : 'Open-source directory • Live updates from GitHub'}
+          </span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-[var(--text-primary)] flex items-center space-x-2">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-bold text-[var(--text-primary)] break-words">
               <span>{t.repos.title}</span>
             </h1>
-            <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+            <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-0.5 leading-relaxed">
               {t.repos.subtitle}
             </p>
           </div>
@@ -108,16 +110,16 @@ export default function GitHubNews() {
           <button
             onClick={() => loadPage(currentPage, activeQuery, activeCategory)}
             disabled={loading}
-            className="self-start sm:self-auto neu-button px-3.5 py-1.5 text-xs font-mono flex items-center space-x-2 disabled:opacity-50 cursor-pointer"
+            className="self-start sm:self-auto neu-button px-3.5 py-2 text-xs font-medium flex items-center space-x-2 disabled:opacity-50 cursor-pointer shrink-0"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#2563EB] dark:text-blue-400' : ''}`} />
             <span>{lang === 'vi' ? 'Tải Lại Dữ Liệu' : 'Refresh Data'}</span>
           </button>
         </div>
       </div>
 
-      {/* Category Pills Bar */}
-      <div className="flex items-center space-x-2 overflow-x-auto pb-1 text-xs font-mono">
+      {/* Category Pills Bar (Clean Wrap on Mobile, Zero Scrollbar Overflow) */}
+      <div className="flex flex-wrap items-center gap-2 text-xs">
         {categories.map((cat) => (
           <button
             key={cat.id}
@@ -125,9 +127,9 @@ export default function GitHubNews() {
               setActiveCategory(cat.id);
               setCurrentPage(1);
             }}
-            className={`px-3.5 py-2 rounded-xl transition-colors cursor-pointer shrink-0 ${
+            className={`px-3.5 py-2 rounded-[8px] transition-colors cursor-pointer ${
               activeCategory === cat.id
-                ? 'bg-indigo-600 text-white font-bold shadow-sm'
+                ? 'bg-[#2563EB] text-white font-semibold'
                 : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] hover:bg-[var(--bg-elevated)]'
             }`}
           >
@@ -136,40 +138,40 @@ export default function GitHubNews() {
         ))}
       </div>
 
-      {/* Search Filter Bar (Single Layer, Perfectly Vertically Centered) */}
-      <form onSubmit={handleSearchSubmit} className="relative flex items-center w-full">
+      {/* Search Filter Bar (Single Layer, Fits All Mobile Widths) */}
+      <form onSubmit={handleSearchSubmit} className="relative flex items-center w-full min-w-0">
         <Search className="w-4 h-4 text-[var(--text-muted)] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder={t.repos.searchPlaceholder}
-          className="w-full pl-10 pr-28 py-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]/30 transition-colors"
+          className="w-full min-w-0 pl-10 pr-24 sm:pr-28 py-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-xs sm:text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB]/30 transition-colors"
         />
         {searchTerm && (
           <button
             type="button"
             onClick={handleClearSearch}
-            className="absolute right-24 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer flex items-center justify-center p-1"
+            className="absolute right-20 sm:right-24 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer flex items-center justify-center p-1"
           >
             <X className="w-3.5 h-3.5" />
           </button>
         )}
         <button
           type="submit"
-          className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3.5 py-1.5 rounded-[6px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-medium text-xs font-mono cursor-pointer transition-colors flex items-center justify-center"
+          className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-[8px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-medium text-xs cursor-pointer transition-colors flex items-center justify-center shrink-0"
         >
           {t.repos.btnSearch}
         </button>
       </form>
 
       {/* Realtime Stats Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-mono text-[var(--text-secondary)] px-1">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-[var(--text-secondary)] px-1 min-w-0">
+        <div className="min-w-0 break-words">
           {activeQuery ? (
-            <span className="flex items-center space-x-1.5">
+            <span className="flex flex-wrap items-center gap-1.5">
               <span>Kết quả cho:</span>
-              <strong className="text-[var(--text-primary)] px-2 py-0.5 rounded craft-input border border-indigo-500/30">
+              <strong className="text-[var(--text-primary)] px-2 py-0.5 rounded craft-input border border-[#2563EB]/30 break-all">
                 "{activeQuery}"
               </strong>
               <button onClick={handleClearSearch} className="text-rose-400 hover:text-rose-300 cursor-pointer ml-1">
@@ -178,32 +180,32 @@ export default function GitHubNews() {
             </span>
           ) : (
             <span>
-              Chủ đề: <strong className="text-indigo-400">{categories.find(c => c.id === activeCategory)?.name}</strong>
+              Chủ đề: <strong className="text-[#2563EB] dark:text-blue-400">{categories.find(c => c.id === activeCategory)?.name}</strong>
             </span>
           )}
         </div>
-        <div className="text-[var(--text-muted)]">
+        <div className="text-[var(--text-muted)] tabular-nums">
           Tìm thấy <strong className="text-emerald-400 font-semibold">{totalCount > 1000 ? `1,000+ (trong ${totalCount.toLocaleString()}+)` : totalCount}</strong> repositories • Trang {currentPage} / {totalPages}
         </div>
       </div>
 
       {/* Repos Grid */}
       {loading ? (
-        <div className="py-24 text-center space-y-3 craft-card">
-          <RefreshCw className="w-6 h-6 text-indigo-400 animate-spin mx-auto" />
-          <p className="text-xs font-mono text-[var(--text-secondary)]">
+        <div className="py-20 px-4 text-center space-y-3 craft-card min-w-0">
+          <RefreshCw className="w-6 h-6 text-[#2563EB] dark:text-blue-400 animate-spin mx-auto" />
+          <p className="text-xs sm:text-sm text-[var(--text-secondary)] break-words max-w-md mx-auto leading-relaxed">
             Đang truy xuất dữ liệu từ GitHub Search API và đối chiếu kho mã nguồn...
           </p>
         </div>
       ) : repos.length === 0 ? (
-        <div className="py-20 text-center craft-card space-y-3">
-          <p className="text-sm font-semibold text-[var(--text-primary)]">
+        <div className="py-16 px-4 text-center craft-card space-y-3 min-w-0">
+          <p className="text-sm font-semibold text-[var(--text-primary)] break-words">
             Không tìm thấy repository nào phù hợp với từ khóa "{activeQuery}".
           </p>
-          <p className="text-xs text-[var(--text-muted)] font-mono">
+          <p className="text-xs text-[var(--text-muted)]">
             Hãy thử tìm bằng từ khóa phổ biến: 'gemini', 'agents', 'langchain', 'ollama', 'prompt'.
           </p>
-          <button onClick={handleClearSearch} className="neu-button px-3 py-1.5 text-xs text-indigo-400 font-semibold cursor-pointer">
+          <button onClick={handleClearSearch} className="neu-button px-3.5 py-1.5 text-xs text-[#2563EB] dark:text-blue-400 font-semibold cursor-pointer">
             Quay lại danh sách mặc định
           </button>
         </div>
@@ -212,23 +214,23 @@ export default function GitHubNews() {
           {repos.map((repo) => (
             <div
               key={repo.id}
-              className="craft-card p-4 flex flex-col justify-between space-y-3 hover:border-indigo-500/40 transition-colors"
+              className="craft-card p-4 flex flex-col justify-between space-y-3 hover:border-[#2563EB]/40 transition-colors min-w-0"
             >
-              <div className="space-y-2.5">
-                <div className="flex items-center space-x-2.5">
+              <div className="space-y-2.5 min-w-0">
+                <div className="flex items-center space-x-2.5 min-w-0">
                   <img
                     src={repo.avatar}
                     alt={repo.author}
-                    className="w-7 h-7 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elevated)]"
+                    className="w-7 h-7 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-elevated)] shrink-0"
                     loading="lazy"
                   />
-                  <div className="text-xs font-mono truncate text-[var(--text-secondary)]">
+                  <div className="text-xs font-mono truncate text-[var(--text-secondary)] min-w-0">
                     <span>{repo.author} / </span>
                     <span className="text-[var(--text-primary)] font-bold">{repo.name}</span>
                   </div>
                 </div>
 
-                <p className="text-xs text-[var(--text-secondary)] line-clamp-3 leading-relaxed">
+                <p className="text-xs text-[var(--text-secondary)] line-clamp-3 leading-relaxed break-words">
                   {repo.description}
                 </p>
 

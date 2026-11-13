@@ -31,21 +31,21 @@ export default function App() {
 
             {/* Main Content Area dynamically adjusted for sidebar with buttery-smooth cubic-bezier */}
             <div 
-              className={`flex-1 flex flex-col min-h-screen transition-[padding] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[padding] ${
+              className={`flex-1 flex flex-col min-h-screen min-w-0 w-full max-w-full overflow-x-hidden transition-[padding] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[padding] ${
                 isCollapsed ? 'lg:pl-[68px]' : 'lg:pl-64'
               }`}
             >
               {/* Top Global Control Bar (Solid High-Contrast Surface, Zero Glassmorphism) */}
-              <header className="sticky top-0 z-30 w-full bg-[var(--bg-page)] border-b border-[var(--border-subtle)] px-4 sm:px-6 lg:px-8 py-2.5 transition-colors">
-                <div className="max-w-6xl mx-auto flex items-center justify-between">
-                  <div className="flex items-center space-x-2 text-xs pl-10 lg:pl-0">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span className="font-semibold text-[var(--text-primary)]">Prompt AI PNIT</span>
-                    <span className="hidden sm:inline text-[var(--text-muted)]">•</span>
-                    <span className="hidden sm:inline text-[var(--text-muted)] text-[11px]">Viết câu lệnh AI dễ hiểu & tự nhiên hơn</span>
+              <header className="sticky top-0 z-30 w-full bg-[var(--bg-page)] border-b border-[var(--border-subtle)] px-3 sm:px-6 lg:px-8 py-2.5 transition-colors">
+                <div className="max-w-6xl mx-auto flex items-center justify-between gap-2 min-w-0">
+                  <div className="flex items-center space-x-2 text-xs pl-10 lg:pl-0 min-w-0">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                    <span className="font-semibold text-[var(--text-primary)] truncate">Prompt AI PNIT</span>
+                    <span className="hidden sm:inline text-[var(--text-muted)] shrink-0">•</span>
+                    <span className="hidden md:inline text-[var(--text-muted)] text-[11px] truncate">Viết câu lệnh AI dễ hiểu & tự nhiên hơn</span>
                   </div>
 
-                  <div className="flex items-center space-x-2.5">
+                  <div className="flex items-center space-x-1.5 sm:space-x-2.5 shrink-0">
                     <Link
                       to="/guide"
                       className="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-[8px] border border-[var(--border-subtle)] hover:bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-xs transition-colors"
@@ -66,7 +66,7 @@ export default function App() {
                 </div>
               </header>
 
-              <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-6 lg:pt-8">
+              <main className="flex-1 max-w-6xl w-full min-w-0 overflow-x-hidden mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
                 <Routes>
                   {/* Trang Giới Thiệu Tổng Quan & Bắt Đầu */}
                   <Route path="/" element={<LandingPage />} />

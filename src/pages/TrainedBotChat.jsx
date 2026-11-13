@@ -501,7 +501,7 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
         {/* Seamless Unified Bottom Action Area (Zero Horizontal Striping) */}
         <div className="p-3.5 bg-[var(--bg-surface)] border-t border-[var(--border-subtle)] space-y-2.5 shrink-0">
           {/* Quick prompt chips */}
-          <div className="flex items-center space-x-1.5 overflow-x-auto text-xs pb-0.5">
+          <div className="flex flex-wrap items-center gap-1.5 text-xs">
             <span className="text-[var(--text-muted)] shrink-0 flex items-center space-x-1 mr-1">
               <Sparkles className="w-3.5 h-3.5 text-[#2563EB] dark:text-blue-400" />
               <span>{t.cortexBot.suggestedPrompts}</span>
