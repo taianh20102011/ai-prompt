@@ -56,21 +56,17 @@ export default function LandingPage() {
             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
             <span className="font-semibold text-[var(--text-primary)]">{t.brand.name}</span>
             <span className="text-[var(--text-muted)]">•</span>
-            <span>{lang === 'vi' ? 'Miễn phí 100% • Không cần tài khoản' : '100% Free • No Sign-up Required'}</span>
+            <span>{t.landing.heroBadge}</span>
           </div>
         </div>
 
         <div className="gsap-hero-item space-y-3.5">
           <h1 className="text-3xl sm:text-5xl lg:text-[52px] font-bold tracking-[-0.025em] leading-[1.15] text-[var(--text-primary)]">
-            {lang === 'vi'
-              ? 'Giao tiếp với AI dễ dàng và tự nhiên hơn'
-              : 'Talk to AI more clearly and naturally'}
+            {t.landing.heroTitle}
           </h1>
 
           <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed max-w-2xl mx-auto">
-            {lang === 'vi'
-              ? 'Đừng lo nếu bạn không biết cách viết câu lệnh (prompt) sao cho hay. Chỉ cần gõ vài chữ mô tả ý tưởng của bạn, chúng tôi sẽ biến nó thành câu lệnh rõ ràng, có chiều sâu để AI hiểu đúng ý bạn ngay lần đầu.'
-              : 'No need to memorize complex prompt formulas. Just describe what you need in plain words, and we will turn it into a clear, thoughtful prompt that AI gets right on the first try.'}
+            {t.landing.heroSubtitle}
           </p>
         </div>
 
@@ -81,7 +77,7 @@ export default function LandingPage() {
             className="w-full sm:w-auto px-7 py-3.5 rounded-[8px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-semibold flex items-center justify-center space-x-2 transition-colors cursor-pointer active:scale-[0.98]"
           >
             <Sparkles className="w-4 h-4" />
-            <span>{lang === 'vi' ? 'Bắt đầu viết câu lệnh' : 'Start Writing Prompt'}</span>
+            <span>{t.landing.btnInspect}</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
 
@@ -90,7 +86,7 @@ export default function LandingPage() {
             className="w-full sm:w-auto px-6 py-3.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-primary)] text-sm font-medium flex items-center justify-center space-x-2 transition-colors"
           >
             <Bot className="w-4 h-4 text-[#2563EB] dark:text-blue-400" />
-            <span>{lang === 'vi' ? 'Trò chuyện với AI ngay' : 'Chat with AI Now'}</span>
+            <span>{t.landing.btnChatBot}</span>
           </Link>
         </div>
       </div>
@@ -99,11 +95,11 @@ export default function LandingPage() {
       <div className="max-w-4xl mx-auto space-y-4">
         <div className="flex items-center justify-between px-1">
           <div className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
-            {lang === 'vi' ? 'Cách dùng chỉ trong 3 bước đơn giản' : 'How it works in 3 simple steps'}
+            {t.landing.stepsSectionTitle}
           </div>
           <Link to="/guide" className="text-xs text-[#2563EB] dark:text-blue-400 hover:underline flex items-center space-x-1">
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>{lang === 'vi' ? 'Xem hướng dẫn chi tiết' : 'Detailed Guide'}</span>
+            <span>{t.landing.stepsGuideLink}</span>
           </Link>
         </div>
 
@@ -113,12 +109,10 @@ export default function LandingPage() {
               1
             </div>
             <h2 className="text-sm font-bold text-[var(--text-primary)]">
-              {lang === 'vi' ? 'Bước 1: Nhập ý tưởng thô' : 'Step 1: Type your rough idea'}
+              {t.landing.step1Title}
             </h2>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-              {lang === 'vi'
-                ? 'Gõ ngắn gọn điều bạn muốn nhờ AI, giống như đang nhắn tin bình thường với một người bạn.'
-                : 'Write briefly what you need help with, just like texting a helpful colleague.'}
+              {t.landing.step1Desc}
             </p>
           </div>
 
@@ -127,12 +121,10 @@ export default function LandingPage() {
               2
             </div>
             <h2 className="text-sm font-bold text-[var(--text-primary)]">
-              {lang === 'vi' ? 'Bước 2: Chọn AI bạn đang dùng' : 'Step 2: Pick your AI tool'}
+              {t.landing.step2Title}
             </h2>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-              {lang === 'vi'
-                ? 'ChatGPT, Claude, Gemini hay Cursor — mỗi công cụ sẽ được tinh chỉnh cách diễn đạt riêng cho hiệu quả nhất.'
-                : 'ChatGPT, Claude, Gemini, or Cursor — we format the prompt specifically for your chosen tool.'}
+              {t.landing.step2Desc}
             </p>
           </div>
 
@@ -141,12 +133,10 @@ export default function LandingPage() {
               3
             </div>
             <h2 className="text-sm font-bold text-[var(--text-primary)]">
-              {lang === 'vi' ? 'Bước 3: Chép và sử dụng ngay' : 'Step 3: Copy and use right away'}
+              {t.landing.step3Title}
             </h2>
             <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-              {lang === 'vi'
-                ? 'Nhận ngay bản câu lệnh đã được viết lại mạch lạc, đầy đủ ngữ cảnh để dán vào AI và nhận kết quả chuẩn xác.'
-                : 'Get a well-structured, context-rich prompt ready to paste into any AI chat for accurate results.'}
+              {t.landing.step3Desc}
             </p>
           </div>
         </div>
@@ -155,7 +145,7 @@ export default function LandingPage() {
       {/* 3. FOUR MAIN FEATURES (Plain-Language Overview) */}
       <div className="max-w-4xl mx-auto space-y-4">
         <div className="text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] px-1">
-          {lang === 'vi' ? 'Bạn có thể làm gì trên Prompt AI PNIT?' : 'What you can do here'}
+          {t.landing.featuresSectionTitle}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -171,9 +161,7 @@ export default function LandingPage() {
                   <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[#2563EB] dark:group-hover:text-blue-400 transition-colors" />
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  {lang === 'vi' 
-                    ? 'Biến vài dòng ý tưởng ngắn ngủi thành câu lệnh đầy đủ vai trò, bối cảnh và mục tiêu rõ ràng để AI không trả lời chung chung.'
-                    : 'Turn brief ideas into complete prompts with clear roles, context, and goals so AI avoids vague answers.'}
+                  {t.landing.feature1Desc}
                 </p>
               </div>
               <div className="pt-2 text-[11px] text-[var(--text-muted)] flex items-center space-x-2">
@@ -196,9 +184,7 @@ export default function LandingPage() {
                   <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-sky-500 transition-colors" />
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  {lang === 'vi'
-                    ? 'Trò chuyện trực tiếp với trợ lý AI thân thiện: nhờ gợi ý công việc, sửa code, hoặc tâm sự nhẹ nhàng khi bạn thấy bế tắc.'
-                    : 'Chat directly with a friendly AI companion for brainstorming, coding advice, or thoughtful conversation.'}
+                  {t.landing.feature2Desc}
                 </p>
               </div>
               <div className="pt-2 text-[11px] text-[var(--text-muted)] flex items-center space-x-2">
@@ -221,9 +207,7 @@ export default function LandingPage() {
                   <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-amber-500 transition-colors" />
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  {lang === 'vi'
-                    ? 'Tìm hiểu vì sao AI hay trả lời rập khuôn và cách viết câu lệnh giúp AI giao tiếp tự nhiên, gần gũi như người thật.'
-                    : 'Understand why AI can sound robotic and learn practical techniques for warm, human-centered prompts.'}
+                  {t.landing.feature3Desc}
                 </p>
               </div>
               <div className="pt-2 text-[11px] text-[var(--text-muted)] flex items-center space-x-2">
@@ -246,9 +230,7 @@ export default function LandingPage() {
                   <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-emerald-500 transition-colors" />
                 </div>
                 <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                  {lang === 'vi'
-                    ? 'Khám phá bộ sưu tập các công cụ và dự án AI mã nguồn mở đáng tin cậy đang được cộng đồng sử dụng rộng rãi.'
-                    : 'Explore a curated list of trusted open-source AI tools and community projects.'}
+                  {t.landing.feature4Desc}
                 </p>
               </div>
               <div className="pt-2 text-[11px] text-[var(--text-muted)] flex items-center space-x-2">

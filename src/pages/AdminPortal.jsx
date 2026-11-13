@@ -24,7 +24,12 @@ import {
   Award,
   Upload,
   RotateCcw,
-  Download
+  Download,
+  Globe,
+  Layout,
+  Edit3,
+  Plus,
+  X
 } from 'lucide-react';
 import { 
   getStorageData, 
@@ -36,13 +41,117 @@ import {
 import { DEFAULT_DOC_CONTENT, DEFAULT_DOC_PATH, DEFAULT_DOC_FILENAME } from '../data/defaultDocContent';
 import UserAvatar from '../components/UserAvatar';
 import { authClient } from '../services/authClient';
+import { useLanguage, getMergedTranslations } from '../context/LanguageContext';
+
+const CMS_SECTIONS = [
+  { id: 'brand', label: 'Thương hiệu & Tiêu đề Web' },
+  { id: 'nav', label: 'Thanh Menu Điều Hướng' },
+  { id: 'landing', label: 'Trang Chủ (Home)' },
+  { id: 'inspector', label: 'Trang Tối Ưu Câu Lệnh' },
+  { id: 'cortexBot', label: 'Trang Trợ Lý AI (Cortex)' },
+  { id: 'directory', label: 'Trang Đội Ngũ Kỹ Sư' },
+  { id: 'repos', label: 'Trang Repo GitHub AI' },
+  { id: 'research', label: 'Trang Góc Nghiên Cứu' },
+  { id: 'footer', label: 'Chân Trang (Footer)' }
+];
+
+const CMS_FIELD_LABELS = {
+  // brand
+  name: 'Tên thương hiệu',
+  subtitle: 'Mô tả ngắn dưới tên thương hiệu',
+  tagline: 'Khẩu hiệu (Tagline)',
+  // nav
+  home: 'Mục menu: Trang chủ',
+  inspector: 'Mục menu: Tối ưu câu lệnh',
+  guide: 'Mục menu: Cách sử dụng',
+  bot: 'Mục menu: Trò chuyện cùng AI',
+  directory: 'Mục menu: Đội ngũ phát triển',
+  repos: 'Mục menu: Repo GitHub AI',
+  research: 'Mục menu: Góc nghiên cứu',
+  devStudio: 'Mục menu: Đóng góp câu lệnh',
+  joinTeam: 'Nút tham gia đội ngũ',
+  adminPortal: 'Mục menu: Quản trị hệ thống',
+  adminKey: 'Mục menu: Khóa Quản trị',
+  // landing
+  heroBadge: 'Nhãn nhỏ phía trên tiêu đề chính',
+  heroTitle: 'Tiêu đề chính (Hero Title)',
+  heroTitleHighlight: 'Phần nhấn mạnh tiêu đề (tùy chọn)',
+  heroSubtitle: 'Đoạn giới thiệu chính (Hero Subtitle)',
+  btnInspect: 'Nút hành động chính (Primary CTA)',
+  btnChatBot: 'Nút hành động phụ (Secondary CTA)',
+  btnResearch: 'Nút đọc tài liệu nghiên cứu',
+  stepsSectionTitle: 'Tiêu đề khối 3 bước sử dụng',
+  stepsGuideLink: 'Chữ liên kết hướng dẫn chi tiết',
+  step1Title: 'Tiêu đề Bước 1',
+  step1Desc: 'Nội dung mô tả Bước 1',
+  step2Title: 'Tiêu đề Bước 2',
+  step2Desc: 'Nội dung mô tả Bước 2',
+  step3Title: 'Tiêu đề Bước 3',
+  step3Desc: 'Nội dung mô tả Bước 3',
+  featuresSectionTitle: 'Tiêu đề khối các tính năng chính',
+  feature1Title: 'Tên tính năng 1',
+  feature1Desc: 'Mô tả tính năng 1 (Kiểm định Prompt)',
+  feature2Title: 'Tên tính năng 2',
+  feature2Desc: 'Mô tả tính năng 2 (Trợ lý AI)',
+  feature3Title: 'Tên tính năng 3',
+  feature3Desc: 'Mô tả tính năng 3 (Nghiên cứu)',
+  feature4Title: 'Tên tính năng 4',
+  feature4Desc: 'Mô tả tính năng 4 (Repo GitHub AI)',
+  joinTeamTitle: 'Tiêu đề banner gia nhập đội ngũ',
+  joinTeamSubtitle: 'Nội dung banner gia nhập đội ngũ',
+  joinTeamBtn: 'Nút bấm banner gia nhập đội ngũ',
+  // shared / inspector / cortexBot / directory / repos / research / footer
+  badge: 'Nhãn Badge đầu trang',
+  title: 'Tiêu đề trang',
+  placeholder: 'Gợi ý trong ô nhập câu lệnh',
+  targetAiBadge: 'Nhãn chọn AI đích',
+  targetAiDesc: 'Mô tả cách chọn AI đích',
+  btnSample: 'Nút dùng thử mẫu',
+  btnInspecting: 'Chữ hiển thị khi đang phân tích',
+  copyOptimized: 'Nút sao chép câu lệnh tối ưu',
+  thinkingHeader: 'Tiêu đề hộp suy nghĩ AI',
+  chipEmpathy: 'Gợi ý nhanh 1 (Thấu cảm)',
+  chipArchitect: 'Gợi ý nhanh 2 (Kỹ thuật/Code)',
+  chipSecurity: 'Gợi ý nhanh 3 (Bảo mật)',
+  chipSocratic: 'Gợi ý nhanh 4 (Gợi mở)',
+  inputPlaceholder: 'Gợi ý trong ô chat AI',
+  btnSend: 'Chữ nút Gửi',
+  certId: 'Nhãn mã chứng nhận kỹ sư',
+  searchPlaceholder: 'Gợi ý trong ô tìm kiếm Repo',
+  btnSearch: 'Chữ nút Tìm kiếm',
+  docBannerTitle: 'Tiêu đề khung tài liệu nghiên cứu',
+  brandDesc: 'Mô tả dự án ở chân trang',
+  authorPrefix: 'Tiền tố tên tác giả',
+  licenseTitle: 'Tiêu đề bản quyền & giấy phép',
+  licenseDesc: 'Mô tả giấy phép Apache 2.0',
+  copyright: 'Dòng bản quyền Copyright cuối trang'
+};
 
 export default function AdminPortal() {
+  const {
+    siteOverrides,
+    rawTranslations,
+    updateSiteSection,
+    resetSiteSection,
+    resetAllSiteContent
+  } = useLanguage();
+
   const [secretInput, setSecretInput] = useState('');
   const [session, setSession] = useState({ authenticated: false, role: null });
-  const [activeTab, setActiveTab] = useState('training'); // 'training' | 'licenses' | 'benchmarks' | 'devs' | 'audit'
+  const [activeTab, setActiveTab] = useState('cms'); // 'cms' | 'training' | 'licenses' | 'benchmarks' | 'devs' | 'docs' | 'audit'
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  // CMS Editor State
+  const [cmsLang, setCmsLang] = useState('vi');
+  const [cmsSection, setCmsSection] = useState('landing');
+  const [cmsDraft, setCmsDraft] = useState({});
+  const [cmsToast, setCmsToast] = useState('');
+
+  useEffect(() => {
+    const merged = getMergedTranslations(cmsLang, siteOverrides);
+    setCmsDraft({ ...(merged[cmsSection] || {}) });
+  }, [cmsLang, cmsSection, siteOverrides]);
 
   // Security Audit Log & Licenses từ Server
   const [auditLogs, setAuditLogs] = useState([]);
@@ -58,6 +167,18 @@ export default function AdminPortal() {
   const [devs, setDevs] = useState(() => 
     getStorageData('promptcraft_verified_devs', DEFAULT_DEVS)
   );
+
+  // Benchmark CRUD State
+  const [showBmForm, setShowBmForm] = useState(false);
+  const [editingBmId, setEditingBmId] = useState(null);
+  const [bmForm, setBmForm] = useState({
+    title: '',
+    industry: 'Công nghệ thông tin',
+    author: 'Admin PNIT',
+    rating: '4.95',
+    originalPrompt: '',
+    optimizedPrompt: ''
+  });
 
   const [newDevName, setNewDevName] = useState('');
   const [newDevCert, setNewDevCert] = useState('');
@@ -239,6 +360,106 @@ export default function AdminPortal() {
     setStorageData('promptcraft_benchmarks', updated);
   };
 
+  const handleOpenAddBm = () => {
+    setEditingBmId(null);
+    setBmForm({
+      title: '',
+      industry: 'Công nghệ thông tin',
+      author: 'Admin PNIT',
+      rating: '4.95',
+      originalPrompt: '',
+      optimizedPrompt: ''
+    });
+    setShowBmForm(true);
+  };
+
+  const handleOpenEditBm = (bm) => {
+    setEditingBmId(bm.id);
+    setBmForm({
+      title: bm.title || '',
+      industry: bm.industry || 'Công nghệ thông tin',
+      author: bm.author || 'Admin PNIT',
+      rating: String(bm.rating || '4.95'),
+      originalPrompt: bm.originalPrompt || '',
+      optimizedPrompt: bm.optimizedPrompt || ''
+    });
+    setShowBmForm(true);
+  };
+
+  const handleSaveBm = (e) => {
+    e.preventDefault();
+    if (!bmForm.title.trim() || !bmForm.optimizedPrompt.trim()) return;
+    const ratingVal = Math.min(5, Math.max(1, parseFloat(bmForm.rating) || 4.9));
+
+    let updated;
+    if (editingBmId) {
+      updated = benchmarks.map((b) =>
+        b.id === editingBmId
+          ? {
+              ...b,
+              title: bmForm.title.trim(),
+              titleEn: bmForm.title.trim(),
+              industry: bmForm.industry.trim(),
+              industryEn: bmForm.industry.trim(),
+              author: bmForm.author.trim() || 'Admin PNIT',
+              rating: ratingVal,
+              originalPrompt: bmForm.originalPrompt.trim() || bmForm.title.trim(),
+              originalPromptEn: bmForm.originalPrompt.trim() || bmForm.title.trim(),
+              optimizedPrompt: bmForm.optimizedPrompt.trim(),
+              optimizedPromptEn: bmForm.optimizedPrompt.trim()
+            }
+          : b
+      );
+    } else {
+      const newItem = {
+        id: 'bm-' + Date.now(),
+        title: bmForm.title.trim(),
+        titleEn: bmForm.title.trim(),
+        industry: bmForm.industry.trim(),
+        industryEn: bmForm.industry.trim(),
+        author: bmForm.author.trim() || 'Admin PNIT',
+        authorBadge: 'Admin Curated',
+        rating: ratingVal,
+        upvotes: 1,
+        testedModels: ['ChatGPT', 'Claude', 'Gemini'],
+        tags: ['custom', 'admin'],
+        originalPrompt: bmForm.originalPrompt.trim() || bmForm.title.trim(),
+        originalPromptEn: bmForm.originalPrompt.trim() || bmForm.title.trim(),
+        optimizedPrompt: bmForm.optimizedPrompt.trim(),
+        optimizedPromptEn: bmForm.optimizedPrompt.trim(),
+        metrics: { clarity: 96, depth: 95, emotionScore: 94 }
+      };
+      updated = [newItem, ...benchmarks];
+    }
+
+    setBenchmarks(updated);
+    setStorageData('promptcraft_benchmarks', updated);
+    setShowBmForm(false);
+    setEditingBmId(null);
+  };
+
+  const showCmsStatus = (msg) => {
+    setCmsToast(msg);
+    setTimeout(() => setCmsToast(''), 2500);
+  };
+
+  const handleSaveCmsSection = () => {
+    updateSiteSection(cmsLang, cmsSection, cmsDraft);
+    showCmsStatus('Đã lưu nội dung trang! Toàn bộ website đã được cập nhật.');
+  };
+
+  const handleResetCmsSection = () => {
+    if (!confirm('Khôi phục toàn bộ văn bản trong mục này về mặc định ban đầu?')) return;
+    resetSiteSection(cmsLang, cmsSection);
+    showCmsStatus('Đã khôi phục mục hiện tại về mặc định.');
+  };
+
+  const handleResetAllCms = () => {
+    if (!confirm('Khôi phục toàn bộ nội dung mọi trang (cả VI và EN) về mặc định ban đầu?')) return;
+    resetAllSiteContent();
+    showCmsStatus('Đã khôi phục toàn bộ website về nội dung gốc.');
+  };
+
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Precision Header */}
@@ -326,6 +547,18 @@ export default function AdminPortal() {
           {/* Tabs Navigation (TẬP TRUNG 100% VÀO PROMPT AI & QUẢN TRỊ) */}
           <div className="flex flex-wrap items-center gap-2 border-b border-[var(--border-subtle)] pb-2 text-xs font-mono">
             <button
+              onClick={() => handleTabChange('cms')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono flex items-center space-x-1.5 transition-colors cursor-pointer ${
+                activeTab === 'cms'
+                  ? 'bg-[#2563EB] text-white font-bold shadow-xs'
+                  : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:bg-[var(--bg-elevated)] hover:border-[var(--border-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              <Layout className="w-3.5 h-3.5" />
+              <span>Nội Dung Các Trang (CMS)</span>
+            </button>
+
+            <button
               onClick={() => handleTabChange('training')}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
                 activeTab === 'training'
@@ -395,6 +628,188 @@ export default function AdminPortal() {
               </button>
             )}
           </div>
+
+          {/* TAB 0: PAGE CONTENT CMS EDITOR */}
+          {activeTab === 'cms' && (
+            <div className="craft-card p-6 space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center space-x-2">
+                    <Edit3 className="w-4 h-4 text-[#2563EB]" />
+                    <span>Trình Chỉnh Sửa Nội Dung Các Trang Web (Live CMS)</span>
+                  </h3>
+                  <p className="text-xs text-[var(--text-secondary)] mt-0.5">
+                    Chọn ngôn ngữ và khu vực bạn muốn sửa chữ. Sau khi bấm <strong>Lưu Nội Dung Trang</strong>, thay đổi sẽ áp dụng ngay trên toàn bộ website.
+                  </p>
+                </div>
+
+                {cmsToast && (
+                  <span className="text-xs font-mono text-emerald-500 flex items-center space-x-1 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-lg">
+                    <Check className="w-3.5 h-3.5 shrink-0" />
+                    <span>{cmsToast}</span>
+                  </span>
+                )}
+              </div>
+
+              {/* Language & Section Selectors */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-mono font-semibold text-[var(--text-secondary)] flex items-center space-x-1.5">
+                    <Globe className="w-3.5 h-3.5 text-[#2563EB]" />
+                    <span>1. Chọn Ngôn Ngữ Chỉnh Sửa:</span>
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setCmsLang('vi')}
+                      className={`flex-1 py-2 px-3 rounded-lg text-xs font-mono font-semibold transition-colors cursor-pointer ${
+                        cmsLang === 'vi'
+                          ? 'bg-[#2563EB] text-white'
+                          : 'border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)]'
+                      }`}
+                    >
+                      Tiếng Việt (VI)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setCmsLang('en')}
+                      className={`flex-1 py-2 px-3 rounded-lg text-xs font-mono font-semibold transition-colors cursor-pointer ${
+                        cmsLang === 'en'
+                          ? 'bg-[#2563EB] text-white'
+                          : 'border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-[var(--text-secondary)]'
+                      }`}
+                    >
+                      English (EN)
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-mono font-semibold text-[var(--text-secondary)] flex items-center space-x-1.5">
+                    <Layout className="w-3.5 h-3.5 text-[#2563EB]" />
+                    <span>2. Chọn Trang / Khu Vực:</span>
+                  </label>
+                  <select
+                    value={cmsSection}
+                    onChange={(e) => setCmsSection(e.target.value)}
+                    className="craft-input w-full px-3 py-2 text-xs font-mono"
+                  >
+                    {CMS_SECTIONS.map((sec) => {
+                      const hasOverride =
+                        siteOverrides?.[cmsLang]?.[sec.id] &&
+                        Object.keys(siteOverrides[cmsLang][sec.id]).length > 0;
+                      return (
+                        <option key={sec.id} value={sec.id}>
+                          {sec.label} {hasOverride ? '(Đã tùy chỉnh)' : ''}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+              </div>
+
+              {/* Dynamic Fields Form */}
+              <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+                {Object.keys(rawTranslations[cmsLang]?.[cmsSection] || {}).map((fieldKey) => {
+                  const defaultValue = rawTranslations[cmsLang]?.[cmsSection]?.[fieldKey] ?? '';
+                  const currentValue = cmsDraft[fieldKey] ?? defaultValue;
+                  const isModified = currentValue !== defaultValue;
+                  const isLongField =
+                    String(defaultValue).length > 70 ||
+                    /subtitle|desc|placeholder|copyright|title/i.test(fieldKey);
+
+                  return (
+                    <div
+                      key={fieldKey}
+                      className="p-3.5 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)]/40 space-y-1.5"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <label className="text-xs font-medium text-[var(--text-primary)]">
+                          {CMS_FIELD_LABELS[fieldKey] || fieldKey}{' '}
+                          <span className="text-[10px] font-mono text-[var(--text-muted)]">({fieldKey})</span>
+                        </label>
+                        <div className="flex items-center space-x-2">
+                          <span
+                            className={`text-[10px] font-mono px-2 py-0.5 rounded ${
+                              isModified
+                                ? 'bg-amber-500/15 text-amber-500 border border-amber-500/30'
+                                : 'bg-[var(--bg-surface)] text-[var(--text-muted)] border border-[var(--border-subtle)]'
+                            }`}
+                          >
+                            {isModified ? 'Đã sửa' : 'Mặc định'}
+                          </span>
+                          {isModified && (
+                            <button
+                              type="button"
+                              onClick={() => setCmsDraft({ ...cmsDraft, [fieldKey]: defaultValue })}
+                              className="text-[10px] font-mono text-[#2563EB] hover:underline cursor-pointer"
+                            >
+                              Hoàn tác
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {isLongField ? (
+                        <textarea
+                          rows={2}
+                          value={currentValue}
+                          onChange={(e) => setCmsDraft({ ...cmsDraft, [fieldKey]: e.target.value })}
+                          disabled={session.role !== 'OWNER'}
+                          className="craft-input w-full px-3 py-2 text-xs leading-relaxed disabled:opacity-60"
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          value={currentValue}
+                          onChange={(e) => setCmsDraft({ ...cmsDraft, [fieldKey]: e.target.value })}
+                          disabled={session.role !== 'OWNER'}
+                          className="craft-input w-full px-3 py-2 text-xs disabled:opacity-60"
+                        />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[var(--border-subtle)]">
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    disabled={session.role !== 'OWNER'}
+                    onClick={handleResetCmsSection}
+                    className="neu-button px-3.5 py-2 text-xs font-mono text-[var(--text-secondary)] hover:text-amber-500 flex items-center space-x-1.5 cursor-pointer disabled:opacity-40"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span>Khôi Phục Mục Này</span>
+                  </button>
+
+                  {Object.keys(siteOverrides || {}).length > 0 && (
+                    <button
+                      type="button"
+                      disabled={session.role !== 'OWNER'}
+                      onClick={handleResetAllCms}
+                      className="neu-button px-3.5 py-2 text-xs font-mono text-rose-400 hover:text-rose-300 flex items-center space-x-1.5 cursor-pointer disabled:opacity-40"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>Khôi Phục Toàn Bộ Website</span>
+                    </button>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  disabled={session.role !== 'OWNER'}
+                  onClick={handleSaveCmsSection}
+                  className="px-5 py-2.5 rounded-[8px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-mono font-semibold flex items-center space-x-1.5 cursor-pointer transition-colors disabled:opacity-40"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                  <span>Lưu Nội Dung Trang</span>
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* TAB 1: SYSTEM PROMPT TRAINING */}
           {activeTab === 'training' && (
@@ -507,24 +922,121 @@ export default function AdminPortal() {
 
           {/* TAB 2: PROMPT BENCHMARKS MANAGEMENT */}
           {activeTab === 'benchmarks' && (
-            <div className="craft-card p-6 space-y-4">
-              <div className="flex items-center justify-between">
+            <div className="craft-card p-6 space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center space-x-2">
                     <Layers className="w-4 h-4 text-indigo-400" />
-                    <span>Quản Lý & Kiểm Duyệt Kho Prompt Mẫu Chuẩn Ngành</span>
+                    <span>Quản Lý, Thêm & Sửa Kho Prompt Mẫu</span>
                   </h3>
                   <p className="text-xs text-[var(--text-secondary)] mt-0.5">
-                    Admin có quyền rà soát, giữ lại các prompt xuất sắc và gỡ bỏ các prompt kém chất lượng.
+                    Admin có thể thêm mới, chỉnh sửa nội dung câu lệnh mẫu hoặc xóa các mẫu không phù hợp trên Trang chủ.
                   </p>
                 </div>
+
+                {session.role === 'OWNER' && (
+                  <button
+                    type="button"
+                    onClick={handleOpenAddBm}
+                    className="px-4 py-2 rounded-[8px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-mono font-semibold flex items-center space-x-1.5 cursor-pointer self-start sm:self-auto"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Thêm Prompt Mẫu Mới</span>
+                  </button>
+                )}
               </div>
+
+              {showBmForm && (
+                <form onSubmit={handleSaveBm} className="p-4 rounded-xl border border-[#2563EB]/40 bg-[var(--bg-elevated)]/60 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-[#2563EB]">
+                      {editingBmId ? 'CHỈNH SỬA PROMPT MẪU' : 'THÊM PROMPT MẪU MỚI'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setShowBmForm(false)}
+                      className="text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <input
+                      type="text"
+                      required
+                      placeholder="Tiêu đề mẫu prompt..."
+                      value={bmForm.title}
+                      onChange={(e) => setBmForm({ ...bmForm, title: e.target.value })}
+                      className="craft-input px-3 py-2 text-xs"
+                    />
+                    <input
+                      type="text"
+                      required
+                      placeholder="Lĩnh vực (VD: Công nghệ thông tin, Học tập...)"
+                      value={bmForm.industry}
+                      onChange={(e) => setBmForm({ ...bmForm, industry: e.target.value })}
+                      className="craft-input px-3 py-2 text-xs"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Tên tác giả"
+                      value={bmForm.author}
+                      onChange={(e) => setBmForm({ ...bmForm, author: e.target.value })}
+                      className="craft-input px-3 py-2 text-xs"
+                    />
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="1"
+                      max="5"
+                      placeholder="Điểm đánh giá (1 - 5)"
+                      value={bmForm.rating}
+                      onChange={(e) => setBmForm({ ...bmForm, rating: e.target.value })}
+                      className="craft-input px-3 py-2 text-xs"
+                    />
+                  </div>
+
+                  <input
+                    type="text"
+                    placeholder="Câu lệnh ngắn / ý tưởng ban đầu (tùy chọn)..."
+                    value={bmForm.originalPrompt}
+                    onChange={(e) => setBmForm({ ...bmForm, originalPrompt: e.target.value })}
+                    className="craft-input w-full px-3 py-2 text-xs"
+                  />
+
+                  <textarea
+                    rows={4}
+                    required
+                    placeholder="Nội dung câu lệnh hoàn chỉnh hiển thị trong thẻ..."
+                    value={bmForm.optimizedPrompt}
+                    onChange={(e) => setBmForm({ ...bmForm, optimizedPrompt: e.target.value })}
+                    className="craft-input w-full px-3 py-2 text-xs leading-relaxed"
+                  />
+
+                  <div className="flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowBmForm(false)}
+                      className="neu-button px-4 py-1.5 text-xs font-mono text-[var(--text-secondary)] cursor-pointer"
+                    >
+                      Hủy
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-1.5 rounded-[8px] bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-mono font-semibold cursor-pointer"
+                    >
+                      {editingBmId ? 'Lưu Thay Đổi' : 'Thêm Vào Kho'}
+                    </button>
+                  </div>
+                </form>
+              )}
 
               <div className="divide-y divide-[var(--border-subtle)]">
                 {benchmarks.map((bm) => (
                   <div key={bm.id} className="py-3.5 first:pt-0 last:pb-0 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
                     <div className="space-y-1 text-xs">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="font-semibold text-[var(--text-primary)] text-sm">{bm.title}</span>
                         <span className="text-[10px] font-mono text-indigo-400 bg-indigo-950/20 px-2 py-0.5 rounded border border-indigo-900/30">
                           {bm.industry}
@@ -537,13 +1049,25 @@ export default function AdminPortal() {
                       </div>
                     </div>
 
-                    <button
-                      onClick={() => handleDeleteBenchmark(bm.id)}
-                      className="px-3 py-1.5 rounded-lg border border-rose-900/40 hover:bg-rose-950/20 text-rose-400 text-xs font-mono flex items-center space-x-1 transition-colors cursor-pointer"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>Xóa Khỏi Kho</span>
-                    </button>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {session.role === 'OWNER' && (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEditBm(bm)}
+                          className="px-3 py-1.5 rounded-lg border border-[var(--border-subtle)] hover:border-[#2563EB] text-[var(--text-secondary)] hover:text-[#2563EB] text-xs font-mono flex items-center space-x-1 transition-colors cursor-pointer"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                          <span>Sửa</span>
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleDeleteBenchmark(bm.id)}
+                        className="px-3 py-1.5 rounded-lg border border-rose-900/40 hover:bg-rose-950/20 text-rose-400 text-xs font-mono flex items-center space-x-1 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Xóa</span>
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
