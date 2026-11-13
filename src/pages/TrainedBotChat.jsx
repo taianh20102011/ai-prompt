@@ -76,6 +76,8 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
   const [showStorageMenu, setShowStorageMenu] = useState(false);
   const storageMenuRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -104,10 +106,19 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
   const benchmarks = getStorageData('promptcraft_benchmarks', DEFAULT_BENCHMARKS);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   };
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     scrollToBottom();
   }, [messages, isThinking]);
 
@@ -382,7 +393,11 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
         </div>
 
         {/* Message Stream */}
-        <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-5">
+        <div
+          ref={messagesContainerRef}
+          data-lenis-prevent
+          className="flex-1 min-h-0 p-4 sm:p-6 overflow-y-auto overscroll-contain touch-pan-y space-y-5"
+        >
           {messages.map((msg) => (
             <div
               key={msg.id}

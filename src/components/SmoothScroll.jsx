@@ -21,6 +21,16 @@ export default function SmoothScroll({ children }) {
       wheelMultiplier: 0.95,
       touchMultiplier: 1.0,
       syncTouch: false, // Ensures native mobile touch inertia is preserved at 60-120fps without lag
+      allowNestedScroll: true,
+      prevent: (node) => {
+        if (!node || !(node instanceof HTMLElement)) return false;
+        if (node.tagName === 'TEXTAREA' || node.hasAttribute('data-lenis-prevent')) return true;
+        const style = window.getComputedStyle(node);
+        const isScrollableY =
+          (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+          node.scrollHeight > node.clientHeight;
+        return isScrollableY;
+      },
     });
 
     lenis.on('scroll', ScrollTrigger.update);
