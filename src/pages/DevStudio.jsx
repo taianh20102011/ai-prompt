@@ -112,7 +112,7 @@ export default function DevStudio() {
       return;
     }
 
-    alert('Mã chứng chỉ không hợp lệ! Bạn có thể thử mã demo: AGY-CERT-882 hoặc mã quốc tế như GCP-AI-994821');
+    alert('Mã chứng chỉ không hợp lệ. Vui lòng kiểm tra lại mã chứng chỉ đã được cấp.');
   };
 
   // Tải ảnh từ máy tính cá nhân
@@ -254,7 +254,7 @@ export default function DevStudio() {
                 required
                 value={certInput}
                 onChange={(e) => setCertInput(e.target.value)}
-                placeholder="VD: AGY-CERT-882 hoặc GCP-AI-994821 hoặc DLAI-77123"
+                placeholder="Nhập mã định danh chứng chỉ của bạn..."
                 className="craft-input w-full text-center tracking-wider font-mono text-xs px-3 py-2.5"
               />
             </div>
@@ -285,9 +285,6 @@ export default function DevStudio() {
               <span className="px-2 py-0.5 rounded bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">Google Cloud Generative AI</span>
               <span className="px-2 py-0.5 rounded bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">AWS AI Practitioner</span>
               <span className="px-2 py-0.5 rounded bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">Credly Badges</span>
-            </div>
-            <div className="text-[11px] font-mono text-[var(--text-muted)] pt-1">
-              Mã demo test nhanh: <code className="text-indigo-400">AGY-CERT-882</code> hoặc <code className="text-indigo-400">GCP-AI-994821</code>
             </div>
           </div>
         </div>
