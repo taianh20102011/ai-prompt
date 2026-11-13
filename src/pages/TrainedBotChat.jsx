@@ -132,6 +132,23 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
     }
   }, [messages]);
 
+  const getLocalizedMessageContent = (msg) => {
+    if (lang === 'vi') return msg.content;
+    const isInitialWelcome =
+      msg.id === 'init-1' ||
+      msg.content?.startsWith('Xin chào. Tôi là **Cortex Bot**') ||
+      msg.content?.startsWith('Chào bạn, mình là **Cortex**');
+    if (isInitialWelcome) {
+      return `Hello! I'm **Cortex** — your AI companion on Prompt AI PNIT.
+
+You can chat with me **free and unlimited** — ask for prompt ideas, clear technical explanations, or simply talk things through when you're feeling stuck. Choose a conversation mode above and send me a message!`;
+    }
+    if (msg.id === 'init-fresh' || msg.content?.startsWith('Phiên trò chuyện đã được làm mới')) {
+      return 'Conversation reset. Choose a mode above and send your question!';
+    }
+    return msg.content;
+  };
+
   const handleSend = async (e) => {
     e?.preventDefault();
     if (!inputValue.trim() || isThinking) return;
@@ -141,7 +158,7 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
       id: 'usr-' + Date.now(),
       role: 'user',
       content: userText,
-      timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+      timestamp: new Date().toLocaleTimeString(lang === 'vi' ? 'vi-VN' : 'en-US', { hour: '2-digit', minute: '2-digit' })
     };
 
     setMessages(prev => [...prev, userMsg]);
@@ -149,7 +166,7 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
     setIsThinking(true);
 
     try {
-      const botResponse = await chatWithTrainedBot(userText, messages, activeMode);
+      const botResponse = await chatWithTrainedBot(userText, messages, activeMode, lang);
       setMessages(prev => [...prev, botResponse]);
       setOpenThinkingId(null);
     } finally {
@@ -159,20 +176,24 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
   };
 
   const handleCloudSync = async () => {
-    setSyncToast('Đang kết nối Vercel Database API...');
+    setSyncToast(lang === 'vi' ? 'Đang kết nối Vercel Database API...' : 'Connecting to Vercel Database API...');
     const res = await syncAllToVercelDatabase();
     setSyncToast(res.message);
     setTimeout(() => setSyncToast(''), 3000);
   };
 
   const clearChat = () => {
-    if (!confirm('Bạn có chắc muốn xóa sạch toàn bộ lịch sử cuộc trò chuyện này không?')) return;
+    if (!confirm(lang === 'vi'
+      ? 'Bạn có chắc muốn xóa sạch toàn bộ lịch sử cuộc trò chuyện này không?'
+      : 'Are you sure you want to clear the entire chat history?')) return;
     const initial = [
       {
         id: 'init-fresh',
         role: 'assistant',
-        content: 'Phiên trò chuyện đã được làm mới. Hãy chọn chế độ và nhập câu hỏi của bạn!',
-        timestamp: 'Vừa xong'
+        content: lang === 'vi'
+          ? 'Phiên trò chuyện đã được làm mới. Hãy chọn chế độ và nhập câu hỏi của bạn!'
+          : 'Conversation reset. Choose a mode above and send your question!',
+        timestamp: lang === 'vi' ? 'Vừa xong' : 'Just now'
       }
     ];
     setMessages(initial);
@@ -350,8 +371,8 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
                 : 'border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--border-hover)] hover:bg-[var(--bg-elevated)]'
             }`}
           >
-            <div className="font-bold text-xs truncate">{mode.name}</div>
-            <div className="text-[11px] opacity-80 line-clamp-1 mt-0.5">{mode.desc}</div>
+            <div className="font-bold text-xs truncate">{lang === 'vi' ? mode.name : mode.nameEn}</div>
+            <div className="text-[11px] opacity-80 line-clamp-1 mt-0.5">{lang === 'vi' ? mode.desc : mode.descEn}</div>
           </button>
         ))}
       </div>
@@ -364,13 +385,16 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
             <span className="flex items-center space-x-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
               <span className="text-[var(--text-secondary)] font-medium">
-                {BOT_MODES.find(m => m.id === activeMode)?.name}
+                {(() => {
+                  const activeModeObj = BOT_MODES.find(m => m.id === activeMode);
+                  return lang === 'vi' ? activeModeObj?.name : activeModeObj?.nameEn;
+                })()}
               </span>
             </span>
             {saveIndicator && (
               <span className="text-emerald-500 font-semibold flex items-center space-x-1">
                 <Check className="w-3 h-3" />
-                <span>Đã lưu lịch sử</span>
+                <span>{lang === 'vi' ? 'Đã lưu lịch sử' : 'Saved'}</span>
               </span>
             )}
           </div>
@@ -423,8 +447,8 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
                 <div className={`flex items-center justify-between text-[11px] pb-1.5 border-b ${
                   msg.role === 'user' ? 'border-white/20 text-white/80' : 'border-[var(--border-subtle)] text-[var(--text-muted)]'
                 }`}>
-                  <span className="font-semibold">{msg.role === 'user' ? 'Bạn' : 'Cortex'}</span>
-                  <span>{msg.timestamp}</span>
+                  <span className="font-semibold">{msg.role === 'user' ? (lang === 'vi' ? 'Bạn' : 'You') : 'Cortex'}</span>
+                  <span>{(msg.timestamp === 'Vừa xong' && lang !== 'vi') ? 'Just now' : msg.timestamp}</span>
                 </div>
 
                 {/* Collapsible Thinking Explanation */}
@@ -479,7 +503,7 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
                       )
                     }}
                   >
-                    {msg.content}
+                    {getLocalizedMessageContent(msg)}
                   </ReactMarkdown>
                 </div>
 
@@ -487,11 +511,11 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
                 {msg.role === 'assistant' && (
                   <div className="flex justify-end pt-1">
                     <button
-                      onClick={() => copyText(msg.id, msg.content)}
+                      onClick={() => copyText(msg.id, getLocalizedMessageContent(msg))}
                       className="px-2 py-0.5 rounded text-[10px] font-mono text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-transparent hover:border-[var(--border-subtle)] flex items-center space-x-1 cursor-pointer transition-colors"
                     >
                       {copiedId === msg.id ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                      <span>{copiedId === msg.id ? 'Đã chép' : 'Sao chép'}</span>
+                      <span>{copiedId === msg.id ? (lang === 'vi' ? 'Đã chép' : 'Copied') : (lang === 'vi' ? 'Sao chép' : 'Copy')}</span>
                     </button>
                   </div>
                 )}
@@ -506,7 +530,15 @@ Bạn có thể hỏi đáp **miễn phí và không giới hạn**, nhờ mình
               </div>
               <div className="rounded-2xl p-4 text-xs text-[var(--text-secondary)] flex items-center space-x-2 font-mono bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
                 <RefreshCw className="w-3.5 h-3.5 animate-spin text-indigo-400" />
-                <span>Cortex đang suy ngẫm theo chế độ {BOT_MODES.find(m => m.id === activeMode)?.name}...</span>
+                <span>
+                  {(() => {
+                    const activeModeObj = BOT_MODES.find(m => m.id === activeMode);
+                    const modeLabel = lang === 'vi' ? activeModeObj?.name : activeModeObj?.nameEn;
+                    return lang === 'vi'
+                      ? `Cortex đang suy ngẫm theo chế độ ${modeLabel}...`
+                      : `Cortex is thinking in ${modeLabel} mode...`;
+                  })()}
+                </span>
               </div>
             </div>
           )}

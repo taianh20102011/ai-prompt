@@ -22,6 +22,16 @@ export default function EngineersDirectory() {
   const [benchmarks] = useState(() => getStorageData('promptcraft_benchmarks', DEFAULT_BENCHMARKS));
   const [selectedProfile, setSelectedProfile] = useState(null);
 
+  const getLocalizedDev = (person) => {
+    const fallback = DEFAULT_DEVS.find(d => d.id === person.id) || {};
+    if (lang === 'vi') return person;
+    return {
+      ...person,
+      bio: person.bioEn || fallback.bioEn || person.bio,
+      specialties: person.specialtiesEn || fallback.specialtiesEn || person.specialties,
+    };
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-fadeIn">
       {/* Header */}
@@ -40,13 +50,13 @@ export default function EngineersDirectory() {
 
       {/* Directory Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {devs.map((person) => {
-          const personBenchmarks = benchmarks.filter(b => b.author.includes(person.name));
+        {devs.map((rawPerson) => {
+          const person = getLocalizedDev(rawPerson);
 
           return (
             <div
               key={person.id}
-              onClick={() => setSelectedProfile(person)}
+              onClick={() => setSelectedProfile(rawPerson)}
               className="craft-card p-5 space-y-4 cursor-pointer group"
             >
               <div className="flex items-start justify-between">
@@ -106,7 +116,9 @@ export default function EngineersDirectory() {
       </div>
 
       {/* Profile Detail Modal */}
-      {selectedProfile && (
+      {selectedProfile && (() => {
+        const localizedSelected = getLocalizedDev(selectedProfile);
+        return (
         <div 
           onClick={() => setSelectedProfile(null)}
           className="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-4"
@@ -119,19 +131,19 @@ export default function EngineersDirectory() {
             <div className="flex items-start justify-between">
               <div className="flex items-center space-x-4">
                 <UserAvatar
-                  avatar={selectedProfile.avatar}
-                  name={selectedProfile.name}
+                  avatar={localizedSelected.avatar}
+                  name={localizedSelected.name}
                   size="w-16 h-16"
                   className="rounded-2xl"
                 />
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <h2 className="text-lg font-bold text-[var(--text-primary)]">{selectedProfile.name}</h2>
+                    <h2 className="text-lg font-bold text-[var(--text-primary)]">{localizedSelected.name}</h2>
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[var(--bg-elevated)] text-indigo-400 border border-indigo-800/60">
-                      {selectedProfile.certificateId}
+                      {localizedSelected.certificateId}
                     </span>
                   </div>
-                  <p className="text-xs font-mono text-[var(--text-muted)]">{selectedProfile.role}</p>
+                  <p className="text-xs font-mono text-[var(--text-muted)]">{localizedSelected.role}</p>
                 </div>
               </div>
 
@@ -145,15 +157,19 @@ export default function EngineersDirectory() {
 
             {/* Bio */}
             <div className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)] text-xs text-[var(--text-primary)] leading-relaxed space-y-2">
-              <div className="text-[10px] font-mono uppercase text-[var(--text-muted)] font-semibold">Tiểu Sử Chuyên Môn</div>
-              <p>{selectedProfile.bio}</p>
+              <div className="text-[10px] font-mono uppercase text-[var(--text-muted)] font-semibold">
+                {lang === 'vi' ? 'Tiểu Sử Chuyên Môn' : 'Professional Bio'}
+              </div>
+              <p>{localizedSelected.bio}</p>
             </div>
 
             {/* Skills */}
             <div className="space-y-2">
-              <div className="text-[10px] font-mono uppercase text-[var(--text-muted)] font-semibold">Lĩnh Vực Chuyên Sâu</div>
+              <div className="text-[10px] font-mono uppercase text-[var(--text-muted)] font-semibold">
+                {lang === 'vi' ? 'Lĩnh Vực Chuyên Sâu' : 'Core Specialties'}
+              </div>
               <div className="flex flex-wrap gap-2">
-                {selectedProfile.specialties?.map((spec, i) => (
+                {localizedSelected.specialties?.map((spec, i) => (
                   <span key={i} className="text-xs font-mono px-2.5 py-1 rounded-lg bg-[var(--bg-elevated)] text-[var(--text-primary)] border border-[var(--border-subtle)]">
                     {spec}
                   </span>
@@ -165,22 +181,22 @@ export default function EngineersDirectory() {
             <div className="grid grid-cols-3 gap-3 text-center">
               <div className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)]">
                 <div className="text-[10px] font-mono text-[var(--text-muted)]">PROMPTS</div>
-                <div className="text-base font-bold text-[var(--text-primary)] font-mono mt-0.5">{selectedProfile.promptsShared}</div>
+                <div className="text-base font-bold text-[var(--text-primary)] font-mono mt-0.5">{localizedSelected.promptsShared}</div>
               </div>
               <div className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)]">
-                <div className="text-[10px] font-mono text-[var(--text-muted)]">UY TÍN</div>
-                <div className="text-base font-bold text-emerald-400 font-mono mt-0.5">{selectedProfile.reputation}%</div>
+                <div className="text-[10px] font-mono text-[var(--text-muted)]">{lang === 'vi' ? 'UY TÍN' : 'REPUTATION'}</div>
+                <div className="text-base font-bold text-emerald-400 font-mono mt-0.5">{localizedSelected.reputation}%</div>
               </div>
               <div className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-elevated)]">
-                <div className="text-[10px] font-mono text-[var(--text-muted)]">PHÂN HẠNG</div>
-                <div className="text-xs font-bold text-indigo-400 font-mono mt-1">{selectedProfile.tier}</div>
+                <div className="text-[10px] font-mono text-[var(--text-muted)]">{lang === 'vi' ? 'PHÂN HẠNG' : 'TIER'}</div>
+                <div className="text-xs font-bold text-indigo-400 font-mono mt-1">{localizedSelected.tier}</div>
               </div>
             </div>
 
             {/* GitHub Link */}
             <div className="pt-2 flex justify-between items-center text-xs font-mono">
               <a
-                href={selectedProfile.github}
+                href={localizedSelected.github}
                 target="_blank"
                 rel="noreferrer"
                 className="neu-button px-4 py-2 flex items-center space-x-2 text-[var(--text-primary)]"
@@ -194,12 +210,13 @@ export default function EngineersDirectory() {
                 onClick={() => setSelectedProfile(null)}
                 className="neu-button px-5 py-2 text-[var(--text-primary)] font-semibold"
               >
-                Đóng
+                {lang === 'vi' ? 'Đóng' : 'Close'}
               </button>
             </div>
           </div>
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

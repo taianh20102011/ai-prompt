@@ -109,17 +109,32 @@ export default function UserAnalyzer() {
     setTimeout(() => setCopiedUpgraded(false), 2000);
   };
 
+  const getLocalizedBenchmark = (bm) => {
+    const fallback = DEFAULT_BENCHMARKS.find(d => d.id === bm.id) || {};
+    if (lang === 'vi') return bm;
+    return {
+      ...bm,
+      title: bm.titleEn || fallback.titleEn || bm.title,
+      industry: bm.industryEn || fallback.industryEn || bm.industry,
+      originalPrompt: bm.originalPromptEn || fallback.originalPromptEn || bm.originalPrompt,
+      optimizedPrompt: bm.optimizedPromptEn || fallback.optimizedPromptEn || bm.optimizedPrompt,
+    };
+  };
+
   const handleCopyBenchmark = (bm) => {
-    navigator.clipboard.writeText(bm.optimizedPrompt);
+    const localized = getLocalizedBenchmark(bm);
+    navigator.clipboard.writeText(localized.optimizedPrompt);
     setCopiedBenchmarkId(bm.id);
     setTimeout(() => setCopiedBenchmarkId(null), 2000);
   };
 
-  const filteredBenchmarks = benchmarks.filter(b => 
-    b.title.toLowerCase().includes(searchBenchmark.toLowerCase()) ||
-    b.industry.toLowerCase().includes(searchBenchmark.toLowerCase()) ||
-    (b.tags && b.tags.some(t => t.toLowerCase().includes(searchBenchmark.toLowerCase())))
-  );
+  const filteredBenchmarks = benchmarks
+    .map(getLocalizedBenchmark)
+    .filter(b =>
+      b.title.toLowerCase().includes(searchBenchmark.toLowerCase()) ||
+      b.industry.toLowerCase().includes(searchBenchmark.toLowerCase()) ||
+      (b.tags && b.tags.some(t => t.toLowerCase().includes(searchBenchmark.toLowerCase())))
+    );
 
   const totalBenchmarkPages = Math.max(1, Math.ceil(filteredBenchmarks.length / benchmarksPerPage));
   const displayedBenchmarks = filteredBenchmarks.slice(
@@ -440,7 +455,9 @@ export default function UserAnalyzer() {
                   }`}>
                     {result.score}
                   </span>
-                  <span className="text-xs text-[var(--text-muted)]">/ 100 điểm</span>
+                  <span className="text-xs text-[var(--text-muted)]">
+                    {lang === 'vi' ? '/ 100 điểm' : '/ 100 pts'}
+                  </span>
                 </div>
               </div>
 
@@ -448,31 +465,39 @@ export default function UserAnalyzer() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                   <div className="p-3.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-[var(--text-primary)]">Vai trò (Role)</span>
+                      <span className="font-semibold text-[var(--text-primary)]">{lang === 'vi' ? 'Vai trò (Role)' : 'Role'}</span>
                       <span className="font-bold text-[#2563EB] dark:text-blue-400 tabular-nums">{result.dimensions.roleScore}/25</span>
                     </div>
-                    <p className="text-[11px] text-[var(--text-muted)]">AI đóng vai chuyên gia hay người bạn nào?</p>
+                    <p className="text-[11px] text-[var(--text-muted)]">
+                      {lang === 'vi' ? 'AI đóng vai chuyên gia hay người bạn nào?' : 'Who should the AI act as?'}
+                    </p>
                   </div>
                   <div className="p-3.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-[var(--text-primary)]">Hoàn cảnh (Context)</span>
+                      <span className="font-semibold text-[var(--text-primary)]">{lang === 'vi' ? 'Hoàn cảnh (Context)' : 'Context'}</span>
                       <span className="font-bold text-[#2563EB] dark:text-blue-400 tabular-nums">{result.dimensions.contextScore}/25</span>
                     </div>
-                    <p className="text-[11px] text-[var(--text-muted)]">Tình huống và thông tin nền đã đủ chưa?</p>
+                    <p className="text-[11px] text-[var(--text-muted)]">
+                      {lang === 'vi' ? 'Tình huống và thông tin nền đã đủ chưa?' : 'Is there enough background context?'}
+                    </p>
                   </div>
                   <div className="p-3.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-[var(--text-primary)]">Mục tiêu (Objective)</span>
+                      <span className="font-semibold text-[var(--text-primary)]">{lang === 'vi' ? 'Mục tiêu (Objective)' : 'Objective'}</span>
                       <span className="font-bold text-[#2563EB] dark:text-blue-400 tabular-nums">{result.dimensions.objectiveScore}/25</span>
                     </div>
-                    <p className="text-[11px] text-[var(--text-muted)]">Yêu cầu chính cần AI giải quyết là gì?</p>
+                    <p className="text-[11px] text-[var(--text-muted)]">
+                      {lang === 'vi' ? 'Yêu cầu chính cần AI giải quyết là gì?' : 'What is the main task or outcome?'}
+                    </p>
                   </div>
                   <div className="p-3.5 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-[var(--text-primary)]">Lưu ý riêng (Constraints)</span>
+                      <span className="font-semibold text-[var(--text-primary)]">{lang === 'vi' ? 'Lưu ý riêng (Constraints)' : 'Constraints'}</span>
                       <span className="font-bold text-[#2563EB] dark:text-blue-400 tabular-nums">{result.dimensions.constraintsScore}/25</span>
                     </div>
-                    <p className="text-[11px] text-[var(--text-muted)]">Cách trình bày và những điều AI cần tránh.</p>
+                    <p className="text-[11px] text-[var(--text-muted)]">
+                      {lang === 'vi' ? 'Cách trình bày và những điều AI cần tránh.' : 'Tone, format, and what AI should avoid.'}
+                    </p>
                   </div>
                 </div>
               )}
@@ -525,19 +550,19 @@ export default function UserAnalyzer() {
                 {result.metrics && (
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
                     <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex items-center justify-between">
-                      <span className="text-[var(--text-secondary)]">Từ ngữ & Token:</span>
+                      <span className="text-[var(--text-secondary)]">{lang === 'vi' ? 'Từ ngữ & Token:' : 'Words & Tokens:'}</span>
                       <span className="font-bold text-[var(--text-primary)] tabular-nums">
-                        {result.metrics.wordCount} từ (~{result.metrics.estimatedTokens})
+                        {result.metrics.wordCount} {lang === 'vi' ? 'từ' : 'words'} (~{result.metrics.estimatedTokens})
                       </span>
                     </div>
                     <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex items-center justify-between">
-                      <span className="text-[var(--text-secondary)]">Đa dạng từ vựng:</span>
+                      <span className="text-[var(--text-secondary)]">{lang === 'vi' ? 'Đa dạng từ vựng:' : 'Vocabulary Diversity:'}</span>
                       <span className="font-bold text-blue-400 tabular-nums">
                         {result.metrics.lexicalDiversity}%
                       </span>
                     </div>
                     <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] flex items-center justify-between">
-                      <span className="text-[var(--text-secondary)]">An toàn câu lệnh:</span>
+                      <span className="text-[var(--text-secondary)]">{lang === 'vi' ? 'An toàn câu lệnh:' : 'Prompt Safety:'}</span>
                       <span className={`font-bold flex items-center space-x-1 ${
                         result.securityAudit?.hasRisk ? 'text-rose-400' : 'text-emerald-400'
                       }`}>
@@ -551,7 +576,7 @@ export default function UserAnalyzer() {
                 {result.modelReadiness && (
                   <div className="space-y-2">
                     <div className="text-[11px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
-                      Độ tương thích theo từng AI
+                      {lang === 'vi' ? 'Độ tương thích theo từng AI' : 'Compatibility by AI'}
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
                       {result.modelReadiness.map((m, idx) => (
@@ -573,7 +598,9 @@ export default function UserAnalyzer() {
                 {result.suggestedParams && (
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 text-xs font-mono">
                     <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
-                      <span className="text-[var(--text-muted)] text-[10px] uppercase">Temperature khuyến nghị</span>
+                      <span className="text-[var(--text-muted)] text-[10px] uppercase">
+                        {lang === 'vi' ? 'Temperature khuyến nghị' : 'Recommended Temperature'}
+                      </span>
                       <div className="text-base font-bold text-blue-400 tabular-nums">{result.suggestedParams.temp}</div>
                     </div>
                     <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
@@ -582,7 +609,9 @@ export default function UserAnalyzer() {
                       <p className="text-[10px] text-[var(--text-secondary)]">Penalty: {result.suggestedParams.repPenalty}</p>
                     </div>
                     <div className="p-3 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--bg-elevated)] space-y-1">
-                      <span className="text-[var(--text-muted)] text-[10px] uppercase">Persona nhận diện</span>
+                      <span className="text-[var(--text-muted)] text-[10px] uppercase">
+                        {lang === 'vi' ? 'Persona nhận diện' : 'Detected Persona'}
+                      </span>
                       <div className="text-xs font-semibold text-[var(--text-primary)]">{result.detectedRole}</div>
                     </div>
                   </div>
@@ -591,7 +620,7 @@ export default function UserAnalyzer() {
                 {result.assignedLibraries && result.assignedLibraries.length > 0 && (
                   <div className="space-y-2">
                     <div className="text-[11px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
-                      Thư viện gợi ý ({result.assignedLibraries.length})
+                      {lang === 'vi' ? `Thư viện gợi ý (${result.assignedLibraries.length})` : `Suggested Libraries (${result.assignedLibraries.length})`}
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                       {result.assignedLibraries.map((lib, idx) => (
