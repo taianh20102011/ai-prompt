@@ -83,6 +83,9 @@ export default function UserAnalyzer() {
   }, [searchBenchmark]);
 
   const handleInspect = async (promptOverride, targetAIOverride) => {
+    if (promptOverride && typeof promptOverride.preventDefault === 'function') {
+      promptOverride.preventDefault();
+    }
     let textToAnalyze = typeof promptOverride === 'string' ? promptOverride : promptInput;
     if (!textToAnalyze || !textToAnalyze.trim()) {
       textToAnalyze = lang === 'vi' 
@@ -199,7 +202,13 @@ export default function UserAnalyzer() {
 
       {/* Step-by-Step Friendly Input Workbench Card */}
       <div className="craft-card p-5 sm:p-6 space-y-6">
-        <form onSubmit={handleInspect} className="space-y-6">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleInspect();
+          }}
+          className="space-y-6"
+        >
           {/* STEP 1: Natural Input + Quick Sample Pills */}
           <div className="space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
