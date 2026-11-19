@@ -27,10 +27,25 @@ app.use((req, res, next) => {
   next();
 });
 
-// Cấu hình CORS linh hoạt cho mọi môi trường Dev / LAN / Host
+// Cấu hình CORS theo allowlist tường minh (OWASP REST Cheatsheet)
+const ALLOWED_ORIGINS = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174',
+  'http://127.0.0.1:5175',
+  ...(process.env.ALLOWED_ORIGIN ? [process.env.ALLOWED_ORIGIN] : [])
+];
+
 app.use(
   cors({
-    origin: (origin, callback) => callback(null, true),
+    origin: (origin, callback) => {
+      if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Origin not allowed by CORS policy'));
+    },
     credentials: true,
   })
 );
@@ -124,13 +139,15 @@ app.post('/api/auth/login', (req, res) => {
     return res.status(403).json({ error: 'Google reCAPTCHA v3 đánh giá lưu lượng đáng ngờ. Đăng nhập bị từ chối!' });
   }
 
-  // So khớp mã hash an toàn
-  const inputHash = crypto.createHash('sha256').update(String(secretKey || '').trim()).digest('hex');
+  // So khớp mã hash an toàn chống timing attack
+  const inputHash = crypto.createHash('sha256').update(String(secretKey || '').trim()).digest();
+  const ownerBuf = Buffer.from(HASH_OWNER, 'hex');
+  const supportBuf = Buffer.from(HASH_SUPPORT, 'hex');
 
   let role = null;
-  if (inputHash === HASH_OWNER) {
+  if (inputHash.length === ownerBuf.length && crypto.timingSafeEqual(inputHash, ownerBuf)) {
     role = 'OWNER';
-  } else if (inputHash === HASH_SUPPORT) {
+  } else if (inputHash.length === supportBuf.length && crypto.timingSafeEqual(inputHash, supportBuf)) {
     role = 'SUPPORT';
   }
 
@@ -155,7 +172,7 @@ app.post('/api/auth/login', (req, res) => {
   // Thiết lập HttpOnly Cookie (Trình duyệt tự quản lý, JavaScript không thể đọc để chống XSS)
   res.cookie('promptcraft_session', sessionId, {
     httpOnly: true,
-    secure: false, // Localhost để false, production đặt true
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     maxAge: 4 * 60 * 60 * 1000
   });

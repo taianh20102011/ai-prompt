@@ -536,9 +536,8 @@ export default function AdminPortal() {
             </button>
           </form>
 
-          <div className="text-[10px] font-mono text-[var(--text-muted)] space-y-1 border-t border-[var(--border-subtle)] pt-3">
-            <div>Owner Key: <code className="text-indigo-400">ADMIN_MASTER_KEY_2026</code> (Toàn quyền)</div>
-            <div>Support Key: <code className="text-indigo-400">SUPPORT_READONLY_KEY_2026</code> (Chỉ đọc)</div>
+          <div className="text-[11px] text-[var(--text-muted)] text-center border-t border-[var(--border-subtle)] pt-3">
+            Phiên quản trị được bảo vệ bằng khóa phía máy chủ (Environment Secret) và HttpOnly Cookie hết hạn sau 4 giờ.
           </div>
         </div>
       ) : (

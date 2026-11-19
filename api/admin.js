@@ -21,11 +21,18 @@ function signToken(payloadObj, hmacSecret) {
   return `${payload}.${sig}`;
 }
 
+function safeEqual(a, b) {
+  const bufA = Buffer.from(String(a || ''), 'utf8');
+  const bufB = Buffer.from(String(b || ''), 'utf8');
+  if (bufA.length !== bufB.length) return false;
+  return crypto.timingSafeEqual(bufA, bufB);
+}
+
 function verifyToken(token, hmacSecret) {
   if (!token || !token.includes('.')) return null;
   const [payload, sig] = token.split('.');
   const expectedSig = crypto.createHmac('sha256', hmacSecret).update(payload).digest('base64url');
-  if (sig !== expectedSig) return null;
+  if (!safeEqual(sig, expectedSig)) return null;
   try {
     const parsed = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
     if (!parsed.exp || Date.now() > parsed.exp) return null;
@@ -59,6 +66,8 @@ const DEFAULT_LICENSES = [
 ];
 
 export default async function handler(req, res) {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Cache-Control', 'no-store');
   const { adminKey, supportKey, hmacSecret } = getSecrets();
   const action = String(req.query.action || '').toLowerCase();
   const isProd = process.env.NODE_ENV === 'production' || Boolean(process.env.VERCEL);
@@ -72,6 +81,9 @@ export default async function handler(req, res) {
   // 1. LOGIN
   if (action === 'login' && req.method === 'POST') {
     const { secretKey, captchaToken } = req.body || {};
+    if (typeof secretKey !== 'string' || secretKey.trim().length === 0 || secretKey.length > 256) {
+      return res.status(400).json({ error: 'Khóa xác thực không hợp lệ.' });
+    }
 
     // Optional real reCAPTCHA verification only if user configured RECAPTCHA_SECRET_KEY
     if (process.env.RECAPTCHA_SECRET_KEY && captchaToken && !String(captchaToken).startsWith('recaptcha_v3_')) {
@@ -95,8 +107,8 @@ export default async function handler(req, res) {
 
     const inputHash = sha256(secretKey);
     let role = null;
-    if (inputHash === sha256(adminKey)) role = 'OWNER';
-    else if (inputHash === sha256(supportKey)) role = 'SUPPORT';
+    if (safeEqual(inputHash, sha256(adminKey))) role = 'OWNER';
+    else if (safeEqual(inputHash, sha256(supportKey))) role = 'SUPPORT';
 
     if (!role) {
       return res.status(401).json({ error: 'Mã xác thực không chính xác.' });
@@ -161,7 +173,7 @@ export default async function handler(req, res) {
     if (session.role !== 'OWNER') {
       return res.status(403).json({ error: 'Chỉ OWNER mới có quyền thu hồi License.' });
     }
-    if (req.headers['x-csrf-token'] !== session.csrfToken) {
+    if (!safeEqual(req.headers['x-csrf-token'], session.csrfToken)) {
       return res.status(403).json({ error: 'CSRF Token không hợp lệ.' });
     }
     return res.status(200).json({ success: true, message: 'Đã thu hồi license trong phiên hiện tại.' });

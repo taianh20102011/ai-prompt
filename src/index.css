@@ -95,11 +95,11 @@
 /* FLAT MINIMALIST COMPONENT ARCHITECTURE (ANTI-SLOP)       */
 /* ========================================================= */
 
-/* 1. Thẻ giao diện phẳng, sắc nét, bo góc 8px thân thiện */
+/* 1. Thẻ giao diện phẳng, sắc nét, bo góc chuẩn 6px (CNC-milled Anti-Slop) */
 .craft-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: var(--neu-flat);
   transition: border-color 0.2s ease, background-color 0.2s ease;
 }
@@ -108,11 +108,11 @@
   border-color: var(--border-hover);
 }
 
-/* 2. Nút bấm phẳng tối giản, chuẩn 8px */
+/* 2. Nút bấm phẳng tối giản, chuẩn 6px */
 .neu-button {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: var(--neu-flat);
   transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
   color: var(--text-primary);
@@ -128,12 +128,12 @@
   opacity: 0.9;
 }
 
-/* 3. Ô nhập liệu phẳng, chuẩn 8px */
+/* 3. Ô nhập liệu phẳng, chuẩn 6px */
 .craft-input {
   background-color: var(--input-bg);
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
-  border-radius: 8px;
+  border-radius: 6px;
   box-shadow: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
